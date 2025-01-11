@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('template_pertanyaan', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('id_survey')->constrained('surveys')->onDelete('cascade');
+            $table->foreignId('id_survey')->constrained('survey')->onDelete('cascade');
             $table->string('pertanyaan');
             $table->string('tipe')->comment('text, textarea, radio, checkbox, select, file');
             $table->integer('urutan');

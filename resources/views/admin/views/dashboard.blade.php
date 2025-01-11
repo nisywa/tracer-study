@@ -1,3 +1,6 @@
+@extends('admin.layouts.app')
+@section('title', 'Dashboard')
+
 @section('content')
         <!-- row 1 -->
         <div class="flex flex-wrap -mx-3">
@@ -23,7 +26,7 @@
               </div>
             </div>
           </div>
-        
+
           <!-- card2 -->
           <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -48,8 +51,8 @@
           </div>
 
 
-          
-        
+
+
           <!-- card3 -->
           <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -73,7 +76,7 @@
             </div>
           </div>
         </div>
-        
+
 
         <!-- cards row 2 -->
         <div class="flex flex-wrap mt-6 -mx-3">
@@ -96,7 +99,7 @@
             <div class="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
               <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
                 <h6 class="capitalize dark:text-white">Persentase Pengisian Survei Aktif [ATASAN]</h6>
-                
+
               </div>
               <div class="flex-auto p-4">
                 <div class="relative w-full h-6 bg-gray-200 rounded-full dark:bg-slate-700">
@@ -115,7 +118,7 @@
             <div class="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
               <div class="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
                 <h6 class="capitalize dark:text-white">Persentase Pengisian Survei Aktif [ALUMNI]</h6>
-                
+
               </div>
               <div class="flex-auto p-4">
                 <div class="relative w-full h-6 bg-gray-200 rounded-full dark:bg-slate-700">
@@ -342,7 +345,7 @@
           </div>
         </div>
 
-        
-      
+
+
       <!-- end cards -->
 @endsection

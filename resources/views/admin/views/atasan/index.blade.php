@@ -1,3 +1,6 @@
+@extends('admin.layouts.app')
+@section('title', 'Managemen Atasan')
+
 @section('content')
 
 <!-- table 1 -->
@@ -7,20 +10,20 @@
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <!-- daftar user dan searchbar -->
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
-                <h6 class="dark:text-white">Daftar User Alumni</h6>
+                <h6 class="dark:text-white">Daftar User Atasan</h6>
                 <div class="relative flex items-center w-auto">
                   <div class="relative flex items-stretch">
                     <span class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
                       <i class="fas fa-search"></i>
                     </span>
-                    <input 
-                      type="text" 
-                      class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow" 
+                    <input
+                      type="text"
+                      class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
                       placeholder="Type here..." />
                   </div>
                 </div>
               </div>
-              
+
               <!-- button import export email dropdown -->
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                 <a href="tambah_survei.html">
@@ -60,46 +63,33 @@
                 </a>
 
 
-                
+
               </div>
-              
+
               <div class="flex-auto px-0 pt-0 pb-2">
                 <div class="p-0 overflow-x-auto">
                   <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                     <thead class="align-bottom">
                       <tr>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nama Alumni</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">NIM</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Email</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">No HP</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tahun Masuk</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Survei Terkait</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Aksi</th>
-                        
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nama Atasan</th>
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Satuan Kerja</th>
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Jabatan</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6> 
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
                           </div>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">222112265</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">nis@gmail.com</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
                         </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">082123190880</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">2018</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Kuesioner Lulusan 2021</span>
-                        </td>
+
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
                             <!-- edit -->
@@ -121,62 +111,14 @@
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6> 
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
                           </div>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">222112265</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">nis@gmail.com</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">082123190880</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">2018</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Kuesioner Lulusan 2021</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- edit -->
-                            <a href="#" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                      
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6> 
-                          </div>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">222112265</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">nis@gmail.com</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">082123190880</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">2018</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Kuesioner Lulusan 2021</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
@@ -199,23 +141,14 @@
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6> 
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
                           </div>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">222112265</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">nis@gmail.com</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">082123190880</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">2018</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Kuesioner Lulusan 2021</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
@@ -238,23 +171,44 @@
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6> 
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
                           </div>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">222112265</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">nis@gmail.com</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
+                        </td>
+                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                          <div class="icon-container">
+                            <!-- edit -->
+                            <a href="#" class="icon-link" data-tooltip="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <!-- Delete -->
+                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            <!-- Details -->
+                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                          <div class="flex  flec-col px-2 py-1">
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
+                          </div>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">082123190880</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">2018</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Kuesioner Lulusan 2021</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
@@ -277,7 +231,7 @@
                   </table>
                 </div>
 
-                
+
 
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex justify-end items-center">
                   <!-- Tombol Batal -->
@@ -289,7 +243,7 @@
                       Kembali
                     </button>
                   </a>
-                
+
                   <!-- Tombol Simpan -->
                   <a href="manajemen_user.html">
                     <button
@@ -300,7 +254,7 @@
                     </button>
                   </a>
                 </div>
-                
+
 
 
               </div>

@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Alumni extends Model
 {
-    protected $fillable = ['user_id', 'nama', 'nim', 'jurusan', 'angkatan'];
+    protected $table = 'alumni';
+    protected $fillable = ['user_id', 'nama', 'nim', 'alamat', 'jenis_kelamin', 'prodi', 'tahun_lulus'];
 
     public function user()
     {

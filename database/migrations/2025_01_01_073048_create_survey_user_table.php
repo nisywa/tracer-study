@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('survey_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('survey_id')->constrained()->onDelete('cascade');
+            $table->foreignId('survey_id')->constrained('survey')->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->bool('status')->default(false);
+            $table->boolean('status')->default(false);
             $table->timestampTz('tanggal_mengisi');
             $table->softDeletes();
             $table->timestamps();

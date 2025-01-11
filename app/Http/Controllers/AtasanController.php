@@ -12,7 +12,7 @@ class AtasanController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.views.atasan.index');
     }
 
     /**

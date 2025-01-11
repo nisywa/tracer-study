@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Alumni;
+use App\Models\Atasan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -14,13 +16,65 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // seed admin role
         $adminRole = Role::create([
             'name' => 'admin'
         ]);
-        $userOwner = User::create(['name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => bcrypt('123123123')
+        //  seed user role
+        $alumniRole = Role::create([
+            'name' => 'alumni'
         ]);
-        $userOwner->assignRole($adminRole);
+        $userAlumni = User::create(
+            [
+                'name' => 'Alumni',
+                'email' => 'alumni@alumni.com',
+                'password' => bcrypt('123123123')
+            ]
+        );
+
+        $userAlumni->assignRole($alumniRole);
+        // seed alumni table
+        Alumni::create([
+            'user_id' => $userAlumni->id,
+            'nama' => 'Alumni',
+            'nim' => '123456789',
+            'alamat' => 'Jl. Alumni No. 1',
+            'jenis_kelamin' => 'L',
+            'prodi' => 'Teknik Informatika',
+            'tahun_lulus' => '2020',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        $atasanRole = Role::create([
+            'name' => 'atasan'
+        ]);
+        $userAtasan = User::create(
+            [
+                'name' => 'Atasan',
+                'email' => 'atasan@atasan.com',
+                'password' => bcrypt('123123123')
+            ]
+        );
+        Atasan::create([
+            'user_id' => $userAtasan->id,
+            'nama' => 'Atasan',
+            'jabatan' => 'Manager',
+            'satuan_kerja' => 'Divisi IT',
+            'unit_kerja' => 'Pengembangan',
+            'alamat_kantor' => 'Jl. Atasan No. 1',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $userAtasan->assignRole($atasanRole);
+        $userAlumni = User::create(
+            [
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password' => bcrypt('123123123')
+            ]
+        );
+
+        $userAlumni->assignRole($adminRole);
     }
 }

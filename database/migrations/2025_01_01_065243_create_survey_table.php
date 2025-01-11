@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nama');
-            $table->timestampTz('tanggal_mulai');
-            $table->timestampTz('tanggal_selesai');
+            $table->timestampTz('tanggal_mulai')->nullable();
+            $table->timestampTz('tanggal_selesai')->nullable();
             $table->string('deskripsi');
             $table->softDeletes();
         });
