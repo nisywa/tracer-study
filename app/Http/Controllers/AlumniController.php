@@ -34,6 +34,7 @@ class AlumniController extends Controller
             'nim' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
+            'no_hp'  => 'required|string|max:13',
             'jenis_kelamin' => 'required|in:L,P',
             'prodi' => 'required|string|max:255',
             'tahun_lulus' => 'required|integer|min:1900|max:' . date('Y'),
