@@ -56,9 +56,9 @@
                     </button>
                 </a>
 
-                <a href="tambah_user_manual.html">
+                <a href="{{ route('admin.atasan.create') }}">
                     <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                      <i class="fas fa-plus mr-2"></i> Tambah User
+                      <i class="fas fa-plus mr-2"></i> Tambah Atasan
                     </button>
                 </a>
 
@@ -72,161 +72,61 @@
                     <thead class="align-bottom">
                       <tr>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nama Atasan</th>
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Email</th>
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">No HP</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Satuan Kerja</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Jabatan</th>
                       </tr>
                     </thead>
                     <tbody>
+                      @foreach ($atasan as $atsn)
+                      
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">{{$atsn->nama}}</h6>
                           </div>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{$atsn->email}}</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{$atsn->no_hp}}</span>
+                        </td>
+                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{$atsn->satuan_kerja}}</span>
+                        </td>
+                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{$atsn->jabatan}}</span>
                         </td>
 
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
                             <!-- edit -->
-                            <a href="tambah_user_manual.html" class="icon-link" data-tooltip="Edit">
+                            <a href="{{route('admin.atasan.edit',$atsn)}}" class="icon-link" data-tooltip="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <!-- Delete -->
                             <a href="javascript:;" class="icon-link" data-tooltip="Delete">
                                 <i class="fas fa-trash"></i>
                             </a>
+                            <form id="delete-form-{{ $atsn->id }}" action="{{ route('admin.atasan.destroy', $atsn->id) }}" method="POST" style="display: none;">
+                              @csrf
+                              @method('DELETE')
+                            </form>                     
                             <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
+                            <a href="{{ route('admin.alumni.show', $atsn->id) }}" class="icon-link" data-tooltip="Details">
+                              <i class="fas fa-info-circle"></i>
                             </a>
                           </div>
                         </td>
                       </tr>
 
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
-                          </div>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- edit -->
-                            <a href="#" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
+                     @endforeach 
 
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
-                          </div>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- edit -->
-                            <a href="#" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
+                      
 
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
-                          </div>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- edit -->
-                            <a href="#" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Nisywa Zahra</h6>
-                          </div>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">BPS Kota Bekasi</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">Statistisi Ahli Pertama</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- edit -->
-                            <a href="#" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
+                      
                     </tbody>
                   </table>
                 </div>

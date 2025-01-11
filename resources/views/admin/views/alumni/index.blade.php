@@ -76,9 +76,7 @@
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                         Tahun Masuk</th>
-                                    <th
-                                        class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                        Survei Terkait</th>
+                                    
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                         Aksi</th>
@@ -100,18 +98,16 @@
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->email }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->phone }}</span>
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->no_hp }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->tahun_lulus }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->survey }}</span>
-                                    </td>
+                                    
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="icon-container">
                                             <!-- edit -->
-                                            <a href="{{ route('admin.alumni.edit', $alumnus->id) }}" class="icon-link" data-tooltip="Edit">
+                                            <a href="{{ route('admin.alumni.edit', $alumnus) }}" class="icon-link" data-tooltip="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <!-- Delete -->

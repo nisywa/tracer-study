@@ -20,7 +20,9 @@ class AlumniController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    
+    
+     public function create()
     {
         return view('admin.views.alumni.create');
     }
@@ -34,7 +36,7 @@ class AlumniController extends Controller
             'nim' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
-            'no_hp'  => 'required|string|max:13',
+            'no_hp'  => 'required|string|max:15',
             'jenis_kelamin' => 'required|in:L,P',
             'prodi' => 'required|string|max:255',
             'tahun_lulus' => 'required|integer|min:1900|max:' . date('Y'),
@@ -64,9 +66,9 @@ class AlumniController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Alumni $alumni)
+    public function edit(Alumni $alumnus)
     {
-        //
+        return view('admin.views.alumni.edit',compact('alumnus'));
     }
 
     /**
@@ -74,9 +76,29 @@ class AlumniController extends Controller
      */
     public function update(Request $request, Alumni $alumni)
     {
-        //
-    }
+     
+        $validatedData = $request->validate([
+            'nim' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'no_hp'  => 'required|string|max:15',
+            'jenis_kelamin' => 'required|in:L,P',
+            'prodi' => 'required|string|max:255',
+            'tahun_lulus' => 'required|integer|min:1900|max:' . date('Y'),
+        ]);
 
+        $user = User::update([
+            'name' => $request->nama,
+            'email' => $request->email,
+            'password' => bcrypt(substr($request->nama, 0, 5) . $request->tahun_lulus),
+        ]);
+        
+
+        $validatedData['user_id'] = $user->id;
+        Alumni::update($validatedData);
+
+        return redirect()->route('admin.alumni.index')->with('success', 'Alumni updated successfully.');
+    }
     /**
      * Remove the specified resource from storage.
      */
