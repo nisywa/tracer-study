@@ -12,8 +12,8 @@ class SurveyController extends Controller
      */
     public function index()
     {
-        // $survey = Survey::all();
-        return view('admin.views.survey.index');
+         $survey = Survey::all();
+        return view('admin.views.survey.index',compact('survey'));
     }
 
     /**
@@ -21,7 +21,8 @@ class SurveyController extends Controller
      */
     public function create()
     {
-        //
+        $survey = Survey::paginate(10);
+        return view('admin.views.survey.create');
     }
 
     /**
@@ -29,7 +30,15 @@ class SurveyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
+            'deskripsi' => 'required|string|max:255',
+        ]);
+
+        Survey::create($validatedData);
+        return redirect()->route('admin.views.survey.index')->with('success','Survey created successfully.');
     }
 
     /**
@@ -45,7 +54,7 @@ class SurveyController extends Controller
      */
     public function edit(survey $survey)
     {
-        //
+        return view('admin.views.survey.edit',compact('survey'));
     }
 
     /**
@@ -53,7 +62,16 @@ class SurveyController extends Controller
      */
     public function update(Request $request, survey $survey)
     {
-        //
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|integer|max:8',
+            'tanggal_selesai' => 'required|integer|max:8',
+            'deskripsi' => 'required|string|max:255',
+        ]);
+
+        Survey::update($validatedData);
+
+        return redirect()->route('admin.views.survey.index')->with('success', 'Survey updated successfully');
     }
 
     /**
