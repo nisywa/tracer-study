@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AlumniExport;
+use App\Imports\AlumniImport;
 use App\Models\Alumni;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
 
 class AlumniController extends Controller
 {
@@ -105,5 +108,21 @@ class AlumniController extends Controller
     public function destroy(Alumni $alumni)
     {
         //
+    }
+
+    public function export()
+    {
+        return Excel::download(new AlumniExport, 'alumni.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new AlumniImport, $request->file('file'));
+
+        return redirect()->route('admin.alumni.index')->with('success', 'Alumni imported successfully.');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\survey;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -12,8 +13,18 @@ class SurveyController extends Controller
      */
     public function index()
     {
-         $survey = Survey::all();
+        $survey = Survey::paginate(10);
+        foreach ($survey as $srvy) {
+           $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-y");
+           $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-y");
+           if($srvy->tanggal_selesai >= now()){
+            $srvy->status="Aktif";
+           }else{
+            $srvy->status="Selesai";
+           }
+        }
         return view('admin.views.survey.index',compact('survey'));
+        
     }
 
     /**
@@ -38,7 +49,7 @@ class SurveyController extends Controller
         ]);
 
         Survey::create($validatedData);
-        return redirect()->route('admin.views.survey.index')->with('success','Survey created successfully.');
+        return redirect()->route('admin.survey.index')->with('success','Survey created successfully.');
     }
 
     /**
@@ -52,15 +63,15 @@ class SurveyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(survey $survey)
+    public function edit(Survey $srvy)
     {
-        return view('admin.views.survey.edit',compact('survey'));
+        return view('admin.views.survey.edit',compact('srvy'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, survey $survey)
+    public function update(Request $request, Survey $srvy)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
@@ -71,7 +82,7 @@ class SurveyController extends Controller
 
         Survey::update($validatedData);
 
-        return redirect()->route('admin.views.survey.index')->with('success', 'Survey updated successfully');
+        return redirect()->route('admin.survey.index')->with('success', 'Survey updated successfully');
     }
 
     /**

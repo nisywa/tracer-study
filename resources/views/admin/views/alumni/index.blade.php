@@ -131,7 +131,7 @@
                         <div class="p-4">
                             {{ $alumni->links() }}
                         </div>
-                        </table>
+                        
                     </div>
 
 

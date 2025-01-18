@@ -30,6 +30,8 @@ Route::get('/', function () {
 // Admin route
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('alumni/export', [AlumniController::class, 'export'])->name('alumni.export');
+    Route::post('alumni/import', [AlumniController::class, 'import'])->name('alumni.import');
     Route::resource('alumni', AlumniController::class);
     Route::resource('atasan', AtasanController::class);
     Route::resource('survey', SurveyController::class);

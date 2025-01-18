@@ -24,23 +24,28 @@
 
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Status</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tanggal Aktif</th>
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Deskripsi</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">aksi</th>
 
                       </tr>
                     </thead>
                     <tbody>
+                    @foreach($survey as $srvy)
                       <tr>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Survei Tracer Study 2022 [ALUMNI]</h6>
+                              <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $srvy->nama }}</h6>
                           </div>
                         </td>
 
                         <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Aktif</span>
+                          <span class="bg-gradient-to-tl {{$srvy->status =='Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300'}}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status }}</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">23/04/18</span>
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $srvy->tanggal_mulai." "."--"." ".$srvy->tanggal_selesai }}</span>
+                        </td>
+                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $srvy->deskripsi }}</span>
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
@@ -53,13 +58,17 @@
                                 <i class="fas fa-user-plus"></i>
                             </a>
                             <!-- Edit -->
-                            <a href="tambah_survei.html" class="icon-link" data-tooltip="Edit">
+                            <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
+                            <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $srvy->id }}').submit();">
                                 <i class="fas fa-trash"></i>
                             </a>
+                            <form id="delete-form-{{ $srvy->id }}" action="{{ route('admin.survey.destroy', $srvy->id) }}" method="POST" style="display: none;">
+                              @csrf
+                              @method('DELETE')
+                            </form>                  
                             <!-- Details -->
                             <a href="javascript:;" class="icon-link" data-tooltip="Details">
                                 <i class="fas fa-info-circle"></i>
@@ -67,199 +76,15 @@
                           </div>
                         </td>
                       </tr>
+                      @endforeach
 
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Survei Tracer Study 2023 [ALUMNI]</h6>
-                          </div>
-                        </td>
-
-                        <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Aktif</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">23/04/18</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- Add document -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Tambah Pertanyaan">
-                                <i class="fas fa-file-alt"></i>
-                            </a>
-                            <!-- Add user -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Tambah User">
-                                <i class="fas fa-user-plus"></i>
-                            </a>
-                            <!-- Edit -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <div class="flex  flec-col px-2 py-1">
-                                <h6 class="mb-0 text-sm leading-normal dark:text-white">Survei Tracer Study 2022 [ATASAN]</h6>
-                            </div>
-                          </td>
-
-                        <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Selesai</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">11/01/19 - 11/01/19 </span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <div class="icon-container">
-                                <!-- Add document -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Tambah Pertanyaan">
-                                    <i class="fas fa-file-alt"></i>
-                                </a>
-                                <!-- Add user -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Tambah User">
-                                    <i class="fas fa-user-plus"></i>
-                                </a>
-                                <!-- Edit -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <!-- Delete -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                                <!-- Details -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                              </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">Survei Tracer Study 2022 [ALUMNI]</h6>
-                          </div>
-                        </td>
-
-                        <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Aktif</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">23/04/18</span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="icon-container">
-                            <!-- Add document -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Tambah Pertanyaan">
-                                <i class="fas fa-file-alt"></i>
-                            </a>
-                            <!-- Add user -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Tambah User">
-                                <i class="fas fa-user-plus"></i>
-                            </a>
-                            <!-- Edit -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                            <!-- Details -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                <i class="fas fa-info-circle"></i>
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <div class="flex  flec-col px-2 py-1">
-                                <h6 class="mb-0 text-sm leading-normal dark:text-white">Survei Tracer Study 2022 [ATASAN]</h6>
-                            </div>
-                          </td>
-
-                        <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Selesai</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">11/01/19 - 11/01/19 </span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <div class="icon-container">
-                                <!-- Add document -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Tambah Pertanyaan">
-                                    <i class="fas fa-file-alt"></i>
-                                </a>
-                                <!-- Add user -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Tambah User">
-                                    <i class="fas fa-user-plus"></i>
-                                </a>
-                                <!-- Edit -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <!-- Delete -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                                <!-- Details -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                              </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <div class="flex  flec-col px-2 py-1">
-                                <h6 class="mb-0 text-sm leading-normal dark:text-white">Survei Tracer Study 2022 [ATASAN]</h6>
-                            </div>
-                          </td>
-
-                        <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Selesai</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">11/01/19 - 11/01/19 </span>
-                        </td>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <div class="icon-container">
-                                <!-- Add document -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Tambah Pertanyaan">
-                                    <i class="fas fa-file-alt"></i>
-                                </a>
-                                <!-- Add user -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Tambah User">
-                                    <i class="fas fa-user-plus"></i>
-                                </a>
-                                <!-- Edit -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <!-- Delete -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                                <!-- Details -->
-                                <a href="javascript:;" class="icon-link" data-tooltip="Details">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
-                              </div>
-                        </td>
-                      </tr>
+                     
                     </tbody>
                   </table>
+                  <div class="p-4">
+                    {{ $survey->links() }}
+                  </div>
+
                 </div>
               </div>
             </div>
