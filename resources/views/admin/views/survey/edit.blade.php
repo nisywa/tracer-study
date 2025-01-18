@@ -4,7 +4,7 @@
 @section('content')
 <!-- table 1 -->
 
-<form action="{{ route('admin.survey.update',$srvy) }}" method="POST"></form>
+<form action="{{ route('admin.survey.update',$srvy) }}" method="POST">
 @csrf
 <div class="flex flex-wrap -mx-3">
           <div class="flex-none w-full max-w-full px-3">
@@ -71,4 +71,5 @@
             </div>
           </div>
         </div>
+</form>
 @endsection
