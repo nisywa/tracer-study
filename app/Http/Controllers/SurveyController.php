@@ -63,15 +63,16 @@ class SurveyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Survey $srvy)
+    public function edit($id)
     {
-        return view('admin.views.survey.edit',compact('srvy'));
+        $survey = Survey::findOrFail($id);
+        return view('admin.views.survey.edit', ['survey'=> $survey]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Survey $srvy)
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
@@ -79,8 +80,8 @@ class SurveyController extends Controller
             'tanggal_selesai' => 'required|integer|max:8',
             'deskripsi' => 'required|string|max:255',
         ]);
-
-        Survey::update($validatedData);
+        $survey = Survey::findOrFail($id);
+        $survey->update($validatedData);
 
         return redirect()->route('admin.survey.index')->with('success', 'Survey updated successfully');
     }
