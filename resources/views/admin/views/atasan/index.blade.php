@@ -26,17 +26,46 @@
 
               <!-- button import export email dropdown -->
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
-                <a href="tambah_survei.html">
+              <button type="button"
+                            id="openModal" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-file-upload mr-2"></i> Import Excel
+              </button>
+
+              <!-- pop up modal import  -->
+              <form action="{{ route('admin.atasan.import') }}" method="POST"  enctype="multipart/form-data"> 
+                        @csrf
+                        <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
+                            <div class="bg-white rounded-lg shadow-lg w-96">
+                                <div class="flex items-center justify-between p-4 border-b">
+                                    <h3 class="text-lg font-bold">Upload File</h3>
+                                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+                                </div>
+                                <div class="p-4">
+                                    <form id="uploadForm">
+                                        <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose Excel File</label>
+                                        <input type="file" id="fileInput" name="file" accept=".xls,.xlsx" class="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
+                                        <p class="mt-2 text-sm text-gray-500">Only .xls and .xlsx files are supported.</p>
+                                        <div class="mt-4 flex justify-end">
+                                            <button type="button" id="cancelUpload" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600">Upload</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                      </form>  
+                       
+
+                        
+              
+              
+              <a href="tambah_survei.html">
                 <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                   <i class="fas fa-file-excel mr-2"></i> Export Excel
                 </button>
                 </a>
 
-                <a href="tambah_survei.html">
-                    <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                      <i class="fas fa-file-upload mr-2"></i> Import Excel
-                    </button>
-                </a>
+                             
 
                 <a href="tambah_survei.html">
                     <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
@@ -162,4 +191,30 @@
           </div>
         </div>
 
+
+        <!-- js pop up modal import -->
+    <script>
+      const openModal = document.getElementById('openModal');
+      const closeModal = document.getElementById('closeModal');
+      const cancelUpload = document.getElementById('cancelUpload');
+      const uploadModal = document.getElementById('uploadModal');
+  
+      openModal.addEventListener('click', () => {
+        uploadModal.classList.remove('hidden');
+      });
+  
+      closeModal.addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+      });
+  
+      cancelUpload.addEventListener('click', () => {
+        uploadModal.classList.add('hidden');
+      });
+  
+      document.getElementById('uploadForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('File uploaded successfully!');
+        uploadModal.classList.add('hidden');
+      });
+    </script> 
 @endsection

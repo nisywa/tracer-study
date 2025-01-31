@@ -104,4 +104,21 @@ class AtasanController extends Controller
     {
         //
     }
+
+
+    public function export()
+    {
+        return Excel::download(new AtasanExport, 'atasan.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new AtasanImport, $request->file('file'));
+
+        return redirect()->route('admin.atasan.index')->with('success', 'Atasan imported successfully.');
+    }
 }
