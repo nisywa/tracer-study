@@ -16,16 +16,15 @@ class AlumniController extends Controller
      */
     public function index()
     {
-        $alumni = Alumni::with('user:id,email')->paginate(10); // Adjust the number as needed
-        return view('admin.views.alumni.index', compact('alumni'));
+        $daftarAlumni = Alumni::with('user:id,email')->paginate(10); // Adjust the number as needed
+
+        return view('admin.views.alumni.index', compact('daftarAlumni'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    
-    
-     public function create()
+    public function create()
     {
         return view('admin.views.alumni.create');
     }
@@ -61,7 +60,7 @@ class AlumniController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Alumni $alumni)
+    public function show(Alumni $alumnus)
     {
         //
     }
@@ -71,15 +70,14 @@ class AlumniController extends Controller
      */
     public function edit(Alumni $alumnus)
     {
-        return view('admin.views.alumni.edit',compact('alumnus'));
+        return view('admin.views.alumni.edit', compact('alumnus'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Alumni $alumni)
+    public function update(Request $request, Alumni $alumnus)
     {
-     
         $validatedData = $request->validate([
             'nim' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
@@ -90,38 +88,42 @@ class AlumniController extends Controller
             'tahun_lulus' => 'required|integer|min:1900|max:' . date('Y'),
         ]);
 
-        $user = User::update([
+        $user = $alumnus->user;
+        $user->update([
             'name' => $request->nama,
             'email' => $request->email,
             'password' => bcrypt(substr($request->nama, 0, 5) . $request->tahun_lulus),
         ]);
-        
 
         $validatedData['user_id'] = $user->id;
-        Alumni::update($validatedData);
+        $alumnus->update($validatedData);
 
         return redirect()->route('admin.alumni.index')->with('success', 'Alumni updated successfully.');
     }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Alumni $alumni)
+    public function destroy(Alumni $alumnus)
     {
-        //
+        var_dump($alumnus);
+        $alumnus->user->delete();
+        $alumnus->delete();
+
+        return redirect()->route('admin.alumni.index')->with('success', 'Alumni deleted successfully.');
     }
 
-    public function export()
+    public function export(Excel $excel)
     {
-        return Excel::download(new AlumniExport, 'alumni.xlsx');
+        return $excel->download(new AlumniExport, 'alumni.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(Request $request, Excel $excel)
     {
         $request->validate([
             'file' => 'required|mimes:xlsx,xls,csv',
         ]);
 
-        Excel::import(new AlumniImport, $request->file('file'));
+        $excel->import(new AlumniImport, $request->file('file'));
 
         return redirect()->route('admin.alumni.index')->with('success', 'Alumni imported successfully.');
     }

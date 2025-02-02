@@ -6,6 +6,16 @@
     <!-- table 1 -->
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @elseif(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div
                 class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <!-- daftar user dan searchbar -->
@@ -36,7 +46,7 @@
                         </button>
 
                         <!-- pop up modal import  -->
-                        <form action="{{ route('admin.alumni.import') }}" method="POST"  enctype="multipart/form-data"> 
+                        <form action="{{ route('admin.alumni.import') }}" method="POST"  enctype="multipart/form-data">
                         @csrf
                         <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
                             <div class="bg-white rounded-lg shadow-lg w-96">
@@ -57,20 +67,15 @@
                                 </div>
                             </div>
                         </div>
-                        </form> 
+                        </form>
                         </div>
 
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-file-excel mr-2"></i> Export Excel
-                        </button>
-                        
-                        
-
-                    
-                        
-                 
-
+                        <a href="{{ route('admin.alumni.export') }}">
+                            <button type="button"
+                                class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-file-excel mr-2"></i> Export Excel
+                            </button>
+                        </a>
                     <a href="tambah_survei.html">
                         <button type="button"
                             class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
@@ -78,10 +83,10 @@
                         </button>
                     </a>
                     <a href="{{ route('admin.alumni.create') }}">
-                      <button type="button"
-                        class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                        <i class="fas fa-plus mr-2"></i> Tambah Alumni
-                      </button>
+                        <button type="button"
+                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-plus mr-2"></i> Tambah Alumni
+                        </button>
                     </a>
                 </div>
                 <div class="flex-auto px-0 pt-0 pb-2">
@@ -105,7 +110,7 @@
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                         Tahun Masuk</th>
-                                    
+
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                         Aksi</th>
@@ -113,7 +118,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($alumni as $alumnus)
+                                @foreach($daftarAlumni as $alumnus)
                                 <tr>
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="flex flec-col px-2 py-1">
@@ -124,7 +129,7 @@
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->nim }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->email }}</span>
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->user->email }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->no_hp }}</span>
@@ -132,7 +137,7 @@
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->tahun_lulus }}</span>
                                     </td>
-                                    
+
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="icon-container">
                                             <!-- edit -->
@@ -143,7 +148,7 @@
                                             <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $alumnus->id }}').submit();">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                            <form id="delete-form-{{ $alumnus->id }}" action="{{ route('admin.alumni.destroy', $alumnus->id) }}" method="POST" style="display: none;">
+                                            <form id="delete-form-{{ $alumnus->id }}" action="{{ route('admin.alumni.destroy', $alumnus) }}" method="POST" style="display: none;">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
@@ -158,9 +163,9 @@
                             </tbody>
                         </table>
                         <div class="p-4">
-                            {{ $alumni->links() }}
+                            {{ $daftarAlumni->links() }}
                         </div>
-                        
+
                     </div>
 
 
@@ -197,23 +202,23 @@
       const closeModal = document.getElementById('closeModal');
       const cancelUpload = document.getElementById('cancelUpload');
       const uploadModal = document.getElementById('uploadModal');
-  
+
       openModal.addEventListener('click', () => {
         uploadModal.classList.remove('hidden');
       });
-  
+
       closeModal.addEventListener('click', () => {
         uploadModal.classList.add('hidden');
       });
-  
+
       cancelUpload.addEventListener('click', () => {
         uploadModal.classList.add('hidden');
       });
-  
+
       document.getElementById('uploadForm').addEventListener('submit', (e) => {
         e.preventDefault();
         alert('File uploaded successfully!');
         uploadModal.classList.add('hidden');
       });
-    </script>  
+    </script>
 @endsection

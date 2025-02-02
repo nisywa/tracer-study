@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Atasan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AtasanExport;
+use App\Imports\AtasanImport;
 
 class AtasanController extends Controller
 {
@@ -13,8 +16,8 @@ class AtasanController extends Controller
      */
     public function index()
     {
-        $atasan = Atasan::with('user:id,email')->paginate(10);
-        return view('admin.views.atasan.index',compact('atasan'));
+        $dataAtasan = Atasan::with('user:id,email')->paginate(10);
+        return view('admin.views.atasan.index', compact('dataAtasan'));
     }
 
     /**
@@ -84,15 +87,15 @@ class AtasanController extends Controller
             'no_hp' => 'required|string|max:15',
         ]);
 
-        $user = User::update([
+        $user = $atasan->user;
+        $user->update([
             'name' => $request->nama,
             'email' => $request->email,
-            'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp,offset: 0,length: 5)),
+            'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp, 0, 5)),
         ]);
-        
 
         $validatedData['user_id'] = $user->id;
-        Atasan::update($validatedData);
+        $atasan->update($validatedData);
 
         return redirect()->route('admin.atasan.index')->with('success', 'Atasan updated successfully.');
     }

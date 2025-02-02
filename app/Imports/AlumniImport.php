@@ -3,9 +3,13 @@
 namespace App\Imports;
 
 use App\Models\Alumni;
+use App\Models\User;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class AlumniImport implements ToModel
+class AlumniImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -14,27 +18,35 @@ class AlumniImport implements ToModel
     */
     public function model(array $row)
     {
-        $user = new User([
-            'name' => $row['nama'],
-            'email' => $row['email'],
-            'password' => bcrypt('default_password'), // You might want to generate a random password or handle this differently
-        ]);
+        try {
+            // Create the user
+            $user = User::firstOrCreate(
+                ['email' => $row['email']], // Check for duplicate email
+                [
+                    'name' => $row['nama'],
+                    'password' => bcrypt('default_password'), // Handle password securely
+                ]
+            );
 
-        $user->save();
-
-        $alumni = new Alumni([
-            'nim' => $row['nim'],
-            'nama' => $row['nama'],
-            'alamat' => $row['alamat'],
-            'jenis_kelamin' => $row['jenis_kelamin'],
-            'no_hp' => $row['no_hp'],
-            'prodi' => $row['prodi'],
-            'tahun_lulus' => $row['tahun_lulus'],
-            'user_id' => $user->id, // Assuming Alumni has a user_id field
-        ]);
-
-        $alumni->save();
+            // Create the alumni record
+            return new Alumni([
+                'user_id' => $user->id,
+                'nama' => $row['nama'],
+                'nim' => $row['nim'],
+                'no_hp' => $row['no_hp'],
+                'alamat' => $row['alamat'],
+                'jenis_kelamin' => $row['jenis_kelamin'],
+                'prodi' => $row['prodi'],
+                'tahun_lulus' => $row['tahun_lulus'],
+            ]);
+        } catch (QueryException $e) {
+            // Log or handle the error
+            Log::error("message: {$e->getMessage()}");
+            return null;
+        }
 
         return $alumni;
     }
+
+
 }
