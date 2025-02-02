@@ -119,12 +119,16 @@ class AlumniController extends Controller
 
     public function import(Request $request, Excel $excel)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
+        try {
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls,csv',
+            ]);
 
-        $excel->import(new AlumniImport, $request->file('file'));
+            $excel->import(new AlumniImport, $request->file('file'));
 
-        return redirect()->route('admin.alumni.index')->with('success', 'Alumni imported successfully.');
+            return redirect()->route('admin.alumni.index')->with('success', 'Alumni imported successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.alumni.index')->with('error', 'Failed to import alumni.');
+        }
     }
 }

@@ -42,10 +42,8 @@ class AlumniImport implements ToModel, WithHeadingRow
         } catch (QueryException $e) {
             // Log or handle the error
             Log::error("message: {$e->getMessage()}");
-            return null;
+            throw $e;
         }
-
-        return $alumni;
     }
 
 
