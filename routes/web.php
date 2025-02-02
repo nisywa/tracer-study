@@ -32,9 +32,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('alumni/export', [AlumniController::class, 'export'])->name('alumni.export');
     Route::post('alumni/import', [AlumniController::class, 'import'])->name('alumni.import');
-    Route::post('atasan/import', [AlumniController::class, 'import'])->name('atasan.import');
+    Route::post('atasan/import', [AtasanController::class, 'import'])->name('atasan.import');
+    Route::get('atasan/export', [AtasanController::class, 'export'])->name('atasan.export');
     Route::resource('alumni', AlumniController::class);
     Route::resource('atasan', AtasanController::class);
+    Route::get('survey/add_question/{id}', [SurveyController::class, 'add_question'])->name('survey.add_question');
     Route::resource('survey', SurveyController::class);
     Route::resource('monitoring', MonitoringController::class);
     // Route::resource('profile', ProfileController::class);

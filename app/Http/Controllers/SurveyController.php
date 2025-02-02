@@ -86,6 +86,12 @@ class SurveyController extends Controller
         return redirect()->route('admin.survey.index')->with('success', 'Survey updated successfully');
     }
 
+    public function add_question($id)
+    {
+        $survey = Survey::findOrFail($id);
+        return view('admin.views.survey.add_question', ['survey'=> $survey]);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

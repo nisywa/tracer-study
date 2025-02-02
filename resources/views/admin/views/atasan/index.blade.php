@@ -7,6 +7,15 @@
 
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @elseif(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             <div
                 class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <!-- daftar user dan searchbar -->
@@ -29,6 +38,7 @@
                 <!-- button import export email dropdown -->
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
+                    <div class="flex items-center gap-4">
                     <button type="button" id="openModal"
                         class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                         <i class="fas fa-file-upload mr-2"></i> Import Excel
@@ -62,7 +72,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="tambah_survei.html">
+                    <a href="{{ route('admin.atasan.export') }}">
                         <button type="button"
                             class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             <i class="fas fa-file-excel mr-2"></i> Export Excel

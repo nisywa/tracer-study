@@ -109,19 +109,22 @@ class AtasanController extends Controller
     }
 
 
-    public function export()
+    public function export(Excel $excel)
     {
         return Excel::download(new AtasanExport, 'atasan.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(Request $request, Excel $excel)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
+        try{
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls,csv',
+            ]);
+            Excel::import(new AtasanImport, $request->file('file'));
 
-        Excel::import(new AtasanImport, $request->file('file'));
-
-        return redirect()->route('admin.atasan.index')->with('success', 'Atasan imported successfully.');
+            return redirect()->route('admin.atasan.index')->with('success', 'Atasan imported successfully.');
+        }catch(\Exception $e){
+            return redirect()->route('admin.atasan.index')->with('error', 'Failed to import atasan.');
+        }   
     }
 }

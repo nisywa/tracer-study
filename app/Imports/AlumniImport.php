@@ -29,7 +29,7 @@ class AlumniImport implements ToModel, WithHeadingRow
             );
 
             // Create the alumni record
-            return new Alumni([
+            $alumni = Alumni::firstOrCreate(['nim'=> $row['nim']],[
                 'user_id' => $user->id,
                 'nama' => $row['nama'],
                 'nim' => $row['nim'],
@@ -39,6 +39,7 @@ class AlumniImport implements ToModel, WithHeadingRow
                 'prodi' => $row['prodi'],
                 'tahun_lulus' => $row['tahun_lulus'],
             ]);
+            return $alumni;
         } catch (QueryException $e) {
             // Log or handle the error
             Log::error("message: {$e->getMessage()}");

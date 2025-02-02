@@ -49,8 +49,8 @@
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
-                            <!-- Add document -->
-                            <a href="list_pertanyaan.html" class="icon-link" data-tooltip="Tambah Pertanyaan">
+                            <!-- Add question -->
+                            <a href="{{ route('admin.survey.add_question', $srvy) }}" class="icon-link" data-tooltip="Tambah Pertanyaan">
                                 <i class="fas fa-file-alt"></i>
                             </a>
                             <!-- Add user -->
