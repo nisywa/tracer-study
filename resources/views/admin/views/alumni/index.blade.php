@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.app')
 @section('title', 'Managemen Alumni')
 
@@ -6,15 +7,6 @@
     <!-- table 1 -->
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @elseif(session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
 
             <div
                 class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -22,6 +14,23 @@
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                     <h6 class="dark:text-white">Daftar User Alumni</h6>
+                    {{-- @if (session('success')) --}}
+                        <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+  <div class="flex">
+    <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+    <div>
+      <p class="font-bold">Our privacy policy has changed</p>
+      <p class="text-sm">Make sure you know how these changes affect you.</p>
+    </div>
+  </div>
+</div>
+                    {{-- @elseif (session('error')) --}}
+                        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800">
+                            {{ session('error') }} testtt
+                        </div>
+                    {{-- @endif --}}
+
+
                     <div class="relative flex items-center w-auto">
                         <div class="relative flex items-stretch">
                             <span

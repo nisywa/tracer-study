@@ -1,11 +1,57 @@
+// first trigger add row button
+document.querySelector(".add-row").click();
 
-function changeInputType() {
-    const select = document.getElementById("inputType");
-    const personalColumn = document.getElementById("personalColumn");
-    
+document.querySelectorAll(".add-row").forEach(button => {
+    button.addEventListener("click", addRow);
+});
+
+function addRow() {
+    const tableBody = document.querySelector("tbody");
+    const newRow = createRow();
+    tableBody.appendChild(newRow);
+    addRowEvents(newRow);
+}
+
+function createRow() {
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = document.getElementById("templateRow").innerHTML;
+    return newRow;
+}
+
+function addRowEvents(row) {
+    row.querySelector(".delete-row").addEventListener("click", function () {
+        row.remove();
+    });
+
+    row.querySelector(".duplicate-row").addEventListener("click", function () {
+        const clonedRow = row.cloneNode(true);
+
+        // Copy values from inputs in original row to cloned row
+        clonedRow.querySelectorAll("input, select, textarea").forEach((input, index) => {
+            input.value = row.querySelectorAll("input, select, textarea")[index].value;
+        });
+
+        // Ensure checkboxes and radio buttons keep their checked state
+        clonedRow.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach((input, index) => {
+            input.checked = row.querySelectorAll("input[type='checkbox'], input[type='radio']")[index].checked;
+        });
+
+        row.parentNode.insertBefore(clonedRow, row.nextElementSibling);
+        addRowEvents(clonedRow);
+    });
+}
+
+// Initialize event listeners for existing and future rows
+document.querySelectorAll("tbody tr").forEach(addRowEvents);
+
+function changeInputType(rowTable) {
+    const selectedRow = rowTable.closest("tr");
+    const select = selectedRow.querySelector(".input-type");
+    const personalColumn = selectedRow.querySelector(".personal-column");
+
     const value = select.value;
     let inputElement = '';
-    
+
     switch(value) {
         case 'option1': // Short Answer
             inputElement = '<input type="text" maxlength="200" class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1" placeholder="Your Answer">';
@@ -26,7 +72,7 @@ function changeInputType() {
         case 'option5': // Checkboxes with dynamic input
             inputElement = `
                 <div id="checkboxContainer"></div>
-                <button type="button" onclick="addCheckboxOption()" class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 mt-2">Add Option</button>
+                <button type="button" onclick="addCheckboxOption(this)" class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 mt-2">Add Option</button>
             `;
             setTimeout(addCheckboxOption, 100);
             break;
@@ -67,15 +113,16 @@ function setRating(rating) {
     document.getElementById("ratingValue").value = rating;
 }
 
-function addCheckboxOption() {
-    const container = document.getElementById("checkboxContainer");
+function addCheckboxOption(thisButton) {
+
+    const container = thisButton?.closest("div").querySelector("#checkboxContainer");
     if (container) {
         const inputDiv = document.createElement("div");
         inputDiv.classList.add("flex", "items-center", "space-x-2", "mt-1");
-        
+
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        
+
         const input = document.createElement("input");
         input.type = "text";
         input.placeholder = "Option";
@@ -92,11 +139,11 @@ function addRadioOption() {
     if (container) {
         const inputDiv = document.createElement("div");
         inputDiv.classList.add("flex", "items-center", "space-x-2", "mt-1");
-        
+
         const radio = document.createElement("input");
         radio.type = "radio";
         radio.name = "dynamicRadio";
-        
+
         const input = document.createElement("input");
         input.type = "text";
         input.placeholder = "Option";
