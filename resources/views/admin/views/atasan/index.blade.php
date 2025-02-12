@@ -7,21 +7,17 @@
 
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @elseif(session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
+            <div class="font-bold">
+            
+            
+            </div>
             <div
                 class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <!-- daftar user dan searchbar -->
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                     <h6 class="dark:text-white">Daftar User Atasan</h6>
+                   
                     <div class="relative flex items-center w-auto">
                         <div class="relative flex items-stretch">
                             <span
@@ -38,7 +34,7 @@
                 <!-- button import export email dropdown -->
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
-                    <div class="flex items-center gap-4">
+               
                     <button type="button" id="openModal"
                         class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                         <i class="fas fa-file-upload mr-2"></i> Import Excel
@@ -84,19 +80,7 @@
                             <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
                         </button>
                     </a>
-                    <a href="tambah_survei.html">
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="ni ni-single-02 mr-2"></i> Alumni
-                        </button>
-                    </a>
-
-                    <a href="tambah_survei.html">
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="ni ni-single-02 mr-2"></i> Atasan
-                        </button>
-                    </a>
+                    
                     <a href="{{ route('admin.atasan.create') }}">
                         <button type="button"
                             class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
@@ -104,6 +88,7 @@
                         </button>
                     </a>
                 </div>
+                
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table
@@ -239,4 +224,14 @@
             uploadModal.classList.add('hidden');
         });
     </script>
+
+<script>
+    setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(el => {
+        el.classList.add('opacity-0'); // Tambahkan efek transparan
+        setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
+    });
+}, 3000);
+
+</script>
 @endsection
