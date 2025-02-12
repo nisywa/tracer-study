@@ -8,9 +8,44 @@
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
             <div class="font-bold">
-            
-            
+            @if(session('success'))
+            <!-- <div class="bg-green-600 text-white font-bold px-4 py-3 rounded-md mb-4 alert alert-success shadow-lg">
+                {{ session('success') }}
+            </div> -->
+            <div class="bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md alert alert-success mb-6" role="alert">
+                <div class="flex">
+                    <div class="py-1">
+                        <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 7.5l-6.25 6.25-3.75-3.75 1.41-1.41 2.34 2.34 4.84-4.84L15 7.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold">{{ session('success') }}</p>
+                    </div>
+                </div>
             </div>
+
+
+            @elseif(session('error'))
+                <!-- <div class="bg-red-600 text-white font-bold px-4 py-3 rounded-md mb-4 alert alert-danger shadow-lg">
+                    {{ session('error') }}
+                </div> -->
+
+                <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md alert alert-danger mb-6" role="alert">
+                    <div class="flex">
+                        <div class="py-1">
+                            <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            </div>
+            
             <div
                 class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <!-- daftar user dan searchbar -->
@@ -226,12 +261,11 @@
     </script>
 
 <script>
-    setTimeout(() => {
+setTimeout(() => {
     document.querySelectorAll('.alert').forEach(el => {
-        el.classList.add('opacity-0'); // Tambahkan efek transparan
+        el.classList.add('opacity-0', 'transition-opacity', 'duration-500'); // Tambahkan efek fade-out
         setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
     });
 }, 3000);
-
 </script>
 @endsection

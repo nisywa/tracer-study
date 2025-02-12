@@ -37,6 +37,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('alumni', AlumniController::class);
     Route::resource('atasan', AtasanController::class);
     Route::get('survey/add_question/{id}', [SurveyController::class, 'add_question'])->name('survey.add_question');
+    Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
     Route::resource('survey', SurveyController::class);
     Route::resource('monitoring', MonitoringController::class);
     // Route::resource('profile', ProfileController::class);

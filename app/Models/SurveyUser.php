@@ -18,4 +18,23 @@ class SurveyUser extends Model
     {
         return $this->hasMany(SurveyUserJawaban::class);
     }
+
+    static function getSurveyUser($id_survey)
+    {
+        $survey=Survey::where('id',$id_survey)->first();
+        if ($survey){
+            $query=self::select('a.*')
+            ->join('survey','survey.id','=','survey_user.survey_id')
+            ->join('users','users.id','=','survey_user.user_id');
+
+            if ($survey->type_survei=='alumni'){
+              $query->join('alumni as a' , 'users.id','=','a.user_id');
+            } elseif ($survey->type_survei=='atasan'){
+              $query->join('atasan as a','users.id','=','a.user_id');  
+            }
+
+            return $query->get();
+        }
+        return false;
+    }
 }
