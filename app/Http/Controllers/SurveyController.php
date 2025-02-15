@@ -17,16 +17,15 @@ class SurveyController extends Controller
     {
         $survey = Survey::paginate(10);
         foreach ($survey as $srvy) {
-           $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-y");
-           $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-y");
-           if($srvy->tanggal_selesai >= now()){
-            $srvy->status="Aktif";
-           }else{
-            $srvy->status="Selesai";
-           }
+            $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-y");
+            $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-y");
+            if ($srvy->tanggal_selesai >= now()) {
+                $srvy->status = "Aktif";
+            } else {
+                $srvy->status = "Selesai";
+            }
         }
-        return view('admin.views.survey.index',compact('survey'));
-        
+        return view('admin.views.survey.index', compact('survey'));
     }
 
     /**
@@ -51,7 +50,7 @@ class SurveyController extends Controller
         ]);
 
         Survey::create($validatedData);
-        return redirect()->route('admin.survey.index')->with('success','Survey created successfully.');
+        return redirect()->route('admin.survey.index')->with('success', 'Survey created successfully.');
     }
 
     /**
@@ -68,7 +67,7 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = Survey::findOrFail($id);
-        return view('admin.views.survey.edit', ['survey'=> $survey]);
+        return view('admin.views.survey.edit', ['survey' => $survey]);
     }
 
     /**
@@ -91,22 +90,27 @@ class SurveyController extends Controller
     public function add_question($id)
     {
         $survey = Survey::findOrFail($id);
-        return view('admin.views.survey.add_question', ['survey'=> $survey]);
+        return view('admin.views.survey.add_question', ['survey' => $survey]);
     }
 
     public function details($id)
     {
         $survey = Survey::findOrFail($id);
         $survey_user = SurveyUser::getSurveyUser($id);
-        $template_pertanyaan=TemplatePertanyaan::getTemplatePertanyaan($id);
+        $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
-           $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
-           if($survey->tanggal_selesai >= now()){
-            $survey->status="Aktif";
-           }else{
-            $survey->status="Selesai";
-           }
-        return view('admin.views.survey.details', ['survey'=> $survey,'survey_user'=>$survey_user,'template_pertanyaan'=>$template_pertanyaan]);
+        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
+        if ($survey->tanggal_selesai >= now()) {
+            $survey->status = "Aktif";
+        } else {
+            $survey->status = "Selesai";
+        }
+        return view('admin.views.survey.details', ['survey' => $survey, 'survey_user' => $survey_user, 'template_pertanyaan' => $template_pertanyaan]);
+    }
+    public function create_question($id)
+    {
+        $survey = Survey::findOrFail($id);
+        return view('admin.views.survey.create_question', ['survey' => $survey]);
     }
 
     /**
