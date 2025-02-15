@@ -107,10 +107,54 @@ class SurveyController extends Controller
         }
         return view('admin.views.survey.details', ['survey' => $survey, 'survey_user' => $survey_user, 'template_pertanyaan' => $template_pertanyaan]);
     }
-    public function create_question($id)
+    public function create_question2(Request $request, TemplatePertanyaan $template_pertanyaan)
     {
-        $survey = Survey::findOrFail($id);
-        return view('admin.views.survey.create_question', ['survey' => $survey]);
+        dd($request->all());
+        exit();
+        $template = $template_pertanyaan->create([
+            'id_survey' => request('id_survey'),
+            'pertanyaan' => request('pertanyaan'),
+            'tipe' => request('tipe')
+        ]);
+
+        return redirect()->back()->with('success', 'Question added successfully');
+    }
+    public function create_question(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Get the data from the request
+            $questions = $request->input('questions', []);
+            $survey_id = $request->input('survey_id');
+
+            foreach ($questions as $index => $question) {
+                // Create the question
+                $templatePertanyaan = TemplatePertanyaan::create([
+                    'id_survey' => $survey_id,
+                    'pertanyaan' => $question['question'],
+                    'tipe' => $question['type'],
+                    'urutan' => $index + 1,
+                ]);
+
+                // If the question type has options (radio, checkbox, select)
+                if (in_array($question['type'], ['radio', 'checkbox', 'select']) && isset($question['options'])) {
+                    foreach ($question['options'] as $optionIndex => $option) {
+                        TemplateJawaban::create([
+                            'id_template_pertanyaan' => $templatePertanyaan->id,
+                            'pilihan_jawaban' => $option,
+                            'urutan' => $optionIndex + 1,
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Template pertanyaan berhasil disimpan');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     /**

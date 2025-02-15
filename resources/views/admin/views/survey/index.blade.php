@@ -54,7 +54,7 @@
                                 <i class="fas fa-file-alt"></i>
                             </a>
                             <!-- Add user -->
-                            
+
                             <button type="button"
                             id="openModal" class="icon-link" data-tooltip="Tambah User">
                             <i class="fas fa-user-plus"></i>
@@ -85,10 +85,10 @@
                           </div>
                           </form>
 
-                            
 
 
-                            
+
+
                             <!-- Edit -->
                             <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit">
                                 <i class="fas fa-edit"></i>
@@ -100,7 +100,7 @@
                             <form id="delete-form-{{ $srvy->id }}" action="{{ route('admin.survey.destroy', $srvy->id) }}" method="POST" style="display: none;">
                               @csrf
                               @method('DELETE')
-                            </form>                  
+                            </form>
                             <!-- Details -->
                             <a href="{{ route('admin.survey.details', $srvy) }}" class="icon-link" data-tooltip="Details">
                                 <i class="fas fa-info-circle"></i>
@@ -110,7 +110,7 @@
                       </tr>
                       @endforeach
 
-                     
+
                     </tbody>
                   </table>
                   <div class="p-4">

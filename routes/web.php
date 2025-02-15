@@ -38,7 +38,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('atasan', AtasanController::class);
     Route::get('survey/add_question/{id}', [SurveyController::class, 'add_question'])->name('survey.add_question');
     Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
-    Route::get('survey/create_question/{id_survey}', [SurveyController::class, 'create_question'])->name('survey.create_question');
+    Route::post('survey/create_question', [SurveyController::class, 'create_question'])->name('survey.create_question');
     Route::resource('survey', SurveyController::class);
     Route::resource('monitoring', MonitoringController::class);
     // Route::resource('profile', ProfileController::class);
