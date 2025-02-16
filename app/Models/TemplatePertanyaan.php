@@ -17,6 +17,15 @@ class TemplatePertanyaan extends Model
         ->groupBy('template_pertanyaan.id');
         return $query->get();
     }
+
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class, 'id_survey');
+    }
+    public function template_jawaban()
+    {
+        return $this->hasMany(TemplateJawaban::class, 'id_template_pertanyaan');
+    }
 }
 
 

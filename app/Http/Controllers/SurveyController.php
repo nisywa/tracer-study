@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\survey;
 use App\Models\SurveyUser;
+use App\Models\TemplateJawaban;
 use App\Models\TemplatePertanyaan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SurveyController extends Controller
 {
@@ -90,7 +92,19 @@ class SurveyController extends Controller
     public function add_question($id)
     {
         $survey = Survey::findOrFail($id);
-        return view('admin.views.survey.add_question', ['survey' => $survey]);
+
+        // Get template questions with their options ordered by urutan
+        $template_questions = TemplatePertanyaan::with(['template_jawaban' => function ($query) {
+            $query->orderBy('urutan', 'asc');
+        }])
+            ->where('id_survey', $id)
+            ->orderBy('urutan')
+            ->get();
+
+        return view('admin.views.survey.add_question', [
+            'survey' => $survey,
+            'template_questions' => $template_questions
+        ]);
     }
 
     public function details($id)
@@ -122,38 +136,56 @@ class SurveyController extends Controller
     public function create_question(Request $request)
     {
         try {
+            // dd($request->all());
             DB::beginTransaction();
 
-            // Get the data from the request
-            $questions = $request->input('questions', []);
             $survey_id = $request->input('survey_id');
 
-            foreach ($questions as $index => $question) {
-                // Create the question
-                $templatePertanyaan = TemplatePertanyaan::create([
+            // Delete existing questions and their options
+            $existingQuestions = TemplatePertanyaan::where('id_survey', $survey_id)->get();
+            foreach ($existingQuestions as $question) {
+                TemplateJawaban::where('id_template_pertanyaan', $question->id)->delete();
+            }
+            TemplatePertanyaan::where('id_survey', $survey_id)->delete();
+
+            // Create new questions
+            $questions = $request->input('questions', []);
+
+            foreach ($questions as $questionData) {
+                $question = TemplatePertanyaan::create([
                     'id_survey' => $survey_id,
-                    'pertanyaan' => $question['question'],
-                    'tipe' => $question['type'],
-                    'urutan' => $index + 1,
+                    'pertanyaan' => $questionData['question'],
+                    'deskripsi' => $questionData['description'] ?? null,
+                    'blok' => $questionData['blok'] ?? null,
+                    'tipe' => $questionData['type'],
+                    'urutan' => $questionData['order'],
                 ]);
 
-                // If the question type has options (radio, checkbox, select)
-                if (in_array($question['type'], ['radio', 'checkbox', 'select']) && isset($question['options'])) {
-                    foreach ($question['options'] as $optionIndex => $option) {
+                if (
+                    in_array($questionData['type'], ['radio', 'checkbox', 'select'])
+                    && !empty($questionData['options'])
+                ) {
+                    foreach ($questionData['options'] as $option) {
                         TemplateJawaban::create([
-                            'id_template_pertanyaan' => $templatePertanyaan->id,
-                            'pilihan_jawaban' => $option,
-                            'urutan' => $optionIndex + 1,
+                            'id_template_pertanyaan' => $question->id,
+                            'pilihan_jawaban' => $option['text'],
+                            'urutan' => $option['order'],
                         ]);
                     }
                 }
             }
 
             DB::commit();
-            return redirect()->back()->with('success', 'Template pertanyaan berhasil disimpan');
+            return response()->json([
+                'success' => true,
+                'message' => 'Template pertanyaan berhasil disimpan'
+            ]);
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 422);
         }
     }
 
