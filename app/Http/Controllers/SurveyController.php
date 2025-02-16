@@ -69,6 +69,14 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = Survey::findOrFail($id);
+        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("m/d/yy");
+           $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("m/d/yy");
+           if($survey->tanggal_selesai >= now()){
+            $survey->status="Aktif";
+           }else{
+            $survey->status="Selesai";
+           }
+        
         return view('admin.views.survey.edit', ['survey'=> $survey]);
     }
 
@@ -79,8 +87,8 @@ class SurveyController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'tanggal_mulai' => 'required|integer|max:8',
-            'tanggal_selesai' => 'required|integer|max:8',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'type_survei' => 'required|string',
             'deskripsi' => 'required|string|max:255',
         ]);
@@ -101,8 +109,8 @@ class SurveyController extends Controller
         $survey = Survey::findOrFail($id);
         $survey_user = SurveyUser::getSurveyUser($id);
         $template_pertanyaan=TemplatePertanyaan::getTemplatePertanyaan($id);
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
-           $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
+        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("m/d/y");
+           $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("m/d/y");
            if($survey->tanggal_selesai >= now()){
             $survey->status="Aktif";
            }else{
