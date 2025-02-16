@@ -9,7 +9,7 @@
     </title>
     <link
       rel="shortcut icon"
-      href="{{asset('assets/images/favicon.png')}}"
+      href="{{asset('assets/images/logo.png')}}"
       type="image/x-icon"
     />
     <link rel="stylesheet" href="{{asset('assets/css/swiper-bundle.min.css')}}" />

@@ -48,6 +48,7 @@ class SurveyController extends Controller
             'nama' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
+            'type_survei' => 'required|string',
             'deskripsi' => 'required|string|max:255',
         ]);
 
@@ -81,6 +82,7 @@ class SurveyController extends Controller
             'nama' => 'required|string|max:255',
             'tanggal_mulai' => 'required|integer|max:8',
             'tanggal_selesai' => 'required|integer|max:8',
+            'type_survei' => 'required|string',
             'deskripsi' => 'required|string|max:255',
         ]);
         $survey = Survey::findOrFail($id);
