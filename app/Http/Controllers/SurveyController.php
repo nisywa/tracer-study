@@ -157,7 +157,7 @@ class SurveyController extends Controller
                 $question = TemplatePertanyaan::create([
                     'id_survey' => $survey_id,
                     'pertanyaan' => $questionData['question'],
-                    'deskripsi' => $questionData['description'] ?? null,
+                    'deskripsi_pertanyaan' => $questionData['description'] ?? null,
                     'blok' => $questionData['blok'] ?? null,
                     'tipe' => $questionData['type'],
                     'urutan' => $questionData['order'],

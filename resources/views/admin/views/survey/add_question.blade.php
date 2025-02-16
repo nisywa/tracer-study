@@ -126,8 +126,8 @@
                                                         @endforeach
                                                     </div>
                                                 @else
-                                                    <span class="text-xs font-semibold leading-tight text-slate-400">Tipe
-                                                        Jawaban</span>
+                                                  <span class="text-xs font-semibold leading-tight text-slate-400">{{ ucfirst($question->tipe) }}</span>
+
                                                 @endif
                                             </td>
                                             <td
