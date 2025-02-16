@@ -9,11 +9,17 @@
     <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
       <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
         <h6 class="dark:text-white">Daftar Pertanyaan</h6>
-
-        <button type="button" class="add-row inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-          <i class="fas fa-plus mr-2"></i> Tambah Pertanyaan
+        <div class="flex space-x-2">
+        <button type="button" class="add-row inline-block px-8 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-transparent border border-gray-300 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+          Kembali 
         </button>
-
+        <button type="button" class="add-row inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+          Simpan 
+        </button>
+        <button type="button" class="add-row inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+          <i class="fas fa-plus mr-2"></i> Tambah 
+        </button>
+        </div>
       </div>
 
 
