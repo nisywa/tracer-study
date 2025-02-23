@@ -18,8 +18,8 @@ Route::get('/', function () {
 // });
 
 Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
-Route::get('survey', [SurveyUserController::class, 'survey'])->name('survey.survey');
-
+Route::get('survey', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
+Route::post('survey', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
 Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
