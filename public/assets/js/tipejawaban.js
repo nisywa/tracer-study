@@ -28,7 +28,7 @@ function addOption(button) {
   if (!container) return;
 
   const inputDiv = document.createElement("div");
-  inputDiv.className = "flex items-center space-x-2";
+  inputDiv.className = "flex items-center space-x-2 mb-2";
 
   const input = document.createElement("input");
   input.type = "text";
@@ -39,17 +39,19 @@ function addOption(button) {
   const controls = document.createElement("div");
   controls.className = "flex space-x-1";
 
-  const moveUpBtn = createButton("↑", () => {
+  const moveUpBtn = createButton('<i class="fas fa-arrow-up"></i>', () => {
     const prev = inputDiv.previousElementSibling;
     if (prev) container.insertBefore(inputDiv, prev);
   });
 
-  const moveDownBtn = createButton("↓", () => {
+  const moveDownBtn = createButton('<i class="fas fa-arrow-down"></i>', () => {
     const next = inputDiv.nextElementSibling;
     if (next) container.insertBefore(next, inputDiv);
   });
 
-  const deleteBtn = createButton("×", () => inputDiv.remove());
+  const deleteBtn = createButton('<i class="fas fa-times"></i>', () =>
+    inputDiv.remove()
+  );
   deleteBtn.className += " text-red-500";
 
   controls.append(moveUpBtn, moveDownBtn, deleteBtn);
@@ -58,6 +60,7 @@ function addOption(button) {
   input.focus();
 }
 
+// Create button element
 function createButton(text, onClick) {
   const button = document.createElement("button");
   button.type = "button";
@@ -70,7 +73,58 @@ function createButton(text, onClick) {
 document.addEventListener("DOMContentLoaded", function () {
   const surveyForm = document.getElementById("surveyForm");
   if (!surveyForm) return;
+  // Add event listener for "Tambah Pertanyaan" button
+  // Inside your DOMContentLoaded event listener, update the addRowBtn click handler:
+  const addRowBtn = document.querySelector(".add-row");
+  if (addRowBtn) {
+    addRowBtn.addEventListener("click", addNewRow);
+  }
 
+  // Add bottom add button after the table
+  const tableContainer = document.querySelector("#dynamicTable").parentElement;
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "p-6 pt-0 text-center mt-8";
+  const bottomAddBtn = document.createElement("button");
+  bottomAddBtn.type = "button";
+  bottomAddBtn.className =
+    "add-row inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85";
+  bottomAddBtn.innerHTML = '<i class="fas fa-plus mr-2"></i> Tambah Pertanyaan';
+  bottomAddBtn.addEventListener("click", addNewRow);
+  buttonContainer.appendChild(bottomAddBtn);
+  tableContainer.appendChild(buttonContainer);
+
+  // Add the new row function
+  function addNewRow() {
+    const tbody = document.querySelector("#dynamicTable tbody");
+    const templateRow = document.querySelector("#templateRow");
+
+    if (tbody && templateRow) {
+      const newRow = templateRow.cloneNode(true);
+      newRow.removeAttribute("id");
+      newRow.style.display = "";
+
+      // Initialize select element
+      const select = newRow.querySelector('select[name="tipe[]"]');
+      if (select) {
+        select.value = "";
+        select.onchange = function () {
+          changeInputType(this);
+        };
+      }
+
+      tbody.appendChild(newRow);
+      addRowEvents(newRow);
+
+      // Scroll to the new row with smooth animation
+      newRow.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      // Focus on the first input of the new row
+      const firstInput = newRow.querySelector('input[name="pertanyaan[]"]');
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }
+  }
   // Initialize existing rows
   document.querySelectorAll("tbody tr:not(#templateRow)").forEach((row) => {
     addRowEvents(row);
@@ -227,38 +281,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Duplicate row
-    const duplicateBtn = row.querySelector(".duplicate-row");
-    if (duplicateBtn) {
-      duplicateBtn.addEventListener("click", function () {
-        const clonedRow = row.cloneNode(true);
-
-        // Preserve the selected type and options if any
-        const originalType = row.querySelector('select[name="tipe[]"]').value;
-        const clonedSelect = clonedRow.querySelector('select[name="tipe[]"]');
-        clonedSelect.value = originalType;
-
-        if (["checkbox", "radio", "select"].includes(originalType)) {
-          const originalOptions = row.querySelectorAll(
-            '.option-item input[type="text"]'
-          );
-          const clonedOptions = clonedRow.querySelectorAll(
-            '.option-item input[type="text"]'
-          );
-
-          originalOptions.forEach((original, index) => {
-            if (clonedOptions[index]) {
-              clonedOptions[index].value = original.value;
-            }
-          });
-        }
-
-        row.parentNode.insertBefore(clonedRow, row.nextElementSibling);
-        addRowEvents(clonedRow);
-        initializeExistingRow(clonedRow);
-      });
-    }
-
     // Move row up
     const moveUpBtn = row.querySelector(".move-up");
     if (moveUpBtn) {
@@ -278,6 +300,104 @@ document.addEventListener("DOMContentLoaded", function () {
         if (nextRow) {
           row.parentNode.insertBefore(nextRow, row);
         }
+      });
+    }
+    // Duplicate row
+    // Duplicate row
+    const duplicateBtn = row.querySelector(".duplicate-row");
+    if (duplicateBtn) {
+      duplicateBtn.addEventListener("click", function () {
+        // Clone the entire row
+        const clonedRow = row.cloneNode(true);
+
+        // Get the original type and options from the current state of the row
+        const originalType = row.querySelector('select[name="tipe[]"]').value;
+        const originalPersonalColumn = row.querySelector(".personal-column");
+        const originalOptionsContainer =
+          originalPersonalColumn.querySelector("#optionContainer");
+
+        // Get ALL options, including newly added ones
+        const originalOptions = originalOptionsContainer
+          ? Array.from(
+              originalOptionsContainer.querySelectorAll(
+                '.flex.items-center.space-x-2.mb-2 input[type="text"]'
+              )
+            ).map((input) => input.value)
+          : [];
+
+        // Reset select change event
+        const clonedSelect = clonedRow.querySelector('select[name="tipe[]"]');
+        clonedSelect.value = originalType;
+        clonedSelect.onchange = function () {
+          changeInputType(this);
+        };
+
+        // Handle options for multiple choice types
+        if (["checkbox", "radio", "select"].includes(originalType)) {
+          const personalColumn = clonedRow.querySelector(".personal-column");
+
+          // Reset the personal column
+          personalColumn.innerHTML = `
+        <div id="optionContainer" class="space-y-2"></div>
+        <button type="button" onclick="addOption(this)"
+          class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 mt-2">
+          Add Option
+        </button>
+      `;
+
+          const newOptionContainer =
+            personalColumn.querySelector("#optionContainer");
+
+          // Add all original options to the new container, including newly added ones
+          originalOptions.forEach((optionValue) => {
+            const inputDiv = document.createElement("div");
+            inputDiv.className = "flex items-center space-x-2 mb-2 option-item";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = optionValue;
+            input.className =
+              "text-xs border border-gray-400 rounded px-2 py-1 flex-grow";
+
+            const controls = document.createElement("div");
+            controls.className = "flex space-x-1";
+
+            // Add control buttons
+            const moveUpBtn = createButton(
+              '<i class="fas fa-arrow-up"></i>',
+              () => {
+                const prev = inputDiv.previousElementSibling;
+                if (prev) newOptionContainer.insertBefore(inputDiv, prev);
+              }
+            );
+
+            const moveDownBtn = createButton(
+              '<i class="fas fa-arrow-down"></i>',
+              () => {
+                const next = inputDiv.nextElementSibling;
+                if (next) newOptionContainer.insertBefore(next, inputDiv);
+              }
+            );
+
+            const deleteBtn = createButton('<i class="fas fa-times"></i>', () =>
+              inputDiv.remove()
+            );
+            deleteBtn.className += " text-red-500";
+
+            controls.append(moveUpBtn, moveDownBtn, deleteBtn);
+            inputDiv.append(input, controls);
+            newOptionContainer.appendChild(inputDiv);
+          });
+        }
+
+        // Insert cloned row after the current row
+        row.parentNode.insertBefore(clonedRow, row.nextElementSibling);
+
+        // Initialize events for the new row
+        addRowEvents(clonedRow);
+
+        // Scroll to the cloned row
+        clonedRow.scrollIntoView({ behavior: "smooth", block: "center" });
       });
     }
   }

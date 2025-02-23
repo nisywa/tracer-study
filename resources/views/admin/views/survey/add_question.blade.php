@@ -59,7 +59,7 @@
                                                 class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="flex flex-col px-2 py-1">
                                                     <input type="text" name="deskripsi[]"
-                                                        value="{{ $question->deskripsi }}"
+                                                        value="{{ $question->deskripsi_pertanyaan }}"
                                                         class="text-sm leading-normal dark:text-white bg-transparent outline-none description-input"
                                                         placeholder="Tulis Deskripsi disini">
                                                 </div>
@@ -110,15 +110,15 @@
                                                                     class="text-xs border border-gray-400 rounded px-2 py-1 flex-grow" />
                                                                 <div class="flex space-x-1">
                                                                     <button type="button"
-                                                                        class="move-option-up text-gray-500 hover:text-gray-700">
+                                                                        class="move-option-up text-xs px-2 py-1 border rounded">
                                                                         <i class="fas fa-arrow-up"></i>
                                                                     </button>
                                                                     <button type="button"
-                                                                        class="move-option-down text-gray-500 hover:text-gray-700">
+                                                                        class="move-option-down text-xs px-2 py-1 border rounded">
                                                                         <i class="fas fa-arrow-down"></i>
                                                                     </button>
                                                                     <button type="button"
-                                                                        class="delete-option text-red-500 hover:text-red-700">
+                                                                        class="delete-option text-xs px-2 py-1 border rounded text-red-500">
                                                                         <i class="fas fa-times"></i>
                                                                     </button>
                                                                 </div>
@@ -126,7 +126,7 @@
                                                         @endforeach
                                                     </div>
                                                 @else
-                                                  <span class="text-xs font-semibold leading-tight text-slate-400">{{ ucfirst($question->tipe) }}</span>
+                                                    <span class="text-xs font-semibold leading-tight text-slate-400">{{ ucfirst($question->tipe) }}</span>
 
                                                 @endif
                                             </td>
@@ -154,6 +154,7 @@
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -202,7 +203,7 @@
                         <option value="textarea">Paragraph</option>
                         <option value="checkbox">Checkboxes</option>
                         <option value="radio">Radio</option>
-                        <option value="select">Select Option</option>
+                        <option value="select">Dropdown</option>
                         <option value="file">File</option>
                         <option value="date">Datepicker</option>
                     </select>
