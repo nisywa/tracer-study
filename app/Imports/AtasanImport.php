@@ -32,11 +32,11 @@ class AtasanImport implements ToModel, WithHeadingRow
         $atasan = Atasan::updateOrCreate(['email'=> $row['email']],[
             'user_id' => $user->id,
             'nama' => $row['nama'],
+            'nip' => $row['nip'],
+            'email' => $row['email'],
             'jabatan' => $row['jabatan'],
             'satuan_kerja' => $row['satuan_kerja'],
             'unit_kerja' => $row['unit_kerja'],
-            'alamat_kantor' => $row['alamat_kantor'],
-            'email' => $row['email'],
             'no_hp' => $row['no_hp'],
         ]);
         return $atasan;

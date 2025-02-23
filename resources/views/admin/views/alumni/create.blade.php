@@ -24,6 +24,13 @@
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
+                                <label for="nip" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP</label>
+                                <input type="text" name="nip" value="{{ old('nip') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('nip')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="w-full px-3 mb-4">
                                 <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email</label>
                                 <input type="email" name="email" value="{{ old('email') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('email')
@@ -31,12 +38,27 @@
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="nim" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIM</label>
-                                <input type="text" name="nim" value="{{ old('nim') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                                @error('nim')
+                                <label for="jabatan" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Jabatan</label>
+                                <input type="text" name="jabatan" value="{{ old('jabatan') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('jabatan')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="w-full px-3 mb-4">
+                                <label for="satuan_kerja" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Satuan Kerja</label>
+                                <input type="text" name="satuan_kerja" value="{{ old('satuan_kerja') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('satuan_kerja')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="w-full px-3 mb-4">
+                                <label for="unit_kerja" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Unit Kerja</label>
+                                <input type="text" name="unit_kerja" value="{{ old('unit_kerja') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('unit_kerja')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            
                             <div class="w-full px-3 mb-4">
                                 <label for="no_hp" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">No HP</label>
                                 <input type="text" name="no_hp" value="{{ old('no_hp') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
@@ -46,37 +68,9 @@
                             </div>
 
                             <div class="w-full px-3 mb-4">
-                                <label for="alamat" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Alamat</label>
-                                <input type="text" name="alamat" value="{{ old('alamat') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                                @error('alamat')
-                                    <span class="text-red-500 text-xs">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="w-full px-3 mb-4">
-                                <label for="jenis_kelamin" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Jenis Kelamin</label>
-                                <select name="jenis_kelamin" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
-                                    <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
-                                </select>
-                                @error('jenis_kelamin')
-                                    <span class="text-red-500 text-xs">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="w-full px-3 mb-4">
-                                <label for="prodi" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Prodi</label>
-                                <select name="prodi" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
-                                    <option value="D3" {{ old('prodi') == 'D3' ? 'selected' : '' }}>D3 Statistika</option>
-                                    <option value="D4" {{ old('prodi') == 'D4' ? 'selected' : '' }}>D4 Statistika</option>
-                                    <option value="D4K" {{ old('prodi') == 'D4K' ? 'selected' : '' }}>D4 Komputasi Statistik</option>
-                                </select>
-                                @error('prodi')
-                                    <span class="text-red-500 text-xs">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="w-full px-3 mb-4">
-                                <label for="tahun_lulus" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tahun Lulus</label>
-                                <input type="number" name="tahun_lulus" value="{{ old('tahun_lulus') }}" min="2000" max="{{ now()->year }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                                @error('tahun_lulus')
+                                <label for="kepala_bps" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama Kepala BPS Tempat Bekerja</label>
+                                <input type="text" name="kepala_bps" value="{{ old('kepala_bps') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('kepala_bps')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>

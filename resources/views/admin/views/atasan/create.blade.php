@@ -16,8 +16,14 @@
                         
                         <p class="leading-normal uppercase dark:text-white dark:opacity-60 text-sm">Informasi User</p>
                         <div class="flex flex-wrap -mx-3">
-                          
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
+                        <div class="w-full px-3 mb-4">
+                                <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama</label>
+                                <input type="text" name="nama" value="{{ old('nama') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('nama')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
+                            </div>
+                          <!-- <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
                             <div class="mb-4">
                               <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama</label>
                               <input type="text" name="nama" value="{{ old('nama') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
@@ -25,61 +31,51 @@
                                 <span class="text-red-500 text-xs">{{ $message }}</span>
                               @enderror
                             </div>
-                          </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
-                            <div class="mb-4">
-                              <label for="satuan_kerja" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Satuan Kerja</label>
-                              <input type="text" name="satuan_kerja" value="{{old('satuan_kerja')}}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                              @error('satuan_kerja')
-                                  <span class="text-red-500 text-xs">{{ $message }}</span>
-                              @enderror
+                          </div> -->
+                          <div class="w-full px-3 mb-4">
+                                <label for="nip" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP</label>
+                                <input type="text" name="nip" value="{{ old('nip') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('niP')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
                             </div>
-                          </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
-                            <div class="mb-4">
-                              <label for="jabatan" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Jabatan</label>
-                              <input type="text" name="jabatan" value="{{old('jabatan')}}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                              @error('jabatan')
+                            <div class="w-full px-3 mb-4">
+                                <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email</label>
+                                <input type="email" name="email" value="{{ old('email') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('email')
                                   <span class="text-red-500 text-xs">{{ $message }}</span>
-                              @enderror
+                                @enderror
                             </div>
-                          </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
-                            <div class="mb-4">
-                              <label for="unit_kerja" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Unit Kerja</label>
-                              <input type="text" name="unit_kerja" value="{{old('unit_kerja')}}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                              @error('unit_kerja')
-                                  <span class="text-red-500 text-xs">{{ $message }}</span>
-                              @enderror
+                            <div class="w-full px-3 mb-4">
+                                <label for="jabatan" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Jabatan</label>
+                                <input type="text" name="jabatan" value="{{ old('jabatan') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('jabatan')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
                             </div>
-                          </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
-                            <div class="mb-4">
-                              <label for="alamat_kantor" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Alamat Kantor</label>
-                              <input type="textarea" name="alamat_kantor" value="{{old('alamat_kantor')}}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                              @error('alamat_kantor')
-                                  <span class="text-red-500 text-xs">{{ $message }}</span>
-                              @enderror
+                            <div class="w-full px-3 mb-4">
+                                <label for="satuan_kerja" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Satuan Kerja</label>
+                                <input type="text" name="satuan_kerja" value="{{ old('satuan_kerja') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('satuan_kerja')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
                             </div>
-                          </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
-                            <div class="mb-4">
-                              <label for="no_hp" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">No HP</label>
-                              <input type="textarea" name="no_hp" value="{{old('no_hp')}}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                              @error('no_hp')
-                                  <span class="text-red-500 text-xs">{{ $message }}</span>
-                              @enderror
+                            <div class="w-full px-3 mb-4">
+                                <label for="unit_kerja" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Unit Kerja</label>
+                                <input type="text" name="unit_kerja" value="{{ old('unit_kerja') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('unit_kerja')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
                             </div>
-                          </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
-                            <div class="mb-4">
-                              <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email</label>
-                              <input type="email" name="email" value="{{old('email')}}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                              @error('email')
-                                  <span class="text-red-500 text-xs">{{ $message }}</span>
-                              @enderror
+                            
+                            <div class="w-full px-3 mb-4">
+                                <label for="no_hp" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">No HP</label>
+                                <input type="text" name="no_hp" value="{{ old('no_hp') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                @error('no_hp')
+                                    <span class="text-red-500 text-xs">{{ $message }}</span>
+                                @enderror
                             </div>
-                          </div>
+                          
                           
                                                     
                         </div>

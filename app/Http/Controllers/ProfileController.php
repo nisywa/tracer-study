@@ -57,4 +57,10 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    // controller buat index user
+    public function index()
+    {
+        return view('user.views.index');
+    }
 }

@@ -35,11 +35,11 @@ class AtasanController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
+            'nip' => 'required|string|max:255',
             'email'=> 'required|string|email',
             'jabatan' => 'required|string|max:255',
             'satuan_kerja' => 'required|string|max:255',
             'unit_kerja' => 'required|string|max:255',
-            'alamat_kantor' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
         ]);
 
@@ -79,11 +79,11 @@ class AtasanController extends Controller
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
+            'nip' => 'required|string|max:255',
             'email'=> 'required|string|email',
             'jabatan' => 'required|string|max:255',
             'satuan_kerja' => 'required|string|max:255',
             'unit_kerja' => 'required|string|max:255',
-            'alamat_kantor' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
         ]);
 

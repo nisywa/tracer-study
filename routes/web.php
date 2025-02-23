@@ -6,12 +6,21 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\SurveyUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Route::get('user/index', function () {
+//     return view('user.index');
+// });
+
+Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('survey', [SurveyUserController::class, 'survey'])->name('survey.survey');
+
+Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
@@ -39,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('survey/add_question/{id}', [SurveyController::class, 'add_question'])->name('survey.add_question');
     Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
     Route::resource('survey', SurveyController::class);
+    // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::resource('monitoring', MonitoringController::class);
     // Route::resource('profile', ProfileController::class);
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');

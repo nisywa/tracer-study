@@ -62,4 +62,8 @@ class SurveyUserController extends Controller
     {
         //
     }
+
+    public function survey(){
+        return view ('user.views.survey');
+    }
 }

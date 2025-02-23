@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Alumni;
 use App\Models\User;
+use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -29,18 +30,25 @@ class AlumniImport implements ToModel, WithHeadingRow
             );
 
             // Create the alumni record
-            $alumni = Alumni::firstOrCreate(['nim'=> $row['nim']],[
+            $alumni = Alumni::firstOrCreate(['nip'=> $row['nip']],[
                 'user_id' => $user->id,
                 'nama' => $row['nama'],
-                'nim' => $row['nim'],
+                'nip' => $row['nip'],
+                'email' => $row['email'],
+                'jabatan' => $row['jabatan'],
+                'satuan_kerja' => $row['satuan_kerja'],
+                'unit_kerja' => $row['unit_kerja'],
                 'no_hp' => $row['no_hp'],
-                'alamat' => $row['alamat'],
-                'jenis_kelamin' => $row['jenis_kelamin'],
-                'prodi' => $row['prodi'],
-                'tahun_lulus' => $row['tahun_lulus'],
+                'kepala_bps' => $row['kepala_bps'],
             ]);
             return $alumni;
         } catch (QueryException $e) {
+            // Log or handle the error
+            Log::error("message: {$e->getMessage()}");
+            throw $e;
+        } catch (Exception $e){
+            
+
             // Log or handle the error
             Log::error("message: {$e->getMessage()}");
             throw $e;

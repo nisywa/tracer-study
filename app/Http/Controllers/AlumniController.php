@@ -35,13 +35,14 @@ class AlumniController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nim' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
-            'no_hp'  => 'required|string|max:15',
-            'jenis_kelamin' => 'required|in:L,P',
-            'prodi' => 'required|string|max:255',
-            'tahun_lulus' => 'required|integer|min:1900|max:' . date('Y'),
+            'nip' => 'required|string|max:255',
+            'email' => 'required|string|email',
+            'jabatan' => 'required|string|max:255',
+            'satuan_kerja' => 'required|string|max:255',
+            'unit_kerja'  => 'required|string|max:15',
+            'no_hp' => 'required|string|max:15',
+            'kepala_bps' => 'required|string|max:255',
         ]);
 
         $user = User::create([
@@ -79,13 +80,14 @@ class AlumniController extends Controller
     public function update(Request $request, Alumni $alumnus)
     {
         $validatedData = $request->validate([
-            'nim' => 'required|string|max:255',
             'nama' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
-            'no_hp'  => 'required|string|max:15',
-            'jenis_kelamin' => 'required|in:L,P',
-            'prodi' => 'required|string|max:255',
-            'tahun_lulus' => 'required|integer|min:1900|max:' . date('Y'),
+            'nip' => 'required|string|max:255',
+            'email' => 'required|string|email',
+            'jabatan' => 'required|string|max:255',
+            'satuan_kerja' => 'required|string|max:255',
+            'unit_kerja'  => 'required|string|max:15',
+            'no_hp' => 'required|string|max:15',
+            'kepala_bps' => 'required|string|max:255',
         ]);
 
         $user = $alumnus->user;

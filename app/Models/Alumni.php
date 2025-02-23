@@ -9,13 +9,14 @@ class Alumni extends Model
     protected $table = 'alumni';
     protected $fillable = [
         'user_id',
-        'nim',
         'nama',
-        'alamat',
-        'jenis_kelamin',
+        'nip',
+        'email',
+        'jabatan',
+        'satuan_kerja',
+        'unit_kerja',
         'no_hp',
-        'prodi',
-        'tahun_lulus',
+        'kepala_bps'
     ];
 
     public function user()
