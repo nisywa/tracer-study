@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TemplatePertanyaan extends Model
 {
     protected $table = 'template_pertanyaan';
-    protected $fillable = ['id_survey', 'pertanyaan', 'tipe', 'urutan'];
+    protected $fillable = ['id_survey', 'pertanyaan', 'tipe', 'urutan', 'blok', 'deskripsi_pertanyaan'];
 
     static function getTemplatePertanyaan($id_survey){
         $query=self::select('template_pertanyaan.*')
@@ -16,6 +16,15 @@ class TemplatePertanyaan extends Model
         ->selectRaw('GROUP_CONCAT(pilihan_jawaban) as template_jawaban')
         ->groupBy('template_pertanyaan.id');
         return $query->get();
+    }
+
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class, 'id_survey');
+    }
+    public function template_jawaban()
+    {
+        return $this->hasMany(TemplateJawaban::class, 'id_template_pertanyaan');
     }
 }
 

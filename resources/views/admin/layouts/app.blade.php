@@ -18,6 +18,7 @@
     <!-- Popper -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Main Styling -->
     <link href="{{asset('assets/css/argon-dashboard-tailwind.css?v=1.0.1')}}" rel="stylesheet" />
