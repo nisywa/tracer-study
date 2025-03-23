@@ -46,32 +46,46 @@
                                 <tbody>
                                     @foreach ($template_questions as $question)
                                         <tr>
-                                            <td
-                                                class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                                <div class="flex flex-col px-2 py-1">
-                                                    <input type="text" name="pertanyaan[]"
-                                                        value="{{ $question->pertanyaan }}"
-                                                        class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
-                                                        placeholder="Tulis Pertanyaan disini">
-                                                </div>
-                                            </td>
+                                        
+
+                                            
+
                                             <td
                                                 class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="flex flex-col px-2 py-1">
-                                                    <input type="text" name="deskripsi[]"
-                                                        value="{{ $question->deskripsi_pertanyaan }}"
-                                                        class="text-sm leading-normal dark:text-white bg-transparent outline-none description-input"
-                                                        placeholder="Tulis Deskripsi disini">
+                                                <textarea name="pertanyaan[]"
+                                                            class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
+                                                            placeholder="Tulis Pertanyaan disini"
+                                                            rows="3" 
+                                                            style="resize: none; width: 100%;"
+                                                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';">{{ $question->pertanyaan }}</textarea>
                                                 </div>
                                             </td>
+
                                             <td
                                                 class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="flex flex-col px-2 py-1">
-                                                    <input type="text" name="blok[]" value="{{ $question->blok }}"
-                                                        class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
-                                                        placeholder="Blok Pertanyaan">
+                                                <textarea name="deskripsi[]"
+                                                            class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
+                                                            placeholder="Tulis Deskripsi disini"
+                                                            rows="3" 
+                                                            style="resize: none; width: 100%;"
+                                                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';">{{ $question->deskripsi_pertanyaan }}</textarea>
                                                 </div>
                                             </td>
+
+                                            <td
+                                                class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                                <div class="flex flex-col px-2 py-1">
+                                                <textarea name="blok[]"
+                                                            class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
+                                                            placeholder="Blok Pertanyaan"
+                                                            rows="3" 
+                                                            style="resize: none; width: 100%;"
+                                                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';">{{ $question->blok }}</textarea>
+                                                </div>
+                                            </td>
+
                                             <td
                                                 class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                                 <select name="tipe[]"

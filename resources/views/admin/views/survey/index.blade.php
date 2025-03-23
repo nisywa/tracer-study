@@ -65,6 +65,14 @@
                             <i class="fas fa-user-plus"></i>
                             </button>
 
+                            <a href="javascript:;" class="icon-link" data-tooltip="Duplicate Survei" onclick="event.preventDefault(); document.getElementById('duplicate-form-{{ $srvy->id }}').submit();">
+                                <i class="fas fa-copy"></i>
+                            </a>
+                            <form id="duplicate-form-{{ $srvy->id }}" action="{{ route('admin.survey.duplicate', $srvy->id) }}" method="POST" style="display: none;">
+                              @csrf
+                              @method('POST')
+                            </form>
+
 
                             <!-- pop up modal import  -->
                           <form action="" method="POST"  enctype="multipart/form-data">

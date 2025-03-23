@@ -53,25 +53,12 @@
         <div class="w-full px-4">
           <div class="text-center">
             <h1 class="mb-4 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.2]">
-              Halo, Nisywa</h1>
+              Halo, {{  $alumni->nama }}</h1>
             <p class="mb-5 text-base text-body-color dark:text-dark-6">
               Yuk isi surveinya sekarang!
             </p>
 
-            <ul class="flex items-center justify-center gap-[10px]">
-              <li>
-                <a href="index.html"
-                  class="flex items-center gap-[10px] text-base font-medium text-dark dark:text-white">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="javascript:void(0)" class="flex items-center gap-[10px] text-base font-medium text-body-color">
-                  <span class="text-body-color dark:text-dark-6"> / </span>
-                  Contact us
-                </a>
-              </li>
-            </ul>
+            
           </div>
         </div>
       </div>
@@ -181,49 +168,63 @@
             <h3 class="mb-8 text-2xl font-semibold md:text-[28px] md:leading-[1.42] text-dark dark:text-white">
               Informasi User
             </h3>
-            <form>
-              <div class="mb-[22px]">
+
+            
+              
+              <!-- <div class="mb-[22px]">
                 <label for="fullName" class="block mb-4 text-sm text-body-color dark:text-dark-6">Nama</label>
-                <input type="text" name="fullName" placeholder="Adam Gelius"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <p class="text-body-color/60 dark:text-dark-6">hai</p>
+                <div class="border-b border-gray-300 dark:border-gray-200 mt-2"></div>
+              </div> -->
+
+              <div class="mb-[22px]">
+                <label for="nama" class="block mb-4 text-sm text-body-color dark:text-dark-6">Nama</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->nama }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
                 <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Email</label>
-                <input type="email" name="email" placeholder="example@yourmail.com"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->email }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
-                <label for="phone" class="block mb-4 text-sm text-body-color dark:text-dark-6">NIP</label>
-                <input type="text" name="phone" placeholder="+885 1254 5211 552"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">NIP</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->nip }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
-                <label for="fullName" class="block mb-4 text-sm text-body-color dark:text-dark-6">Jabatan</label>
-                <input type="text" name="fullName" placeholder="Adam Gelius"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Jabatan</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->jabatan }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
-                <label for="fullName" class="block mb-4 text-sm text-body-color dark:text-dark-6">Satuan Kerja</label>
-                <input type="text" name="fullName" placeholder="Adam Gelius"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Satuan Kerja</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->satuan_kerja }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
-                <label for="fullName" class="block mb-4 text-sm text-body-color dark:text-dark-6">Unit Kerja</label>
-                <input type="text" name="fullName" placeholder="Adam Gelius"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Unit Kerja</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->unit_kerja }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
-                <label for="phone" class="block mb-4 text-sm text-body-color dark:text-dark-6">Nomor Telepon</label>
-                <input type="text" name="phone" placeholder="+885 1254 5211 552"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">No HP</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->no_hp }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
+
               <div class="mb-[22px]">
-                <label for="fullName" class="block mb-4 text-sm text-body-color dark:text-dark-6">Nama Pengguna Lulusan</label>
-                <input type="text" name="fullName" placeholder="Adam Gelius"
-                  class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
+                <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Nama Kepala BPS Tempat Bekerja</label>
+                <p class="text-body-color/60 dark:text-dark-6 pb-3">{{  $alumni->kepala_bps }}</p>
+                <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
               </div>
-              
-            </form>
+
           </div>
         </div>
       </div>

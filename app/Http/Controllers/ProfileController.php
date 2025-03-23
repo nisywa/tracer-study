@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Alumni;
+use App\Models\Survey;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +63,21 @@ class ProfileController extends Controller
     // controller buat index user
     public function index()
     {
-        return view('user.views.index');
+        $alumni=Alumni::where('user_id',31)->first();
+        return view('user.views.index',[
+            'alumni'=>$alumni
+        ]);
     }
+    // buat di indeks user
+    // public function profileUser(){
+    //     // $alumni=Alumni::findOrFail($id);
+    //     $alumni=Alumni::where('user_id',31)->first();
+        
+
+    //     return view('user.views.index', [
+            
+    //         'profil'=>$alumni
+    //     ]);
+    // }
 }
+
