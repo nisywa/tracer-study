@@ -132,22 +132,10 @@ class SurveyController extends Controller
         }
         return view('admin.views.survey.details', ['survey' => $survey, 'survey_user' => $survey_user, 'template_pertanyaan' => $template_pertanyaan]);
     }
-    public function create_question2(Request $request, TemplatePertanyaan $template_pertanyaan)
-    {
-        dd($request->all());
-        exit();
-        $template = $template_pertanyaan->create([
-            'id_survey' => request('id_survey'),
-            'pertanyaan' => request('pertanyaan'),
-            'tipe' => request('tipe')
-        ]);
 
-        return redirect()->back()->with('success', 'Question added successfully');
-    }
     public function create_question(Request $request)
     {
         try {
-            // dd($request->all());
             DB::beginTransaction();
 
             $survey_id = $request->input('survey_id');
@@ -161,7 +149,6 @@ class SurveyController extends Controller
 
             // Create new questions
             $questions = $request->input('questions', []);
-
             foreach ($questions as $questionData) {
                 $question = TemplatePertanyaan::create([
                     'id_survey' => $survey_id,
@@ -214,9 +201,9 @@ class SurveyController extends Controller
 
     try {
         DB::beginTransaction();
-        
-        // 1. Find the original survey
-        $originalSurvey = Survey::findOrFail($id);
+
+            // 1. Find the original survey
+            $originalSurvey = Survey::findOrFail($id);
 
         // 2. Clone the survey
         $newSurvey = $originalSurvey->replicate();
@@ -224,27 +211,27 @@ class SurveyController extends Controller
         $newSurvey->created_at = now();
         $newSurvey->updated_at = now();
         $newSurvey->save();
-        
-        // 3. Get all template questions of the original survey
-        $originalTemplateQuestions = TemplatePertanyaan::where('id_survey', $originalSurvey->id)
+
+            // 3. Get all template questions of the original survey
+            $originalTemplateQuestions = TemplatePertanyaan::where('id_survey', $originalSurvey->id)
             ->orderBy('urutan')
             ->get();
-        
-        // 4. Clone each template question and its options
-        foreach ($originalTemplateQuestions as $originalQuestion) {
+
+            // 4. Clone each template question and its options
+            foreach ($originalTemplateQuestions as $originalQuestion) {
             $newQuestion = $originalQuestion->replicate();
             $newQuestion->id_survey = $newSurvey->id;
             $newQuestion->created_at = now();
             $newQuestion->updated_at = now();
             $newQuestion->save();
-            
-            // 5. Get all template answers for this question
-            $originalAnswers = TemplateJawaban::where('id_template_pertanyaan', $originalQuestion->id)
+
+                // 5. Get all template answers for this question
+                $originalAnswers = TemplateJawaban::where('id_template_pertanyaan', $originalQuestion->id)
                 ->orderBy('urutan')
                 ->get();
-            
-            // 6. Clone each template answer
-            foreach ($originalAnswers as $originalAnswer) {
+
+                // 6. Clone each template answer
+                foreach ($originalAnswers as $originalAnswer) {
                 $newAnswer = $originalAnswer->replicate();
                 $newAnswer->id_template_pertanyaan = $newQuestion->id;
                 $newAnswer->created_at = now();
@@ -252,12 +239,12 @@ class SurveyController extends Controller
                 $newAnswer->save();
             }
         }
-        
-        // 7. Get all survey users of the original survey
-        $originalSurveyUsers = SurveyUser::where('survey_id', $originalSurvey->id)->whereNull('deleted_at')->get();
-        
-        // 8. Clone each survey user
-        foreach ($originalSurveyUsers as $originalSurveyUser) {
+
+            // 7. Get all survey users of the original survey
+            $originalSurveyUsers = SurveyUser::where('survey_id', $originalSurvey->id)->whereNull('deleted_at')->get();
+
+            // 8. Clone each survey user
+            foreach ($originalSurveyUsers as $originalSurveyUser) {
             $newSurveyUser = $originalSurveyUser->replicate();
             $newSurveyUser->survey_id = $newSurvey->id;
             $newSurveyUser->status = '0'; // Reset status for the new survey
@@ -265,16 +252,15 @@ class SurveyController extends Controller
             $newSurveyUser->created_at = now();
             $newSurveyUser->updated_at = now();
             $newSurveyUser->save();
-            
-            // Note: We don't copy user answers because the new survey hasn't been filled out yet
-        }
-        
-        DB::commit();
-        
-        return redirect()->route('admin.survey.index')
-            ->with('success', 'Survey has been successfully copied');
-            
-    } catch (\Exception $e) {
+
+                // Note: We don't copy user answers because the new survey hasn't been filled out yet
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.survey.index')
+                ->with('success', 'Survey has been successfully copied');
+        } catch (\Exception $e) {
         Log::error($e->getMessage());
         DB::rollback();
         return redirect()->back()

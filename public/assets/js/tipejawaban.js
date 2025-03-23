@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   surveyForm.onsubmit = function (e) {
     e.preventDefault();
-    debugger;
+
     // Validate required fields
     const invalidInputs = this.querySelectorAll(
       "input[required]:invalid, select[required]:invalid"
@@ -149,15 +149,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Collect form data
     const questions = [];
-    const rows = this.querySelectorAll("tbody tr");
+    const rows = this.querySelectorAll("tbody tr:not(#templateRow)");
 
     rows.forEach((row, index) => {
+      // Check if this is a header row or actual question row
+      if (row.classList.contains("bg-gray-100") || row.children.length <= 2) {
+        return; // Skip header rows
+      }
+
+      // Get field values, supporting both input and textarea elements
+      const questionInput = row.querySelector('textarea[name="pertanyaan[]"]');
+      const descriptionInput = row.querySelector(
+        'textarea[name="deskripsi[]"]'
+      );
+      const blokInput = row.querySelector('textarea[name="blok[]"]');
+
       const question = {
-        question: row.querySelector('input[name="pertanyaan[]"]')?.value,
-        description:
-          row.querySelector('input[name="deskripsi[]"]')?.value || "",
-        blok: row.querySelector('input[name="blok[]"]')?.value || "",
+        question: questionInput?.value,
+        description: descriptionInput?.value || "",
+        blok: blokInput?.value || "",
         type: row.querySelector('select[name="tipe[]"]')?.value,
+        visualisasi:
+          row.querySelector('select[name="visualisasi[]"]')?.value || "",
         options: [],
         order: index + 1,
       };
@@ -182,7 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
         questions.push(question);
       }
     });
-    console.log(questions);
+
+    console.log("Collected questions:", questions);
 
     // Get the CSRF token
     const token = document.querySelector('meta[name="csrf-token"]')?.content;

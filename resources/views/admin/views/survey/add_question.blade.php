@@ -56,7 +56,7 @@
                                                 <textarea name="pertanyaan[]"
                                                             class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
                                                             placeholder="Tulis Pertanyaan disini"
-                                                            rows="3" 
+                                                            rows="3"
                                                             style="resize: none; width: 100%;"
                                                             oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';">{{ $question->pertanyaan }}</textarea>
                                                 </div>
@@ -68,7 +68,7 @@
                                                 <textarea name="deskripsi[]"
                                                             class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
                                                             placeholder="Tulis Deskripsi disini"
-                                                            rows="3" 
+                                                            rows="3"
                                                             style="resize: none; width: 100%;"
                                                             oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';">{{ $question->deskripsi_pertanyaan }}</textarea>
                                                 </div>
@@ -80,7 +80,7 @@
                                                 <textarea name="blok[]"
                                                             class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
                                                             placeholder="Blok Pertanyaan"
-                                                            rows="3" 
+                                                            rows="3"
                                                             style="resize: none; width: 100%;"
                                                             oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';">{{ $question->blok }}</textarea>
                                                 </div>
@@ -148,12 +148,12 @@
                                                 <select name="visualisasi[]"
                                                     class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 input-type">
                                                     <option value="">Pilih Visualisasi</option>
-                                                    <option value="barChart">Bar Chart</option>
-                                                    <option value="pieChart">Pie Chart</option>
-                                                    <option value="lineChart">Line Chart</option>
+                                                    <option value="barChart" {{ $question->visualisasi == 'barChart' ? 'selected' : '' }}>Bar Chart</option>
+                                                    <option value="pieChart" {{ $question->visualisasi == 'pieChart' ? 'selected' : '' }}>Pie Chart</option>
+                                                    <option value="lineChart" {{ $question->visualisasi == 'lineChart' ? 'selected' : '' }}>Line Chart</option>
                                                 </select>
                                             </td>
-                                            
+
                                             <td
                                                 class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="icon-container">
@@ -174,7 +174,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -197,25 +197,34 @@
                 <td
                     class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                     <div class="flex flex-col px-2 py-1">
-                        <input type="text" name="pertanyaan[]"
+                        <textarea type="text" name="pertanyaan[]"
                             class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
-                            placeholder="Tulis Pertanyaan disini">
+                            placeholder="Tulis Pertanyaan disini"
+                            rows="3"
+                            style="resize: none; width: 100%;"
+                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"></textarea>
                     </div>
                 </td>
                 <td
                     class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                     <div class="flex flex-col px-2 py-1">
-                        <input type="text" name="deskripsi[]"
+                        <textarea type="text" name="deskripsi[]"
                             class="text-sm leading-normal dark:text-white bg-transparent outline-none description-input"
-                            placeholder="Tulis Deskripsi disini">
+                            placeholder="Tulis Deskripsi disini"
+                            rows="3"
+                            style="resize: none; width: 100%;"
+                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"></textarea>
                     </div>
                 </td>
                 <td
                     class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                     <div class="flex flex-col px-2 py-1">
-                        <input type="text" name="blok[]"
+                        <textarea type="text" name="blok[]"
                             class="text-sm leading-normal dark:text-white bg-transparent outline-none question-input"
-                            placeholder="Blok Pertanyaan">
+                            placeholder="Blok Pertanyaan"
+                            rows="3"
+                            style="resize: none; width: 100%;"
+                            oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"></textarea>
                     </div>
                 </td>
                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
@@ -237,7 +246,15 @@
                     <span class="text-xs font-semibold leading-tight text-slate-400">Tipe Jawaban</span>
                 </td>
 
-                
+                <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                    <select name="visualisasi[]"
+                        class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 input-type">
+                        <option value="">Pilih Visualisasi</option>
+                        <option value="barChart">Bar Chart</option>
+                        <option value="pieChart">Pie Chart</option>
+                        <option value="lineChart">Line Chart</option>
+                    </select>
+                </td>
 
                 <td
                     class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
