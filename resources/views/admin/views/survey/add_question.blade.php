@@ -40,15 +40,15 @@
                                             Keterangan Jawaban</th>
                                         <th
                                             class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                                            Keterangan Visualisasi</th>
+                                        <th
+                                            class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                             Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($template_questions as $question)
                                         <tr>
-                                        
-
-                                            
 
                                             <td
                                                 class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
@@ -144,6 +144,16 @@
 
                                                 @endif
                                             </td>
+                                            <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                                                <select name="visualisasi[]"
+                                                    class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 input-type">
+                                                    <option value="">Pilih Visualisasi</option>
+                                                    <option value="barChart">Bar Chart</option>
+                                                    <option value="pieChart">Pie Chart</option>
+                                                    <option value="lineChart">Line Chart</option>
+                                                </select>
+                                            </td>
+                                            
                                             <td
                                                 class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="icon-container">
@@ -226,6 +236,9 @@
                     class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent personal-column">
                     <span class="text-xs font-semibold leading-tight text-slate-400">Tipe Jawaban</span>
                 </td>
+
+                
+
                 <td
                     class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                     <div class="icon-container">

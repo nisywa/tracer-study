@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TemplatePertanyaan extends Model
 {
     protected $table = 'template_pertanyaan';
-    protected $fillable = ['id_survey', 'pertanyaan', 'tipe', 'urutan', 'blok', 'deskripsi_pertanyaan'];
+    protected $fillable = ['id_survey', 'pertanyaan', 'tipe', 'urutan', 'blok', 'deskripsi_pertanyaan', 'visualisasi'];
 
     static function getTemplatePertanyaan($id_survey){
         $query=self::select('template_pertanyaan.*')

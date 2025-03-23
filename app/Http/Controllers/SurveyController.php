@@ -170,6 +170,7 @@ class SurveyController extends Controller
                     'blok' => $questionData['blok'] ?? null,
                     'tipe' => $questionData['type'],
                     'urutan' => $questionData['order'],
+                    'visualisasi' => $questionData['visualisasi'],
                 ]);
 
                 if (
