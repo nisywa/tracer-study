@@ -63,7 +63,7 @@ class ProfileController extends Controller
     // controller buat index user
     public function index()
     {
-        $alumni=Alumni::where('user_id',31)->first();
+        $alumni = Alumni::where('user_id', Auth::id())->first();
         return view('user.views.index',[
             'alumni'=>$alumni
         ]);
@@ -72,10 +72,10 @@ class ProfileController extends Controller
     // public function profileUser(){
     //     // $alumni=Alumni::findOrFail($id);
     //     $alumni=Alumni::where('user_id',31)->first();
-        
+
 
     //     return view('user.views.index', [
-            
+
     //         'profil'=>$alumni
     //     ]);
     // }
