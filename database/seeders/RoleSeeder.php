@@ -37,11 +37,13 @@ class RoleSeeder extends Seeder
         Alumni::create([
             'user_id' => $userAlumni->id,
             'nama' => 'Alumni',
-            'nim' => '123456789',
-            'alamat' => 'Jl. Alumni No. 1',
-            'jenis_kelamin' => 'L',
-            'prodi' => 'Teknik Informatika',
-            'tahun_lulus' => '2020',
+            'no_hp' => '08123456789',
+            'nip' => '123456789',
+            'jabatan' => 'Staff',
+            'satuan_kerja' => 'Divisi IT',
+            'unit_kerja' => 'Pengembangan',
+            'kepala_bps' => 'Kepala BPS',
+            'email'
             'created_at' => now(),
             'updated_at' => now(),
         ]);

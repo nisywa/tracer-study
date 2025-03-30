@@ -52,6 +52,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::resource('monitoring', MonitoringController::class);
+    Route::get('monitoring/grafik/{id}', [MonitoringController::class, 'grafik'])->name('monitoring.grafik');
+    Route::get('monitoring/chart-data/{surveyId}/{questionId}', [MonitoringController::class, 'getChartData'])->name('monitoring.chartData');
     // Route::resource('profile', ProfileController::class);
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::resource('user', ProfileController::class);
