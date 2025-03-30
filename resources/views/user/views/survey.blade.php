@@ -22,8 +22,8 @@
       new WOW().init();
     </script>
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-  
-  
+
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   </head>
@@ -43,10 +43,10 @@
 
   @include('user.layouts.navigation')
 
-    
+
     @yield('content')
 
-    
+
     <!-- ====== Banner Section Start -->
   <div class="relative z-10 overflow-hidden pt-[120px] pb-[60px] md:pt-[130px] lg:pt-[160px] dark:bg-dark">
     <div
@@ -65,7 +65,7 @@
                Silakan isi formulir di bawah ini dengan informasi yang sesuai.
             </p>
 
-            
+
           </div>
         </div>
       </div>
@@ -79,12 +79,12 @@
     <div class="absolute top-0 left-0 -z-[1] h-1/2 w-full bg-[#E9F9FF] dark:bg-dark-700 lg:h-[45%] xl:h-1/2"></div>
     <div class="container px-4">
       <div class="flex flex-wrap items-center -mx-4">
-      <form action="{{ route('survey.save') }}" method="POST">
+      <form action="{{ route('user.survey.save') }}" method="POST">
         @csrf
         <div class="w-full px-4 lg:w-full xl:w-full">
           <div class="wow fadeInUp rounded-lg bg-white dark:bg-dark-2 py-10 px-8 shadow-testimonial dark:shadow-none sm:py-12 sm:px-10 md:p-[60px] lg:p-10 lg:py-12 lg:px-10 2xl:p-[60px]">
                @foreach ($surveyPertanyaan as $blok=>$pertanyaans)
-                  <div>   
+                  <div>
                   <h3 class="mb-8 text-2xl font-semibold md:text-[28px] md:leading-[1.42] text-dark dark:text-white">
                   {{ $blok }}
                 </h3>
@@ -112,15 +112,15 @@
                           <input type="file" name="{{ $pertanyaan->id }}"
                           class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
                           @elseif($pertanyaan->tipe=="select")
-                            <select name="phone" class="bg-transparent w-full text-body-color dark:text-dark-6 
+                            <select name="phone" class="bg-transparent w-full text-body-color dark:text-dark-6
                                 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none">
                                 <option value="" disabled selected hidden class="border-[#f1f1f1] dark:border-dark-3 pb-3">Choose</option>
                                 @foreach ($pertanyaan->template_jawaban as $option)
                                 <option value="{{ $option->id }}">{{ $option->pilihan_jawaban }}</option>
-                                @endforeach                      
+                                @endforeach
                             </select>
                           @elseif($pertanyaan->tipe=="date")
-                          <input type="text" id="{{ $pertanyaan->id }}" name="{{ $pertanyaan->id }}" placeholder="Pilih tanggal" 
+                          <input type="text" id="{{ $pertanyaan->id }}" name="{{ $pertanyaan->id }}" placeholder="Pilih tanggal"
                           class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none datepicker" />
                               <script>
                             document.addEventListener("DOMContentLoaded", function() {
@@ -134,7 +134,7 @@
                               });
                             });
                           </script>
-                          
+
                           @elseif($pertanyaan->tipe=="checkbox")
                             @foreach ($pertanyaan->template_jawaban as $option)
                             <label for="option2" class="flex items-center text-sm mb-2 text-body-color dark:text-dark-6">
@@ -142,8 +142,8 @@
                               <span class="ml-2">{{ $option->pilihan_jawaban }}</span>
                             </label>
                             @endforeach
-                          @endif 
-                          
+                          @endif
+
                           <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                   </div>
                 @endforeach
@@ -156,7 +156,7 @@
                     Kirim
                   </button>
                 </div>
-            
+
           </div>
         </div>
         </form>
@@ -164,7 +164,7 @@
     </div>
   </section>
   <!-- ====== Contact End ====== -->
-    
+
 
     @include('user.layouts.footer')
 
@@ -179,7 +179,7 @@
     </a>
     <!-- ====== Back To Top End -->
 
-    
+
 
     <!-- ====== All Scripts -->
 

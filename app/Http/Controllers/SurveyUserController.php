@@ -87,7 +87,7 @@ class SurveyUserController extends Controller
 
     public function surveyUserPertanyaan()
     {
-        $surveyUser = SurveyUser::where('user_id', 1)->first();
+        $surveyUser = SurveyUser::where('user_id', Auth::id())->first();
         $survey = Survey::where('id', $surveyUser->survey_id)->first();
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
@@ -112,15 +112,22 @@ class SurveyUserController extends Controller
     {
         try {
             // Get current user's survey assignment
-            $surveyUser = SurveyUser::where('user_id', 1)->first();
+            $surveyUser = SurveyUser::where('user_id', Auth::id())->first();
             if (!$surveyUser) {
                 return redirect()->back()->with('error', 'Survey tidak ditemukan');
             }
 
             // Process each question response
             foreach ($request->except('_token') as $questionId => $answer) {
+                // Check if the answer is a file upload
+                if ($request->hasFile($questionId)) {
+                    $file = $request->file($questionId);
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $path = $file->storeAs('survey_uploads', $fileName, 'public');
+                    $answer = $path;
+                }
                 // Handle checkbox arrays
-                if (is_array($answer)) {
+                elseif (is_array($answer)) {
                     $answer = implode(',', $answer);
                 }
 
@@ -135,6 +142,11 @@ class SurveyUserController extends Controller
                     ]
                 );
             }
+
+            // update status survey user
+            $surveyUser->status = 1;
+            $surveyUser->save();
+
 
             return redirect()->back()->with('success', 'Jawaban survey berhasil disimpan');
         } catch (\Exception $e) {
