@@ -1,74 +1,28 @@
 // chart 1
 
-if (document.querySelector("#chart-bars")) {
-  
-  var ctx = document.getElementById("chart-bars").getContext("2d");
-  
-  new Chart(ctx, {
-    type: "bar",
+if(document.querySelector("#chart-bar")){
+  const ctxBar = document.getElementById('chart-bar').getContext('2d');
+new Chart(ctxBar, {
+    type: 'bar',
     data: {
-      labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          label: "Sales",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "#fff",
-          data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
-          maxBarThickness: 6,
-        },
-      ],
+        labels: ['Category A', 'Category B', 'Category C'],
+        datasets: [{
+            label: 'My Dataset', // Label for the dataset
+            data: [300, 50, 100], // Data points for the bars
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Colors for the bars
+            borderColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Border colors for the bars
+            borderWidth: 1 // Border width for the bars
+        }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      interaction: {
-        intersect: false,
-        mode: "index",
-      },
-      scales: {
-        y: {
-          grid: {
-            drawBorder: false,
-            display: false,
-            drawOnChartArea: false,
-            drawTicks: false,
-          },
-          ticks: {
-            suggestedMin: 0,
-            suggestedMax: 600,
-            beginAtZero: true,
-            padding: 15,
-            font: {
-              size: 14,
-              family: "Open Sans",
-              style: "normal",
-              lineHeight: 2,
-            },
-            color: "#fff",
-          },
-        },
-        x: {
-          grid: {
-            drawBorder: false,
-            display: false,
-            drawOnChartArea: false,
-            drawTicks: false,
-          },
-          ticks: {
-            display: false,
-          },
-        },
-      },
-    },
-  });
+        responsive: true, // Make the chart responsive
+        scales: {
+            y: {
+                beginAtZero: true // Start the y-axis at zero
+            }
+        }
+    }
+});
 }
 
 // chart 2

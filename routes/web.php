@@ -21,6 +21,7 @@ Route::get('profile', [ProfileController::class, 'index'])->name('profile.index'
 Route::get('survey', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
 Route::post('survey', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
 Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
+
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
@@ -51,6 +52,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('monitoring/details/{id}', [MonitoringController::class, 'details'])->name('monitoring.details');
     Route::resource('monitoring', MonitoringController::class);
     // Route::resource('profile', ProfileController::class);
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');

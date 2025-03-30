@@ -62,7 +62,7 @@
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
                             <!-- Lihat survei -->
-                            <a href="" class="icon-link" data-tooltip="Lihat Hasil Survei">
+                            <a href="{{ route('admin.monitoring.details',$srvy->id) }}" class="icon-link" data-tooltip="Lihat Hasil Survei">
                                 <i class="fas fa-eye"></i>
                             </a>
                           </div>
