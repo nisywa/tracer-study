@@ -135,21 +135,21 @@
                   </tr>
                 </thead>
                 <tbody class="text-body-color dark:text-dark-6">
+                @foreach($survey as $srvy)
                   <tr>
-                    <td class="border border-gray-300 px-4 py-2 font-bold">Survei atasan</td>
+                    <td class="border border-gray-300 px-4 py-2 font-bold">{{ $srvy->nama }}</td>
                     <td class="border border-gray-300 px-2 py-2 text-center">
-                      <a 
-                        class="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark">
-                        Aktif
-                      </a>
+                      <a class="bg-gradient-to-tl {{$srvy->status =='Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300'}}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status }}</a>
+                     
                     </td>
-                    <td class="border border-gray-300 px-4 py-2">hahahaha</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ $srvy->deskripsi }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center relative group">
                       <a href="list_pertanyaan.html" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
-                        <i class="fas fa-pencil-alt"></i> <!-- Ikon pensil untuk mengerjakan -->
+                        <i class="fas fa-pencil-alt"></i> 
                       </a>
                     </td>
                   </tr>
+                  @endforeach
                 </tbody>
               </table>
               

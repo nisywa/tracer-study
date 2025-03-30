@@ -10,4 +10,15 @@ class Survey extends Model
     protected $fillable = ['nama', 'tanggal_mulai', 'tanggal_selesai', 'type_survei', 'deskripsi'];
 
 
+    public function questions()
+    {
+        return $this->hasMany(TemplatePertanyaan::class, 'id_survey');
+    }
+
+    public function surveyUsers()
+    {
+        return $this->hasMany(SurveyUser::class, 'survey_id');
+    }
 }
+
+
