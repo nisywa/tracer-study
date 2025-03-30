@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use App\Models\SurveyUser;
+use App\Models\SurveyUserJawaban;
 use App\Models\TemplatePertanyaan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class SurveyUserController extends Controller
 {
@@ -71,7 +73,10 @@ class SurveyUserController extends Controller
     }
 
     public function surveyUserPertanyaan(){
-        $surveyUser= SurveyUser::where ('user_id',1)->first();
+        $surveyUser= SurveyUser::where ('user_id',Auth::id())->where ('status',0)->first();
+        if (!$surveyUser) {
+            return redirect()->back()->with('error', 'Survey tidak ditemukan');
+        }
         $survey=Survey::where('id',$surveyUser->survey_id)->first();
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
@@ -93,8 +98,21 @@ class SurveyUserController extends Controller
     }
 
     public function saveSurvey(Request $request){
-        echo "<pre>";
-        print_r($request);
-        echo "</pre>";
+        $surveyUser=SurveyUser::where('user_id',Auth::id())->where ('status',0)->first();
+        if (!$surveyUser) {
+            return redirect()->back()->with('error', 'Survey tidak ditemukan');
+        }
+        foreach ($request->except('_token') as $questionId => $answer) {
+            if (is_array($answer)) {
+                $answer = implode(',', $answer);
+            }
+            SurveyUserJawaban::updateOrCreate(
+                ['survey_user_id' => $surveyUser->id, 'template_pertanyaan_id' => $questionId],
+                ['jawaban' => $answer]
+            );
+        }
+        $surveyUser->status = '1';
+        $surveyUser->save();
+        return redirect()->route('user.views.index')->with('success', 'Survey berhasil disimpan');
     }
 }

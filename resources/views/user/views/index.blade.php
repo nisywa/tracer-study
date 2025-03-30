@@ -140,14 +140,21 @@
                   <tr>
                     <td class="border border-gray-300 px-4 py-2 font-bold">{{ $srvy->nama }}</td>
                     <td class="border border-gray-300 px-2 py-2 text-center">
-                      <a class="bg-gradient-to-tl {{$srvy->status =='Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300'}}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status }}</a>
+                      <span class="bg-gradient-to-tl {{$srvy->status_aktif =='Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300'}}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status_aktif }}</span>
+                      <br> <span> {{ $srvy->tanggal_mulai }} - {{ $srvy->tanggal_selesai }}</span>
                     </td>
                     <td class="border border-gray-300 px-4 py-2">{{ $srvy->deskripsi }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center relative group">
-                      <a href="{{ route('user.survey.survey', $srvy) }}" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
+                      <!-- <a href="{{ route('user.survey.survey', $srvy) }}" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
                         <i class="fas fa-pencil-alt"></i> 
-                      </a>
+                      </a> -->
+                      @if ($srvy->status==0)
+                        <a href="{{ route('user.survey.survey', $srvy) }}" class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Isi Survei</a>
+                      @else
+                        selesai
+                      @endif
                     </td>
+                    
                   </tr>
                   @endforeach
                 </tbody>

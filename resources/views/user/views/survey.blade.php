@@ -94,16 +94,16 @@
                           <label for="{{ $pertanyaan->id }}" class="font-semibold block mb-4 text-sm text-body-color dark:text-dark-6">{{ $pertanyaan->pertanyaan }}</label>
                           <label for="{{ $pertanyaan->id }}" class="block mb-4 text-xs text-body-color dark:text-dark-6">{{ $pertanyaan->deskripsi_pertanyaan }}</label>
                           @if ($pertanyaan->tipe=="text")
-                          <input type="text" name="{{ $pertanyaan->id }}" placeholder="Adam Gelius"
+                          <input type="text" name="{{ $pertanyaan->id }}"
                             class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
                           @elseif($pertanyaan->tipe=="textarea")
-                          <input type="textarea" name="{{ $pertanyaan->id }}" placeholder="Adam Gelius"
+                          <input type="textarea" name="{{ $pertanyaan->id }}"
                             class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
                           @elseif($pertanyaan->tipe=="radio")
                           <div class="flex flex-col gap-y-3 mb-2 text-body-color dark:text-dark-6">
                             @foreach ($pertanyaan->template_jawaban as $option)
                             <label class="flex items-center gap-x-3">
-                                <input type="radio" name="{{ $pertanyaan->id }}" value="{{ $option->id }}" class="text-primary">
+                                <input type="radio" name="{{ $pertanyaan->id }}" value="{{ $option->pilihan_jawaban }}" class="text-primary">
                                 <span>{{ $option->pilihan_jawaban }}</span>
                             </label>
                             @endforeach
@@ -112,11 +112,11 @@
                           <input type="file" name="{{ $pertanyaan->id }}"
                           class="bg-transparent w-full text-body-color dark:text-dark-6 placeholder:text-body-color/60 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none" />
                           @elseif($pertanyaan->tipe=="select")
-                            <select name="phone" class="bg-transparent w-full text-body-color dark:text-dark-6 
+                            <select name="{{ $pertanyaan->id }}" class="bg-transparent w-full text-body-color dark:text-dark-6 
                                 border-0 border-b border-[#f1f1f1] dark:border-dark-3 pb-3 focus:border-primary focus:outline-none">
                                 <option value="" disabled selected hidden class="border-[#f1f1f1] dark:border-dark-3 pb-3">Choose</option>
                                 @foreach ($pertanyaan->template_jawaban as $option)
-                                <option value="{{ $option->id }}">{{ $option->pilihan_jawaban }}</option>
+                                <option value="{{ $option->pilihan_jawaban }}">{{ $option->pilihan_jawaban }}</option>
                                 @endforeach                      
                             </select>
                           @elseif($pertanyaan->tipe=="date")
@@ -138,7 +138,7 @@
                           @elseif($pertanyaan->tipe=="checkbox")
                             @foreach ($pertanyaan->template_jawaban as $option)
                             <label for="option2" class="flex items-center text-sm mb-2 text-body-color dark:text-dark-6">
-                              <input type="checkbox" id="{{ $pertanyaan->id }}" name="{{ $pertanyaan->id }}[]" value="{{$option->id}}" class="w-4 h-4 text-primary border border-[#f1f1f1] dark:border-dark-3 focus:ring-primary" />
+                              <input type="checkbox" id="{{ $pertanyaan->id }}" name="{{ $pertanyaan->id }}[]" value="{{$option->pilihan_jawaban}}" class="w-4 h-4 text-primary border border-[#f1f1f1] dark:border-dark-3 focus:ring-primary" />
                               <span class="ml-2">{{ $option->pilihan_jawaban }}</span>
                             </label>
                             @endforeach
