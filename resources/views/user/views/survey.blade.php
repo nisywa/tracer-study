@@ -79,7 +79,7 @@
     <div class="absolute top-0 left-0 -z-[1] h-1/2 w-full bg-[#E9F9FF] dark:bg-dark-700 lg:h-[45%] xl:h-1/2"></div>
     <div class="container px-4">
       <div class="flex flex-wrap items-center -mx-4">
-      <form action="{{ route('survey.save') }}" method="POST">
+      <form action="{{ route('user.survey.save') }}" method="POST">
         @csrf
         <div class="w-full px-4 lg:w-full xl:w-full">
           <div class="wow fadeInUp rounded-lg bg-white dark:bg-dark-2 py-10 px-8 shadow-testimonial dark:shadow-none sm:py-12 sm:px-10 md:p-[60px] lg:p-10 lg:py-12 lg:px-10 2xl:p-[60px]">

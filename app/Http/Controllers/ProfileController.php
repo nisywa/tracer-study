@@ -68,12 +68,11 @@ class ProfileController extends Controller
         $survey=Survey::whereHas('surveyUsers',function($query){
             $query->where('user_id',Auth::id());
         })->get();
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
-        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
-        if ($survey->tanggal_selesai >= now()) {
-            $survey->status = "Aktif";
-        } else {
-            $survey->status = "Selesai";
+
+        foreach($survey as $item) {
+            $item->tanggal_mulai = Carbon::parse($item->tanggal_mulai)->format("d-m-y");
+            $item->tanggal_selesai = Carbon::parse($item->tanggal_selesai)->format("d-m-y");
+            $item->status = $item->tanggal_selesai >= now() ? "Aktif" : "Selesai";
         }
 
         $alumni=Alumni::where('user_id',Auth::id())->first();

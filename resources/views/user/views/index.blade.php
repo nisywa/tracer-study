@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{asset('assets/css/swiper-bundle.min.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/animate.css')}}" />
     <link rel="stylesheet" href="{{asset('assets/css/tailwind.css')}}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- ==== WOW JS ==== -->
     <script src="{{asset('assets/js/wow.min.js')}}"></script>
@@ -140,11 +141,10 @@
                     <td class="border border-gray-300 px-4 py-2 font-bold">{{ $srvy->nama }}</td>
                     <td class="border border-gray-300 px-2 py-2 text-center">
                       <a class="bg-gradient-to-tl {{$srvy->status =='Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300'}}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status }}</a>
-                     
                     </td>
                     <td class="border border-gray-300 px-4 py-2">{{ $srvy->deskripsi }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center relative group">
-                      <a href="list_pertanyaan.html" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
+                      <a href="{{ route('user.survey.survey', $srvy) }}" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
                         <i class="fas fa-pencil-alt"></i> 
                       </a>
                     </td>
