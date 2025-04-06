@@ -27,16 +27,16 @@ class DummyDataSeeder extends Seeder
     public function run()
     {
         // seed admin role
-        $adminRole = Role::create([
-            'name' => 'admin'
-        ]);
+        // $adminRole = Role::create([
+        //     'name' => 'admin'
+        // ]);
         //  seed user role
-        $alumniRole = Role::create([
-            'name' => 'alumni'
-        ]);
-        $atasanRole = Role::create([
-            'name' => 'atasan'
-        ]);
+        // $alumniRole = Role::create([
+        //     'name' => 'alumni'
+        // ]);
+        // $atasanRole = Role::create([
+        //     'name' => 'atasan'
+        // ]);
         // Create Admin User
         $admin = User::firstOrCreate(
             ['email' => 'admin@example.com'],

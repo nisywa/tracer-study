@@ -150,7 +150,6 @@
                                                     <option value="">Pilih Visualisasi</option>
                                                     <option value="barChart" {{ $question->visualisasi == 'barChart' ? 'selected' : '' }}>Bar Chart</option>
                                                     <option value="pieChart" {{ $question->visualisasi == 'pieChart' ? 'selected' : '' }}>Pie Chart</option>
-                                                    <option value="lineChart" {{ $question->visualisasi == 'lineChart' ? 'selected' : '' }}>Line Chart</option>
                                                 </select>
                                             </td>
 

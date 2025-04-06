@@ -137,7 +137,7 @@
         <!-- cards row 3 -->
 
         <div class="flex flex-wrap mt-6 -mx-3">
-          <div class="w-full max-w-full px-3 mt-0 mb-6 lg:mb-0 lg:w-7/12 lg:flex-none">
+          <!-- <div class="w-full max-w-full px-3 mt-0 mb-6 lg:mb-0 lg:w-7/12 lg:flex-none">
             <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl dark:bg-gray-950 border-black-125 rounded-2xl bg-clip-border">
               <div class="p-4 pb-0 mb-0 rounded-t-4">
                 <div class="flex justify-between">
@@ -342,7 +342,7 @@
                 </ul>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
 

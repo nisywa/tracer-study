@@ -48,6 +48,7 @@ class AtasanController extends Controller
             'email' => $request->email,
             // 'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp,offset: 0,length: 5)),
             'password'=> bcrypt('password'),
+            'role' => 'atasan',
         ]);
         $user->assignRole('atasan');
 
