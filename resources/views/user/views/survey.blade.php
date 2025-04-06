@@ -77,7 +77,8 @@
         <div class="absolute top-0 left-0 -z-[1] h-1/2 w-full bg-[#E9F9FF] dark:bg-dark-700 lg:h-[45%] xl:h-1/2"></div>
         <div class="container px-4">
             <div class="flex flex-wrap items-center -mx-4">
-                <form action="{{ route('user.survey.save') }}" method="POST">
+                <form action="{{ route('user.survey.save', ['id' => $survey->id]) }}" method="POST">
+
                     @csrf
                     <div class="w-full px-4 lg:w-full xl:w-full">
                         <div
@@ -193,8 +194,8 @@
 
     <!-- ====== All Scripts -->
 
-    <script src="assets/js/swiper-bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="{{ asset('assets/js/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
     <script>
         // ==== for menu scroll
         const pageLink = document.querySelectorAll(".ud-menu-scroll");

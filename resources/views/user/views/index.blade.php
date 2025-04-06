@@ -57,89 +57,8 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-wrap justify-between mb-12 lg:mb-0">
-                <div class="mb-8 flex w-[330px] max-w-full">
-                    <div class="mr-6 text-[32px] text-primary">
-                        <svg width="29" height="35" viewBox="0 0 29 35" class="fill-current">
-                            <path
-                                d="M14.5 0.710938C6.89844 0.710938 0.664062 6.72656 0.664062 14.0547C0.664062 19.9062 9.03125 29.5859 12.6406 33.5234C13.1328 34.0703 13.7891 34.3437 14.5 34.3437C15.2109 34.3437 15.8672 34.0703 16.3594 33.5234C19.9688 29.6406 28.3359 19.9062 28.3359 14.0547C28.3359 6.67188 22.1016 0.710938 14.5 0.710938ZM14.9375 32.2109C14.6641 32.4844 14.2812 32.4844 14.0625 32.2109C11.3828 29.3125 2.57812 19.3594 2.57812 14.0547C2.57812 7.71094 7.9375 2.625 14.5 2.625C21.0625 2.625 26.4219 7.76562 26.4219 14.0547C26.4219 19.3594 17.6172 29.2578 14.9375 32.2109Z" />
-                            <path
-                                d="M14.5 8.58594C11.2734 8.58594 8.59375 11.2109 8.59375 14.4922C8.59375 17.7188 11.2187 20.3984 14.5 20.3984C17.7812 20.3984 20.4062 17.7734 20.4062 14.4922C20.4062 11.2109 17.7266 8.58594 14.5 8.58594ZM14.5 18.4297C12.3125 18.4297 10.5078 16.625 10.5078 14.4375C10.5078 12.25 12.3125 10.4453 14.5 10.4453C16.6875 10.4453 18.4922 12.25 18.4922 14.4375C18.4922 16.625 16.6875 18.4297 14.5 18.4297Z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h5 class="mb-[18px] text-lg font-semibold text-dark dark:text-white">Our Location</h5>
-                        <p class="text-base text-body-color dark:text-dark-6">
-                            401 Broadway, 24th Floor, Orchard Cloud View, London
-                        </p>
-                    </div>
-                </div>
-                <div class="mb-8 flex w-[330px] max-w-full">
-                    <div class="mr-6 text-[32px] text-primary">
-                        <svg width="34" height="25" viewBox="0 0 34 25" class="fill-current">
-                            <path
-                                d="M30.5156 0.960938H3.17188C1.42188 0.960938 0 2.38281 0 4.13281V20.9219C0 22.6719 1.42188 24.0938 3.17188 24.0938H30.5156C32.2656 24.0938 33.6875 22.6719 33.6875 20.9219V4.13281C33.6875 2.38281 32.2656 0.960938 30.5156 0.960938ZM30.5156 2.875C30.7891 2.875 31.0078 2.92969 31.2266 3.09375L17.6094 11.3516C17.1172 11.625 16.5703 11.625 16.0781 11.3516L2.46094 3.09375C2.67969 2.98438 2.89844 2.875 3.17188 2.875H30.5156ZM30.5156 22.125H3.17188C2.51562 22.125 1.91406 21.5781 1.91406 20.8672V5.00781L15.0391 12.9922C15.5859 13.3203 16.1875 13.4844 16.7891 13.4844C17.3906 13.4844 17.9922 13.3203 18.5391 12.9922L31.6641 5.00781V20.8672C31.7734 21.5781 31.1719 22.125 30.5156 22.125Z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h5 class="mb-[18px] text-lg font-semibold text-dark dark:text-white">How Can We Help?</h5>
-                        <p class="text-base text-body-color dark:text-dark-6">info@yourdomain.com</p>
-                        <p class="mt-1 text-base text-body-color dark:text-dark-6">
-                            contact@yourdomain.com
-                        </p>
-                    </div>
-                </div>
-            </div>
+
         </div>
-    </div> -->
-
-    <div class="w-full px-4 lg:w-7/12 xl:w-8/12">
-        <div class="wow fadeInUp rounded-lg bg-white dark:bg-dark-2 py-10 px-8 shadow-testimonial dark:shadow-none sm:py-12 sm:px-10 md:p-[60px] lg:p-10 lg:py-12 lg:px-10 2xl:p-[60px]"
-            data-wow-delay=".2s">
-            <h3 class="mb-8 text-2xl font-semibold md:text-[28px] md:leading-[1.42] text-dark dark:text-white">
-                Informasi Survei
-            </h3>
-            <div class="overflow-x-auto">
-                <table class="w-full min-w-full border border-gray-300 dark:border-gray-600 table-fixed">
-                    <thead>
-                        <tr class="bg-gray-100 text-dark dark:text-white">
-                            <th class="w-5/12 border border-gray-300 px-4 py-2 text-left">Nama</th>
-                            <th class="w-auto border border-gray-300 px-4 py-2 text-left">Status</th>
-                            <th class="w-4/12 border border-gray-300 px-4 py-2 text-left">Deskripsi</th>
-                            <th class="w-1/12 border border-gray-300 px-4 py-2 text-left">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-body-color dark:text-dark-6">
-                        @foreach ($survey as $srvy)
-                            <tr>
-                                <td class="border border-gray-300 px-4 py-2 font-bold">{{ $srvy->nama }}</td>
-                                <td class="border border-gray-300 px-2 py-2 text-center">
-                                    <span
-                                        class="bg-gradient-to-tl {{ $srvy->status_aktif == 'Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300' }}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status_aktif }}</span>
-                                    <br> <span> {{ $srvy->tanggal_mulai }} - {{ $srvy->tanggal_selesai }}</span>
-                                </td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $srvy->deskripsi }}</td>
-                                <td class="border border-gray-300 px-4 py-2 text-center relative group">
-                                    <!-- <a href="{{ route('user.survey.survey', $srvy) }}" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
-                        <i class="fas fa-pencil-alt"></i>
-                      </a> -->
-                                    @if ($srvy->status == '0' && $srvy->status_aktif == 'Aktif')
-                                        <a href="{{ route('user.survey.survey', $srvy) }}"
-                                            class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Isi
-                                            Survei</a>
-                                    @else
-                                        selesai
-                                    @endif
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-    </div>
     </div>
     <!-- ====== Banner Section End -->
 
@@ -168,27 +87,34 @@
                                     </tr>
                                 </thead>
                                 <tbody class="text-body-color dark:text-dark-6">
-                                    @foreach ($surveys as $survey)
+                                    @foreach ($survey as $srvy)
                                         <tr>
-                                            <td class="border border-gray-300 px-4 py-2 font-bold">{{ $survey->nama }}
-                                            </td>
+                                            <td class="border border-gray-300 px-4 py-2 font-bold">{{ $srvy->nama }}</td>
                                             <td class="border border-gray-300 px-2 py-2 text-center">
-                                                <span
-                                                    class="inline-flex items-center justify-center px-4 py-2 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark">
-                                                    Aktif
-                                                </span>
+                                                <span class="bg-gradient-to-tl {{$srvy->status_aktif =='Aktif' ? 'from-emerald-500 to-teal-400' : 'from-slate-600 to-slate-300'}}  px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">{{ $srvy->status_aktif }}</span>
+                                                <br>
+                                                <span> {{ $srvy->tanggal_mulai }} - {{ $srvy->tanggal_selesai }}</span>
                                             </td>
-                                            <td class="border border-gray-300 px-4 py-2">{{ $survey->deskripsi }}</td>
+                                            <td class="border border-gray-300 px-4 py-2">{{ $srvy->deskripsi }}</td>
                                             <td class="border border-gray-300 px-4 py-2 text-center relative group">
-                                                <a href="{{ route('survey.pertanyaan', ['survey' => $survey->id]) }}"
-                                                    class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
-                                                    <i
-                                                        class="fas fa-pencil-alt text-xl text-primary hover:text-blue-dark"></i>
-                                                </a>
+                                                @if ($srvy->status==0)
+                                                    @if ($srvy->status_aktif=='Aktif')
+                                                        <a href="{{ route('user.survey.survey', ['id' => $srvy->id]) }}" class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Isi Survei</a>
+
+                                                    @else
+                                                        <span class="text-red-500 font-medium">Kamu tidak mengisi survei yang sudah selesai</span>
+                                                    @endif
+                                                @else
+                                                    @if ($srvy->status_aktif=='Aktif')
+                                                        <span class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Selesai</span>
+                                                    @else
+                                                        <span class="bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Done</span>
+                                                    @endif
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
-                                    @if (count($surveys) == 0)
+                                    @if (count($survey) == 0)
                                         <tr>
                                             <td colspan="4" class="border border-gray-300 px-4 py-4 text-center">
                                                 Tidak ada survei yang aktif saat ini</td>

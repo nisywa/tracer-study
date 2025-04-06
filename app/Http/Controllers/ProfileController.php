@@ -70,9 +70,9 @@ class ProfileController extends Controller
         })->get();
 
         foreach ($survey as $item) {
-            $item->tanggal_mulai = Carbon::parse($item->tanggal_mulai)->format("d-m-y");
-            $item->tanggal_selesai = Carbon::parse($item->tanggal_selesai)->format("d-m-y");
-            $item->status_aktif = $item->tanggal_selesai >= now() ? "Aktif" : "Selesai";
+            $item->status_aktif = Carbon::parse($item->tanggal_selesai) >= now() ? "Aktif" : "Selesai";
+            $item->tanggal_mulai = Carbon::parse($item->tanggal_mulai)->format("d-m-Y");
+            $item->tanggal_selesai = Carbon::parse($item->tanggal_selesai)->format("d-m-Y");
         }
 
         $alumni = Alumni::where('user_id', Auth::id())->first();

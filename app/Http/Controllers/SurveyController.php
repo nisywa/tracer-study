@@ -20,9 +20,10 @@ class SurveyController extends Controller
     {
         $survey = Survey::paginate(10);
         foreach ($survey as $srvy) {
-            $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-y");
-            $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-y");
-            if ($srvy->tanggal_selesai >= now()) {
+            $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-Y");
+            $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-Y");
+
+            if (Carbon::parse($srvy->tanggal_selesai) >= now()) {
                 $srvy->status = "Aktif";
             } else {
                 $srvy->status = "Selesai";
@@ -73,7 +74,7 @@ class SurveyController extends Controller
         $survey = Survey::findOrFail($id);
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("m/d/yy");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("m/d/yy");
-        if ($survey->tanggal_selesai >= now()) {
+        if (Carbon::parse($survey->tanggal_selesai) >= now()) {
             $survey->status = "Aktif";
         } else {
             $survey->status = "Selesai";
@@ -123,9 +124,9 @@ class SurveyController extends Controller
         $survey = Survey::findOrFail($id);
         $survey_user = SurveyUser::getSurveyUser($id);
         $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
-        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
-        if ($survey->tanggal_selesai >= now()) {
+        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
+        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
+        if (Carbon::parse($survey->tanggal_selesai) >= now()) {
             $survey->status = "Aktif";
         } else {
             $survey->status = "Selesai";
