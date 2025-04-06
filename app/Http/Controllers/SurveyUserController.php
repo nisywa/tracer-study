@@ -113,6 +113,6 @@ class SurveyUserController extends Controller
         }
         $surveyUser->status = '1';
         $surveyUser->save();
-        return redirect()->route('user.views.index')->with('success', 'Survey berhasil disimpan');
+        return redirect()->route('user.profile.index')->with('success', 'Survey berhasil disimpan');
     }
 }

@@ -148,7 +148,7 @@
                       <!-- <a href="{{ route('user.survey.survey', $srvy) }}" class="icon-link" data-tooltip="Mengerjakan Pertanyaan">
                         <i class="fas fa-pencil-alt"></i> 
                       </a> -->
-                      @if ($srvy->status==0)
+                      @if ($srvy->status=='0' && $srvy->status_aktif=='Aktif')
                         <a href="{{ route('user.survey.survey', $srvy) }}" class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Isi Survei</a>
                       @else
                         selesai
