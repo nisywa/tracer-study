@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Atasan;
+use App\Models\SurveyUser;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
@@ -11,6 +12,12 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class AtasanImport implements ToModel, WithHeadingRow
 {
+    protected $survey_id;
+
+    public function __construct($survey_id = null)
+    {
+        $this->survey_id = $survey_id;
+    }
     /**
     * @param array $row
     *
@@ -39,6 +46,14 @@ class AtasanImport implements ToModel, WithHeadingRow
             'unit_kerja' => $row['unit_kerja'],
             'no_hp' => $row['no_hp'],
         ]);
+
+        // Create survey_user entry if survey_id is set
+        if ($this->survey_id) {
+            SurveyUser::create([
+                'survey_id' => $this->survey_id,
+                'user_id' => $user->id,
+            ]);
+        }
         return $atasan;
     } catch (QueryException $e) {
         // Log or handle the error

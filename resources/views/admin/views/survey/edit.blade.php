@@ -19,7 +19,7 @@
                         <p class="leading-normal uppercase dark:text-white dark:opacity-60 text-sm">Informasi Survei</p>
                         <div class="flex flex-wrap -mx-3">
 
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
+                          <div class="w-full max-w-full px-3 shrink-0 md:w-full md:flex-0">
                             <div class="mb-4">
                               <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama Survei</label>
                               <input type="text" name="nama" value="{{ $survey->nama }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
@@ -28,10 +28,8 @@
                               @enderror
                             </div>
                           </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
+                          <div class="w-full max-w-full px-3 shrink-0 md:w-6/12 md:flex-0">
                             <div class="mb-4">
-
-                              {{ dd($survey->tanggal_mulai) }}
                               <label for="tanggal_mulai" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tanggal Mulai</label>
                               <input type="date" name="tanggal_mulai" value="{{ $survey->tanggal_mulai }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                             </div>
@@ -39,7 +37,7 @@
                                   <span class="text-red-500 text-xs">{{ $message }}</span>
                             @enderror
                           </div>
-                          <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
+                          <div class="w-full max-w-full px-3 shrink-0 md:w-6/12 md:flex-0">
                             <div class="mb-4">
                               <label for="tanggal_selesai" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tanggal Selesai</label>
                               <input type="date" name="tanggal_selesai" value="{{ $survey->tanggal_selesai }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
@@ -48,6 +46,7 @@
                               <span class="text-red-500 text-xs">{{ $message }}</span>
                             @enderror
                           </div>
+                          
                           <div class="w-full max-w-full px-3 shrink-0 md:w-full md:flex-0">
                             <div class="mb-4">
                               <label for="deskripsi" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Deskripsi</label>

@@ -43,7 +43,7 @@ class RoleSeeder extends Seeder
             'satuan_kerja' => 'Divisi IT',
             'unit_kerja' => 'Pengembangan',
             'kepala_bps' => 'Kepala BPS',
-            'email'
+            'email'=> 'alumni@gmail.com',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

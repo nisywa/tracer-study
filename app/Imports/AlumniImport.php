@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Alumni;
+use App\Models\SurveyUser;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -12,6 +13,12 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class AlumniImport implements ToModel, WithHeadingRow
 {
+    protected $survey_id;
+
+    public function __construct($survey_id = null)
+    {
+        $this->survey_id = $survey_id;
+    }
     /**
     * @param array $row
     *
@@ -41,6 +48,14 @@ class AlumniImport implements ToModel, WithHeadingRow
                 'no_hp' => $row['no_hp'],
                 'kepala_bps' => $row['kepala_bps'],
             ]);
+
+            // Create survey_user entry if survey_id is set
+            if ($this->survey_id) {
+                SurveyUser::create([
+                    'survey_id' => $this->survey_id,
+                    'user_id' => $user->id,
+                ]);
+            }
             return $alumni;
         } catch (QueryException $e) {
             // Log or handle the error

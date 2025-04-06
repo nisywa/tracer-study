@@ -10,6 +10,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Log;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\AlumniImport;
+use App\Imports\AtasanImport;
 
 class SurveyController extends Controller
 {
@@ -72,8 +75,8 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = Survey::findOrFail($id);
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("m/d/yy");
-        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("m/d/yy");
+        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("Y-m-d");
+        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("Y-m-d");
         if (Carbon::parse($survey->tanggal_selesai) >= now()) {
             $survey->status = "Aktif";
         } else {
@@ -86,13 +89,14 @@ class SurveyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+
+     public function update(Request $request, $id)
     {
+        
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'type_survei' => 'required|string',
             'deskripsi' => 'required|string|max:255',
         ]);
         $survey = Survey::findOrFail($id);
@@ -195,6 +199,27 @@ class SurveyController extends Controller
     public function destroy(survey $survey)
     {
         //
+    }
+
+    public function import(Request $request, Excel $excel)
+    {
+        try{
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls,csv',
+                'survey_id' => 'required',
+            ]);   
+            $survey_id = $request->input('survey_id');
+            $survey = Survey::findOrFail($survey_id);
+            if ($survey->type_survei='atasan'){
+            Excel::import(new AtasanImport ($survey_id), ($request->file('file')));}
+            else{
+                Excel::import(new AlumniImport ($survey_id), $request->file('file'));
+            }
+
+            return redirect()->route('admin.atasan.index')->with('success', 'Atasan imported successfully.');
+        }catch(\Exception $e){
+            return redirect()->route('admin.atasan.index')->with('error', 'Failed to import atasan.');
+        }   
     }
 
     public function duplicate($id)

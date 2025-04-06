@@ -75,7 +75,7 @@
 
 
                             <!-- pop up modal import  -->
-                          <form action="" method="POST"  enctype="multipart/form-data">
+                          <form action="{{ route('admin.survey.import') }}" method="POST"  enctype="multipart/form-data">
                           <!-- @csrf -->
                           <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
                               <div class="bg-white rounded-lg shadow-lg w-96">
@@ -87,6 +87,7 @@
                                       <form id="uploadForm">
                                           <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose Excel File</label>
                                           <input type="file" id="fileInput" name="file" accept=".xls,.xlsx" class="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
+                                          <input type="hidden" name="survey_id" value="{{ $srvy->id }}">
                                           <p class="mt-2 text-sm text-gray-500">Only .xls, .xlsx, .csv files are supported.</p>
                                           <div class="mt-4 flex justify-end">
                                               <button type="button" id="cancelUpload" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
