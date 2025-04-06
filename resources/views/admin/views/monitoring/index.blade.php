@@ -65,6 +65,9 @@
                             <a href="{{ route('admin.monitoring.details',$srvy->id) }}" class="icon-link" data-tooltip="Lihat Hasil Survei">
                                 <i class="fas fa-eye"></i>
                             </a>
+                            <a href="" class="icon-link" data-tooltip="Export Hasil Survei">
+                                <i class="fas fa-file-excel"></i>
+                            </a>
                           </div>
                         </td>
                       </tr>
