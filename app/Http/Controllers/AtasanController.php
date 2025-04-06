@@ -46,7 +46,8 @@ class AtasanController extends Controller
         $user = User::create([
             'name' => $request->nama,
             'email' => $request->email,
-            'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp,offset: 0,length: 5)),
+            // 'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp,offset: 0,length: 5)),
+            'password'=> bcrypt('password'),
         ]);
         $user->assignRole('atasan');
 
@@ -91,7 +92,8 @@ class AtasanController extends Controller
         $user->update([
             'name' => $request->nama,
             'email' => $request->email,
-            'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp, 0, 5)),
+            // 'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp, 0, 5)),
+            'password'=> bcrypt('password'),
         ]);
 
         $validatedData['user_id'] = $user->id;

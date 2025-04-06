@@ -87,7 +87,10 @@ class SurveyUserController extends Controller
 
     public function surveyUserPertanyaan()
     {
-        $surveyUser = SurveyUser::where('user_id', Auth::id())->first();
+        $surveyUser = SurveyUser::where('user_id', Auth::id())->where('status', 0)->first();
+        if (!$surveyUser) {
+            return redirect()->back()->with('error', 'Survey tidak ditemukan');
+        }
         $survey = Survey::where('id', $surveyUser->survey_id)->first();
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");

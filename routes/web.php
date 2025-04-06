@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('monitoring/details/{id}', [MonitoringController::class, 'details'])->name('monitoring.details');
     Route::resource('monitoring', MonitoringController::class);
     Route::get('monitoring/grafik/{id}', [MonitoringController::class, 'grafik'])->name('monitoring.grafik');
     Route::get('monitoring/chart-data/{surveyId}/{questionId}', [MonitoringController::class, 'getChartData'])->name('monitoring.chartData');
@@ -65,6 +66,10 @@ Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function
     // Route::get('/', function () {
     //     return view('welcome');
     // })->name('user.dashboard');
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('survey', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
+    Route::post('survey', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
+    Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 });
 
 

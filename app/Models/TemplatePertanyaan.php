@@ -26,6 +26,11 @@ class TemplatePertanyaan extends Model
     {
         return $this->hasMany(TemplateJawaban::class, 'id_template_pertanyaan');
     }
+
+    public function survey_user_jawaban()
+    {
+        return $this->hasMany(SurveyUserJawaban::class, 'id_template_pertanyaan');
+    }
 }
 
 

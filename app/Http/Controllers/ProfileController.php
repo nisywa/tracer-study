@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Alumni;
 use App\Models\Survey;
+use App\Models\SurveyUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -63,9 +65,20 @@ class ProfileController extends Controller
     // controller buat index user
     public function index()
     {
+        $survey = Survey::whereHas('surveyUsers', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->get();
+
+        foreach ($survey as $item) {
+            $item->tanggal_mulai = Carbon::parse($item->tanggal_mulai)->format("d-m-y");
+            $item->tanggal_selesai = Carbon::parse($item->tanggal_selesai)->format("d-m-y");
+            $item->status_aktif = $item->tanggal_selesai >= now() ? "Aktif" : "Selesai";
+        }
+
         $alumni = Alumni::where('user_id', Auth::id())->first();
-        return view('user.views.index',[
-            'alumni'=>$alumni
+        return view('user.views.index', [
+            'alumni' => $alumni,
+            'survey' => $survey,
         ]);
     }
     // buat di indeks user
@@ -80,4 +93,3 @@ class ProfileController extends Controller
     //     ]);
     // }
 }
-

@@ -8,6 +8,7 @@ class SurveyUserJawaban extends Model
 {
     protected $table = 'survey_user_jawaban';
     protected $fillable = ['survey_user_id', 'jawaban', 'template_pertanyaan_id'];
+    protected $table = 'survey_user_jawaban';
 
     public function surveyUser()
     {
