@@ -20,10 +20,10 @@ class AlumniImport implements ToModel, WithHeadingRow
         $this->survey_id = $survey_id;
     }
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         try {
@@ -37,7 +37,7 @@ class AlumniImport implements ToModel, WithHeadingRow
             );
 
             // Create the alumni record
-            $alumni = Alumni::firstOrCreate(['nip'=> $row['nip']],[
+            $alumni = Alumni::firstOrCreate(['nip' => $row['nip']], [
                 'user_id' => $user->id,
                 'nama' => $row['nama'],
                 'nip' => $row['nip'],
@@ -61,14 +61,12 @@ class AlumniImport implements ToModel, WithHeadingRow
             // Log or handle the error
             Log::error("message: {$e->getMessage()}");
             throw $e;
-        } catch (Exception $e){
-            
+        } catch (Exception $e) {
+
 
             // Log or handle the error
             Log::error("message: {$e->getMessage()}");
             throw $e;
         }
     }
-
-
 }

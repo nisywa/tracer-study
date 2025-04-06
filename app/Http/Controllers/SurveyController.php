@@ -9,7 +9,7 @@ use App\Models\TemplatePertanyaan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AlumniImport;
 use App\Imports\AtasanImport;
@@ -92,7 +92,7 @@ class SurveyController extends Controller
 
      public function update(Request $request, $id)
     {
-        
+
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
@@ -204,22 +204,26 @@ class SurveyController extends Controller
     public function import(Request $request, Excel $excel)
     {
         try{
+            DB::beginTransaction();
             $request->validate([
                 'file' => 'required|mimes:xlsx,xls,csv',
                 'survey_id' => 'required',
-            ]);   
+            ]);
             $survey_id = $request->input('survey_id');
             $survey = Survey::findOrFail($survey_id);
             if ($survey->type_survei='atasan'){
-            Excel::import(new AtasanImport ($survey_id), ($request->file('file')));}
-            else{
-                Excel::import(new AlumniImport ($survey_id), $request->file('file'));
+                Excel::import(new AtasanImport($survey_id), ($request->file('file')));
+            } else {
+                Excel::import(new AlumniImport($survey_id), $request->file('file'));
             }
-
-            return redirect()->route('admin.atasan.index')->with('success', 'Atasan imported successfully.');
+            DB::commit();
+            return redirect()->route('admin.survey.index')->with('success', 'Atasan imported successfully.');
         }catch(\Exception $e){
-            return redirect()->route('admin.atasan.index')->with('error', 'Failed to import atasan.');
-        }   
+            Log::error($e->getMessage());
+            // Rollback the transaction if needed
+            DB::rollback();
+            return redirect()->route('admin.survey.index')->with('error', 'Failed to import user survey.');
+        }
     }
 
     public function duplicate($id)

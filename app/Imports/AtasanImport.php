@@ -26,8 +26,8 @@ class AtasanImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         try{
-        // Create the user
-        $user = User::updateOrCreate(
+            // Create the user
+            $user = User::updateOrCreate(
             ['email' => $row['email']], // Check for duplicate email
             [
                 'name' => $row['nama'],

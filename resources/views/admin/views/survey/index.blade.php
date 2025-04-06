@@ -46,7 +46,7 @@
                           <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $srvy->tanggal_mulai." "."--"." ".$srvy->tanggal_selesai }}</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          
+
                           <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{$srvy->type_survei =='alumni' ? 'lulusan' : 'pengguna lulusan'}}</span>
                         </td>
                         <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
@@ -61,7 +61,7 @@
                             <!-- Add user -->
 
                             <button type="button"
-                            id="openModal" class="icon-link" data-tooltip="Tambah User">
+                            onclick="openModal({{ $srvy->id }})" class="icon-link" data-tooltip="Tambah User">
                             <i class="fas fa-user-plus"></i>
                             </button>
 
@@ -76,15 +76,15 @@
 
                             <!-- pop up modal import  -->
                           <form action="{{ route('admin.survey.import') }}" method="POST"  enctype="multipart/form-data">
-                          <!-- @csrf -->
-                          <div id="uploadModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
+                          @csrf
+                          <div id="uploadModal-{{ $srvy->id }}" class="fixed inset-0 z-50 items-center justify-center hidden bg-gray-800 bg-opacity-50">
                               <div class="bg-white rounded-lg shadow-lg w-96">
                                   <div class="flex items-center justify-between p-4 border-b">
                                       <h3 class="text-lg font-bold">Tambah User Survei ...</h3>
-                                      <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+                                      <button type="button" onclick="closeModal({{ $srvy->id }})" class="text-gray-500 hover:text-gray-700">&times;</button>
                                   </div>
                                   <div class="p-4">
-                                      <form id="uploadForm">
+                                      <form id="uploadForm-{{ $srvy->id }}">
                                           <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose Excel File</label>
                                           <input type="file" id="fileInput" name="file" accept=".xls,.xlsx" class="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
                                           <input type="hidden" name="survey_id" value="{{ $srvy->id }}">
@@ -140,27 +140,32 @@
 
 <!-- js pop up modal import -->
 <script>
-      const openModal = document.getElementById('openModal');
-      const closeModal = document.getElementById('closeModal');
-      const cancelUpload = document.getElementById('cancelUpload');
-      const uploadModal = document.getElementById('uploadModal');
+      function openModal(id) {
+        const modal = document.getElementById(`uploadModal-${id}`);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
 
-      openModal.addEventListener('click', () => {
-        uploadModal.classList.remove('hidden');
+      function closeModal(id) {
+        const modal = document.getElementById(`uploadModal-${id}`);
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+
+      document.querySelectorAll('[id^="uploadForm-"]').forEach(form => {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          alert('File uploaded successfully!');
+          const id = form.id.split('-')[1];
+          closeModal(id);
+        });
       });
 
-      closeModal.addEventListener('click', () => {
-        uploadModal.classList.add('hidden');
-      });
-
-      cancelUpload.addEventListener('click', () => {
-        uploadModal.classList.add('hidden');
-      });
-
-      document.getElementById('uploadForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('File uploaded successfully!');
-        uploadModal.classList.add('hidden');
+      document.querySelectorAll('[id^="cancelUpload-"]').forEach(button => {
+        button.addEventListener('click', () => {
+          const id = button.id.split('-')[1];
+          closeModal(id);
+        });
       });
     </script>
 
