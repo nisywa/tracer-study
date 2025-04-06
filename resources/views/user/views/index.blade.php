@@ -99,8 +99,7 @@
                                             <td class="border border-gray-300 px-4 py-2 text-center relative group">
                                                 @if ($srvy->status==0)
                                                     @if ($srvy->status_aktif=='Aktif')
-                                                        <a href="{{ route('user.survey.survey', ['id' => $srvy->id]) }}" class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">Isi Survei</a>
-
+                                                        <a href="{{ route('user.survey.survey', ['id' => $srvy->id]) }}" class="bg-gradient-to-tl from-emerald-500 to-teal-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none hover:from-teal-400 hover:to-emerald-500">Isi Survei</a>
                                                     @else
                                                         <span class="text-red-500 font-medium">Kamu tidak mengisi survei yang sudah selesai</span>
                                                     @endif
