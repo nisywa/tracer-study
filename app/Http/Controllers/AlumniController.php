@@ -48,6 +48,7 @@ class AlumniController extends Controller
         $user = User::create([
             'name' => $request->nama,
             'email' => $request->email,
+            'role' => 'alumni',
             // 'password' => bcrypt(substr($request->nama, 0, 5) . $request->tahun_lulus),
             'password'=> bcrypt('password'),
             'role' => 'alumni',

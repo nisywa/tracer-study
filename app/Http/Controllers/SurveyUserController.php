@@ -85,15 +85,16 @@ class SurveyUserController extends Controller
         return view('user.views.survey');
     }
 
-    public function surveyUserPertanyaan()
+    public function surveyUserPertanyaan($id)
     {
-        $surveyUser = SurveyUser::where('user_id', Auth::id())->where('status', 0)->first();
+        $surveyUser = SurveyUser::where('user_id', Auth::id())->where('survey_id', $id)->where('status', 0)->first();
         if (!$surveyUser) {
             return redirect()->back()->with('error', 'Survey tidak ditemukan');
         }
         $survey = Survey::where('id', $surveyUser->survey_id)->first();
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
-        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
+        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
+        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
+
         $surveyUserPertanyaan = TemplatePertanyaan::with(['template_jawaban' => function ($query) {
             $query->orderBy('urutan', 'asc');
         }])
@@ -104,6 +105,7 @@ class SurveyUserController extends Controller
             ->map(function ($questions) {
                 return $questions->values(); // Reset array keys for each group
             });
+        // dd($surveyUserPertanyaan);
 
         return view('user.views.survey', [
             'survey' => $survey,
@@ -111,11 +113,11 @@ class SurveyUserController extends Controller
         ]);
     }
 
-    public function saveSurvey(Request $request)
+    public function saveSurvey(Request $request, $id)
     {
         try {
             // Get current user's survey assignment
-            $surveyUser = SurveyUser::where('user_id', Auth::id())->first();
+            $surveyUser = SurveyUser::where('user_id', Auth::id())->where('survey_id', $id)->first();
             if (!$surveyUser) {
                 return redirect()->back()->with('error', 'Survey tidak ditemukan');
             }

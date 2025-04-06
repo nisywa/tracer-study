@@ -60,15 +60,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // User route
 Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function () {
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('survey', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
-    Route::post('survey', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
-    Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
-    // Route::get('/', function () {
-    //     return view('welcome');
-    // })->name('user.dashboard');
-    Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('survey', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
-    Route::post('survey', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
+    Route::get('survey/{id}', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
+    Route::post('survey/{id}', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
     Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 });
 

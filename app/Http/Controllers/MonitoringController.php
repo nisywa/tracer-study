@@ -19,9 +19,9 @@ class MonitoringController extends Controller
     {
         $survey = Survey::paginate(10);
         foreach ($survey as $srvy) {
-            $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-y");
-            $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-y");
-            if ($srvy->tanggal_selesai >= now()) {
+            $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-Y");
+            $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-Y");
+            if (Carbon::parse($srvy->tanggal_selesai) >= now()) {
                 $srvy->status = "Aktif";
             } else {
                 $srvy->status = "Selesai";
@@ -160,9 +160,9 @@ class MonitoringController extends Controller
             ->orderBy('urutan')
             ->get();
 
-        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-y");
-        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-y");
-        if ($survey->tanggal_selesai >= now()) {
+        $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
+        $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
+        if (Carbon::parse($survey->tanggal_selesai) >= now()) {
             $survey->status = "Aktif";
         } else {
             $survey->status = "Selesai";
