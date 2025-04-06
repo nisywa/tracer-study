@@ -169,4 +169,13 @@
       });
     </script>
 
+    <script>
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(el => {
+            el.classList.add('opacity-0', 'transition-opacity', 'duration-500'); // Tambahkan efek fade-out
+            setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
+        });
+    }, 3000);
+    </script>
+
 @endsection
