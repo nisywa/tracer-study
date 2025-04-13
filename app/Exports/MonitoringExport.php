@@ -6,6 +6,7 @@ use App\Models\Survey;
 use App\Models\SurveyUserJawaban;
 use App\Models\TemplatePertanyaan;
 use App\Models\SurveyUser;
+use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -13,24 +14,25 @@ class MonitoringExport implements FromCollection, WithHeadings
 {protected $surveyId;
     protected $questions;
     protected $users;
-    protected $answers; 
+    protected $answers;
     /**
      * @return \Illuminate\Support\Collection
      */
 
-    
+
     public function __construct($surveyId)
     {
         $this->surveyId = $surveyId;
+        $this->prepareData($surveyId);
 
     }
-    
+
     public function prepareData(){
         $survey=Survey::findOrFail($this->surveyId);
         $this->questions=TemplatePertanyaan::where('id_survey', $this->surveyId)->get();
         $this->users = SurveyUser::getUser($this->surveyId);
         $this->answers= [];
-        $answers=SurveyUserJawaban::whereIn('survey_user_id', $this->users->pluck(id))->with(
+        $answers = SurveyUserJawaban::whereIn('survey_user_id', $this->users->pluck('id'))->with(
             'surveyUser','template_pertanyaan'
         )->get();
         foreach ($answers as $answer) {
@@ -44,13 +46,12 @@ class MonitoringExport implements FromCollection, WithHeadings
             'ID',
             'Nama',
             'Email',
-            'Status', 
+            'Status',
             'Tanggal Mengisi',
         ];
         foreach ($this->questions as $question) {
             $prefix = $question->blok ? "[$question->blok] " : "";
-            $headings[] =$prefix.$question->pertanyaan;
-            
+            $headings[] = $prefix . $question->pertanyaan;
         }
         return $headings;
     }
@@ -67,17 +68,13 @@ class MonitoringExport implements FromCollection, WithHeadings
             foreach ($this->questions as $question) {
                 $row[] = isset($this->answers[$user->id][$question->id]) ? $this->answers[$user->id][$question->id] : '';
             }
-            
+
             $data->push($row);
         }
         return $data;
-       
-
-
     }
 
     /**
      * @return array
      */
-    
 }

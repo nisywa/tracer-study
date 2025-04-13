@@ -10,7 +10,7 @@ use App\Models\TemplatePertanyaan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel;
 
 class MonitoringController extends Controller
 {
@@ -177,6 +177,7 @@ class MonitoringController extends Controller
     }
 
     public function export($surveyId, Excel $excel){
-        return $excel->download(new MonitoringExport($surveyId), '.xlsx'); 
+        $file_name = 'export_survey_' . $surveyId . '_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        return $excel->download(new MonitoringExport($surveyId), $file_name);
     }
 }
