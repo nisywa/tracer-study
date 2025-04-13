@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MonitoringExport;
 use App\Models\Survey;
 use App\Models\SurveyUser;
 use App\Models\SurveyUserJawaban;
@@ -9,6 +10,7 @@ use App\Models\TemplatePertanyaan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MonitoringController extends Controller
 {
@@ -172,5 +174,9 @@ class MonitoringController extends Controller
             'survey' => $survey,
             'template_questions' => $template_questions
         ]);
+    }
+
+    public function export($surveyId, Excel $excel){
+        return $excel->download(new MonitoringExport($surveyId), '.xlsx'); 
     }
 }

@@ -13,4 +13,10 @@ class SurveyUserJawaban extends Model
     {
         return $this->belongsTo(SurveyUser::class);
     }
+    public function template_pertanyaan()
+    {
+        return $this->belongsTo(TemplatePertanyaan::class, 'template_pertanyaan_id');
+    }
+    
+    
 }

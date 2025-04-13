@@ -126,9 +126,7 @@ class SurveyController extends Controller
     public function details($id)
     {
         
-        $survey = Survey::findOrFail($id)-> paginate(10);
-        
-        
+        $survey = Survey::findOrFail($id);
         $survey_user = SurveyUser::getSurveyUser($id);
         $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");

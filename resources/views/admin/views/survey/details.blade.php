@@ -102,6 +102,9 @@
                     @endforeach
                     </tbody>
                   </table>
+                  <div class="p-4">
+                    {{ $template_pertanyaan->links() }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -156,13 +159,13 @@
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->kepala_bps }}</span>
                                     </td>
-
-                                    
                                 </tr>
                                 @endforeach
-                        
                       </tbody>
                     </table>
+                    <div class="p-4">
+                      {{ $survey_user->links() }}
+                    </div>
                   </div>
                 </div>
               </div>

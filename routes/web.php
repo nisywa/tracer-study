@@ -40,6 +40,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('alumni/import', [AlumniController::class, 'import'])->name('alumni.import');
     Route::post('atasan/import', [AtasanController::class, 'import'])->name('atasan.import');
     Route::get('atasan/export', [AtasanController::class, 'export'])->name('atasan.export');
+    Route::get('atasan/details/{id}', [AtasanController::class, 'details'])->name('atasan.details');
     Route::resource('alumni', AlumniController::class);
     Route::resource('atasan', AtasanController::class);
     Route::post('survey/import', [SurveyController::class, 'import'])->name('survey.import');
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('monitoring/export/{surveyId}', [MonitoringController::class, 'export'])->name('monitoring.export');
     Route::get('monitoring/details/{id}', [MonitoringController::class, 'details'])->name('monitoring.details');
     Route::resource('monitoring', MonitoringController::class);
     Route::get('monitoring/grafik/{id}', [MonitoringController::class, 'grafik'])->name('monitoring.grafik');

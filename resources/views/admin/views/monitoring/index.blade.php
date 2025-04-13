@@ -91,7 +91,7 @@
                                                 class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="icon-container">
                                                     
-                                                    <a href="" class="icon-link" data-tooltip="Export Hasil Survei">
+                                                    <a href="{{ route('admin.monitoring.export', $srvy->id) }}" class="icon-link" data-tooltip="Export Hasil Survei">
                                                         <i class="fas fa-file-excel"></i>
                                                     </a>
                                                     <!-- Visualisasi -->

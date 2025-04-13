@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Atasan;
+use App\Models\Alumni;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -129,5 +130,13 @@ class AtasanController extends Controller
         }catch(\Exception $e){
             return redirect()->route('admin.atasan.index')->with('error', 'Failed to import atasan.');
         }   
+    }
+
+    public function details($id)
+    {
+        $atasan = Atasan::findOrFail($id);
+        $alumni = Alumni ::where('nip_kepala_bps', $atasan->nip)->paginate(10);
+        return view('admin.views.atasan.details', compact('atasan', 'alumni'));
+
     }
 }

@@ -15,7 +15,7 @@ class TemplatePertanyaan extends Model
         ->join('template_jawaban','template_pertanyaan.id','=','template_jawaban.id_template_pertanyaan')
         ->selectRaw('GROUP_CONCAT(pilihan_jawaban) as template_jawaban')
         ->groupBy('template_pertanyaan.id');
-        return $query->get();
+        return $query->paginate(10, ['*'], 'question_page');
     }
 
     public function survey()
