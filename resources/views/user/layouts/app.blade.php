@@ -75,10 +75,10 @@
                     <h5
                       class="mb-[18px] text-lg font-semibold text-dark dark:text-white"
                     >
-                      Our Location
+                      Temukan kami di
                     </h5>
                     <p class="text-base text-body-color dark:text-dark-6">
-                      401 Broadway, 24th Floor, Orchard Cloud View, London
+                      Jl. Otto Iskandardinata No.64C 1, RT.1/RW.4, Bidara Cina, Kecamatan Jatinegara, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta
                     </p>
                   </div>
                 </div>
@@ -99,13 +99,16 @@
                     <h5
                       class="mb-[18px] text-lg font-semibold text-dark dark:text-white"
                     >
-                      How Can We Help?
+                      Hubungi kami di
                     </h5>
                     <p class="text-base text-body-color dark:text-dark-6">
-                      info@yourdomain.com
+                      humas@stis.ac.id
                     </p>
-                    <p class="mt-1 text-base text-body-color dark:text-dark-6">
-                      contact@yourdomain.com
+                    <p class="text-base text-body-color dark:text-dark-6">
+                      Telp. (021) 8191437, 8508812
+                    </p>
+                    <p class="text-base text-body-color dark:text-dark-6">
+                      Fax. (021) 8197577
                     </p>
                   </div>
                 </div>

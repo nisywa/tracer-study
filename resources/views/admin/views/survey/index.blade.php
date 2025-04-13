@@ -6,6 +6,38 @@
 
         <div class="flex flex-wrap -mx-3">
           <div class="flex-none w-full max-w-full px-3">
+          <div class="font-bold">
+            @if(session('success'))
+            <div class="bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md alert alert-success mb-6" role="alert">
+                <div class="flex">
+                    <div class="py-1">
+                        <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 7.5l-6.25 6.25-3.75-3.75 1.41-1.41 2.34 2.34 4.84-4.84L15 7.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold">{{ session('success') }}</p>
+                    </div>
+                </div>
+            </div>
+
+
+            @elseif(session('error'))
+                <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md alert alert-danger mb-6" role="alert">
+                    <div class="flex">
+                        <div class="py-1">
+                            <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-bold">{{ session('error') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            </div>
+            
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                 <h6 class="dark:text-white">Daftar Survei</h6>
@@ -49,8 +81,10 @@
 
                           <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{$srvy->type_survei =='alumni' ? 'lulusan' : 'pengguna lulusan'}}</span>
                         </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $srvy->deskripsi }}</span>
+                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+
+                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 description-wrap">{{ $srvy->deskripsi }}</span>
+
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
@@ -98,10 +132,6 @@
                               </div>
                           </div>
                           </form>
-
-
-
-
 
                             <!-- Edit -->
                             <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit">
@@ -177,5 +207,6 @@
         });
     }, 3000);
     </script>
+    
 
 @endsection

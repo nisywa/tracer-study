@@ -66,33 +66,39 @@
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Pertanyaan</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Blok</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tipe Jawaban</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Keterangan Jawaban</th>
-
-                        
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Keterangan Jawaban</th> 
                       </tr>
                     </thead>
                     <tbody>
                     @foreach($template_pertanyaan as $tanya)  
                     <tr>
-                        <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <div class="flex  flec-col px-2 py-1">
-                              <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $tanya->pertanyaan }}</h6> 
-                          </div>
-                        </td>
-                        
-                        
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                          <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $tanya->blok }}</span>
-                        </td>
-                        
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $tanya->tipe }}</span>
-                        </td>
-                        <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $tanya->template_jawaban }}</span>
-                        </td>
-                        
-                      </tr>
+                      <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+                        <div class="flex flex-col px-2 py-1">
+                          <h6 class="mb-0 text-sm leading-normal dark:text-white break-words whitespace-normal">
+                            {{ $tanya->pertanyaan }}
+                          </h6> 
+                        </div>
+                      </td>
+
+                      <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words whitespace-normal">
+                          {{ $tanya->blok }}
+                        </span>
+                      </td>
+
+                      <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words whitespace-normal">
+                          {{ $tanya->tipe }}
+                        </span>
+                      </td>
+
+                      <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words whitespace-normal">
+                          {{ $tanya->template_jawaban }}
+                        </span>
+                      </td>
+                    </tr>
+
                     @endforeach
                     </tbody>
                   </table>
@@ -123,10 +129,10 @@
                       <thead class="align-bottom">
                         <tr>
                             <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nama</th>
-                            <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">NIM</th>
+                            <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">NIP</th>
                             <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Email</th>
                             <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">No HP</th>
-                            <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tahun Masuk</th>
+                            <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Kepala BPS</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -139,7 +145,7 @@
                                         </div>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->nim }}</span>
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->nip }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->email }}</span>
@@ -148,7 +154,7 @@
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->no_hp }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->tahun_lulus }}</span>
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->kepala_bps }}</span>
                                     </td>
 
                                     
@@ -162,5 +168,17 @@
               </div>
             </div>
         </div>
+
+        <!-- biar otomatis ke bawah -->
+        <script>
+        window.addEventListener('DOMContentLoaded', () => {
+          const cells = document.querySelectorAll('td span, td h6');
+
+          cells.forEach(cell => {
+            cell.style.wordWrap = 'break-word';
+            cell.style.whiteSpace = 'normal';
+          });
+        });
+      </script>
 
 @endsection

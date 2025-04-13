@@ -125,7 +125,10 @@ class SurveyController extends Controller
 
     public function details($id)
     {
-        $survey = Survey::findOrFail($id);
+        
+        $survey = Survey::findOrFail($id)-> paginate(10);
+        
+        
         $survey_user = SurveyUser::getSurveyUser($id);
         $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
@@ -217,7 +220,7 @@ class SurveyController extends Controller
                 Excel::import(new AlumniImport($survey_id), $request->file('file'));
             }
             DB::commit();
-            return redirect()->route('admin.survey.index')->with('success', 'Atasan imported successfully.');
+            return redirect()->route('admin.survey.index')->with('success', 'User imported successfully.');
         }catch(\Exception $e){
             Log::error($e->getMessage());
             // Rollback the transaction if needed

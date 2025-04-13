@@ -121,10 +121,10 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                        Nama</th>
-                                    <th
+                                        Nama/NIP</th>
+                                    <!-- <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                        NIP</th>
+                                        NIP</th> -->
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
                                         Email</th>
@@ -142,7 +142,7 @@
                                         No HP</th>
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                        Kepala BPS</th>
+                                        Kepala BPS/NIP</th>
 
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
@@ -153,32 +153,40 @@
                             <tbody>
                                 @foreach($daftarAlumni as $alumnus)
                                 <tr>
-                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <div class="flex flec-col px-2 py-1">
-                                            <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $alumnus->nama }}</h6>
-                                        </div>
-                                    </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->nip }}</span>
-                                    </td>
+                                <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+                                    <div class="flex flex-col px-2 py-1 break-words">
+                                        <h6 class="mb-0 text-sm leading-normal dark:text-white break-words">{{ $alumnus->nama }}</h6>
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">
+                                            {{ $alumnus->nip }}
+                                        </span>
+                                    </div>
+                                </td>
+
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->user->email }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->jabatan }}</span>
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">{{ $alumnus->jabatan }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->satuan_kerja }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->unit_kerja }}</span>
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
+                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">{{ $alumnus->unit_kerja }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->no_hp }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->kepala_bps }}</span>
+                                    <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
+                                        <div class="flex flex-col px-2 py-1 break-words">
+                                            <h6 class="mb-0 text-sm leading-normal dark:text-white break-words">{{ $alumnus->kepala_bps }}</h6>
+                                            <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">
+                                            {{ $alumnus->nip_kepala_bps }}
+                                            </span>
+                                        </div>
                                     </td>
+                                    
+
 
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="icon-container">
@@ -194,10 +202,6 @@
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
-                                            <!-- Details -->
-                                            <a href="{{ route('admin.alumni.show', $alumnus->id) }}" class="icon-link" data-tooltip="Details">
-                                                <i class="fas fa-info-circle"></i>
-                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -270,6 +274,14 @@ setTimeout(() => {
         setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
     });
 }, 3000);
+</script>
+<script>
+    document.addEventListener('input', function (e) {
+        if (e.target.classList.contains('auto-resize')) {
+            e.target.style.height = 'auto';
+            e.target.style.height = (e.target.scrollHeight) + 'px';
+        }
+    });
 </script>
 
 

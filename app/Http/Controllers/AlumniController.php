@@ -43,6 +43,7 @@ class AlumniController extends Controller
             'unit_kerja'  => 'required|string|max:15',
             'no_hp' => 'required|string|max:15',
             'kepala_bps' => 'required|string|max:255',
+            'nip_kepala_bps' => 'required|string|max:255',
         ]);
 
         $user = User::create([
@@ -91,6 +92,7 @@ class AlumniController extends Controller
             'unit_kerja'  => 'required|string|max:15',
             'no_hp' => 'required|string|max:15',
             'kepala_bps' => 'required|string|max:255',
+            'nip_kepala_bps' => 'required|string|max:255',
         ]);
 
         $user = $alumnus->user;

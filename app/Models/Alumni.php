@@ -16,7 +16,8 @@ class Alumni extends Model
         'satuan_kerja',
         'unit_kerja',
         'no_hp',
-        'kepala_bps'
+        'kepala_bps',
+        'nip_kepala_bps',
     ];
 
     public function user()

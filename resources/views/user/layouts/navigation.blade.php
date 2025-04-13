@@ -4,8 +4,8 @@
       <div class="relative flex items-center justify-between -mx-4">
         <div class="max-w-full px-4 w-60">
           <a href="index.html" class="block w-full py-5 navbar-logo">
-            <img src="assets/images/logo/logo.svg" alt="logo" class="w-full dark:hidden" />
-            <img src="assets/images/logo/logo-white.svg" alt="logo" class="hidden w-full dark:block" />
+            <img src="assets/images/logo/ts.svg" alt="logo" class="w-full dark:hidden" />
+            <img src="assets/images/logo/ts_white.svg" alt="logo" class="hidden w-full dark:block" />
           </a>
         </div>
         <div class="flex items-center justify-between w-full px-4">
@@ -100,7 +100,7 @@
                             </button>
                           </form>
                     @else
-                        <a href="signin.html"
+                        <a 
                           class="loginBtn py-2 px-[22px] text-base font-medium text-dark dark:text-white hover:opacity-70">
                           <!-- Sign In -->
                         </a>

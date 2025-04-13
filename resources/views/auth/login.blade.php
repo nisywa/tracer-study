@@ -37,8 +37,8 @@
       <div class="relative flex items-center justify-between -mx-4">
         <div class="max-w-full px-4 w-60">
           <a href="index.html" class="block w-full py-5 navbar-logo">
-            <img src="assets/images/logo/logo.svg" alt="logo" class="w-full dark:hidden" />
-            <img src="assets/images/logo/logo-white.svg" alt="logo" class="hidden w-full dark:block" />
+            <img src="assets/images/logo/ts.svg" alt="logo" class="w-full dark:hidden" />
+            <img src="assets/images/logo/ts_white.svg" alt="logo" class="hidden w-full dark:block" />
           </a>
         </div>
         <div class="flex items-center justify-between w-full px-4">
@@ -125,10 +125,17 @@
   </div>
   <!-- ====== Navbar Section End -->
 
+  <div class="relative z-10 overflow-hidden md:pt-[130px] lg:pt-[160px] dark:bg-dark">
+    <div
+      class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-stroke/0 via-stroke dark:via-dark-3 to-stroke/0">
+    </div>
+  </div>
+
+
 
 
   <!-- ====== Forms Section Start -->
-  <section class="bg-[#F4F7FF] py-14 lg:py-20 dark:bg-dark">
+  <section class="bg-[#F4F7FF] w-full py-14 lg:py-20 dark:bg-dark">
     <div class="container">
       <div class="flex flex-wrap -mx-4">
         <div class="w-full px-4">
@@ -137,8 +144,8 @@
             data-wow-delay=".15s">
             <div class="mb-10 text-center">
               <a href="javascript:void(0)" class="mx-auto inline-block max-w-[160px]">
-                <img src="assets/images/logo/logo.svg" alt="logo" class="dark:hidden" />
-                <img src="assets/images/logo/logo-white.svg" alt="logo" class="hidden dark:block" />
+                <img src="assets/images/logo/ts.svg" alt="logo" class="dark:hidden" />
+                <img src="assets/images/logo/ts_white.svg" alt="logo" class="hidden dark:block" />
               </a>
             </div>
             <form method="POST" action="{{ route('login') }}">
@@ -236,7 +243,7 @@
   <!-- ====== Back To Top End -->
 
   <!-- ====== Made With Button Start -->
-  <a target="_blank" rel="nofollow noopener"
+  <!-- <a target="_blank" rel="nofollow noopener"
     class="inline-flex items-center gap-[10px] py-2 px-[14px] rounded-lg bg-white dark:bg-dark-2 shadow-2 fixed bottom-8 left-4 sm:left-9 z-[999]"
     href="https://tailgrids.com/">
     <span class="text-base font-medium text-dark-3 dark:text-dark-6">
@@ -247,7 +254,7 @@
       <img src="./assets/images/brands/tailgrids.svg" alt="tailgrids" class="dark:hidden">
       <img src="./assets/images/brands/tailgrids-white.svg" alt="tailgrids" class="hidden dark:block">
     </span>
-  </a>
+  </a> -->
   <!-- ====== Made With Button End -->
 
   <!-- ====== All Scripts -->

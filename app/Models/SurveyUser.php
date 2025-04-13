@@ -32,7 +32,7 @@ class SurveyUser extends Model
             } elseif ($survey->type_survei=='atasan'){
               $query->join('atasan as a','users.id','=','a.user_id');  
             }
-
+            $query->where ('survey_user.survey_id',$id_survey);
             return $query->get();
         }
         return false;

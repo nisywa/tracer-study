@@ -4404,4 +4404,14 @@ h6 {
   .xl-max\:opacity-65 {
     opacity: 0.65;
   }
+
+  /* agar menjadi otomatis ke bawah di index manajemen survei */
+  .description-wrap {
+    white-space: normal !important;
+    word-wrap: break-word;
+    max-width: 100px; /* bisa disesuaikan */
+    display: inline-block; 
+  }
+
+  
 }

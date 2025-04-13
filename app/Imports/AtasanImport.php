@@ -49,7 +49,7 @@ class AtasanImport implements ToModel, WithHeadingRow
 
         // Create survey_user entry if survey_id is set
         if ($this->survey_id) {
-            SurveyUser::create([
+            SurveyUser::updateOrcreate([
                 'survey_id' => $this->survey_id,
                 'user_id' => $user->id,
             ]);
