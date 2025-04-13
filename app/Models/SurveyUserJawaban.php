@@ -13,4 +13,15 @@ class SurveyUserJawaban extends Model
     {
         return $this->belongsTo(SurveyUser::class);
     }
+    // Add the missing relationship
+    public function template_pertanyaan()
+    {
+        return $this->belongsTo(TemplatePertanyaan::class, 'template_pertanyaan_id');
+    }
+
+    // Add relationship for template_jawaban as well
+    public function template_jawaban()
+    {
+        return $this->belongsTo(TemplateJawaban::class, 'template_jawaban_id');
+    }
 }

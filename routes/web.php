@@ -49,6 +49,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
+    Route::get('monitoring/export/{id}', [MonitoringController::class, 'exportResults'])->name('monitoring.export');
     Route::get('monitoring/details/{id}', [MonitoringController::class, 'details'])->name('monitoring.details');
     Route::resource('monitoring', MonitoringController::class);
     Route::get('monitoring/grafik/{id}', [MonitoringController::class, 'grafik'])->name('monitoring.grafik');

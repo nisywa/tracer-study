@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SurveyResultsExport;
 use App\Models\Survey;
 use App\Models\SurveyUser;
 use App\Models\SurveyUserJawaban;
@@ -9,6 +10,7 @@ use App\Models\TemplatePertanyaan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MonitoringController extends Controller
 {
@@ -31,6 +33,13 @@ class MonitoringController extends Controller
         return view('admin.views.monitoring.index', compact('survey'));
     }
 
+    public function exportResults($id)
+    {
+        $survey = Survey::findOrFail($id);
+        $filename = 'survey_results_' . $survey->id . '_' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(new SurveyResultsExport($id), $filename);
+    }
     /**
      * Show visualization page
      */
