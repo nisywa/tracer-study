@@ -125,20 +125,30 @@ class SurveyController extends Controller
 
     public function details($id)
     {
-        
-        $survey = Survey::findOrFail($id)-> paginate(10);
-        
-        
-        $survey_user = SurveyUser::getSurveyUser($id);
-        $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
+
+        $survey = Survey::findOrFail($id);
+
+        $survey_user = SurveyUser::where('survey_id', $id)
+            ->paginate(10, ['*'], 'user_page');
+
+        $template_pertanyaan = TemplatePertanyaan::where('id_survey', $id)
+            ->orderBy('urutan')
+            ->paginate(10, ['*'], 'question_page');
+
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
+
         if (Carbon::parse($survey->tanggal_selesai) >= now()) {
             $survey->status = "Aktif";
         } else {
             $survey->status = "Selesai";
         }
-        return view('admin.views.survey.details', ['survey' => $survey, 'survey_user' => $survey_user, 'template_pertanyaan' => $template_pertanyaan]);
+
+        return view('admin.views.survey.details', [
+            'survey' => $survey,
+            'survey_user' => $survey_user,
+            'template_pertanyaan' => $template_pertanyaan
+        ]);
     }
 
     public function create_question(Request $request)

@@ -45,6 +45,13 @@
                                         </div>
                                         <div class="chart-container bg-white dark:bg-slate-800 rounded-lg"
                                             style="position: relative; height:300px;">
+                                            <div class="flex justify-end p-2">
+                                                <button onclick="exportChart('{{ $question->id }}')"
+                                                    class="inline-flex items-center px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-md">
+                                                    <i class="fas fa-download mr-2"></i>
+                                                    Export Chart
+                                                </button>
+                                            </div>
                                             <canvas id="chart-{{ $question->id }}" class="p-2"></canvas>
                                             <div id="error-{{ $question->id }}"
                                                 class="text-red-500 dark:text-red-400 text-center hidden">
@@ -73,6 +80,25 @@
         <!-- Load Chart.js from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
         <script>
+            // Function to export chart as image
+            function exportChart(questionId) {
+                const chart = chartInstances.get(questionId);
+                if (!chart) return;
+
+                const canvas = chart.canvas;
+                const link = document.createElement('a');
+
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    link.href = url;
+                    link.download = `chart-${questionId}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                });
+            }
+
             console.log('Available questions:', @json($questions->pluck('pertanyaan', 'id')));
 
             function hideLoading(questionId) {
