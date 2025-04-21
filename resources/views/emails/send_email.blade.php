@@ -99,24 +99,21 @@
             </div>
             <div class="content">
                 <div class="content-wrapper">
-                    <h2>Halo tracers!</h2>
+                    <h2>Halo {{ $data->nama }}!</h2>
                     
                     <p>Berikut akun tracer study kamu:</p>
                     
                     <div class="account-info">
                         <div class="info-label">Email:</div>
-                        <div class="info-value">hahaha</div>
+                        <div class="info-value">{{ $data->email }}</div>
                         
                         <div class="info-label">Password:</div>
-                        <div class="info-value">hahaha</div>
-                        
-                        <div class="info-label">Link:</div>
-                        <div class="info-value">hahah</div>
+                        <div class="info-value">{{$data->password}}</div>
                     </div>
                     
-                    <p>Yuk, langsung isi surveimu! Terima kasih :)</p>
+                    <p>Yuk, langsung isi surveimu! Terima kasih </p>
                     
-                    <a href="" class="cta-button">Login Sekarang</a>
+                    <a href="{{ $data->link }}" class="cta-button">Login Sekarang</a>
                 </div>
             </div>
             

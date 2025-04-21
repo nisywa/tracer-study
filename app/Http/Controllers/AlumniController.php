@@ -51,7 +51,7 @@ class AlumniController extends Controller
             'email' => $request->email,
             'role' => 'alumni',
             // 'password' => bcrypt(substr($request->nama, 0, 5) . $request->tahun_lulus),
-            'password'=> bcrypt('password'),
+            'password'=>bcrypt(substr($request->nip, 0, 5)),
             'role' => 'alumni',
         ]);
         $user->assignRole('alumni');

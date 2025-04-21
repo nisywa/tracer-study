@@ -9,6 +9,8 @@ use App\Models\TemplatePertanyaan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 class SurveyUserController extends Controller
 {
@@ -160,15 +162,21 @@ class SurveyUserController extends Controller
     }
 
     public function sendEmail ($id){
-        $surveyUser = SurveyUser::with (['user'])->where('survey_id', $id)->get();
+        $surveyUsers = SurveyUser::with (['user.alumni','user.atasan'])->where('survey_id', $id)->get();
+        foreach ($surveyUsers as $surveyUser) {
+            $nip = $surveyUser->user->alumni->nip ?? $surveyUser->user->atasan->nip;
+            $data = [
+                'subject' => 'Akun Tracer Study Politeknik Statistika STIS',
+                'title' => 'Akun Tracer Study Politeknik Statistika STIS',
+                'nama' => $surveyUser->user->name,
+                'email' => $surveyUser->user->email,
+                'password' => $nip,
+                'link' => route('user.survey.survey', $id),
+            ];
         
+            Mail::to($surveyUser->user->email)->send(new SendEmail($data));
+        }
 
-        $data = [
-            'subject' => 'Testing Kirim Email',
-            'title' => 'Testing Kirim Email',
-            'body' => 'Ini adalah email uji coba dari Tutorial Laravel: Send Email Via SMTP GMAIL @ qadrLabs.com'
-        ];
-    
-        Mail::cc('nisywazahrai.nzi@gmail.com')->send(new SendEmail($data));
+        
     }
 }

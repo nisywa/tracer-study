@@ -60,6 +60,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Route::resource('profile', ProfileController::class);
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::resource('user', ProfileController::class);
+    Route::get('send_email/{surveyId}',[SurveyUserController::class, 'sendEmail'])->name('send_email');
 });
 
 // User route
@@ -70,18 +71,6 @@ Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function
     Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 });
 
-
-// send email otomatis
-Route::get('/mail/send', function () {
-    $data = [
-        'subject' => 'Testing Kirim Email',
-        'title' => 'Testing Kirim Email',
-        'body' => 'Ini adalah email uji coba dari Tutorial Laravel: Send Email Via SMTP GMAIL @ qadrLabs.com'
-    ];
-
-    Mail::to('nisywazahrai.nzi@gmail.com')->send(new SendEmail($data));
-
-});
 
 
 require __DIR__ . '/auth.php';

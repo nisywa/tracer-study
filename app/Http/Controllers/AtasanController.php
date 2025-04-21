@@ -94,8 +94,7 @@ class AtasanController extends Controller
         $user->update([
             'name' => $request->nama,
             'email' => $request->email,
-            // 'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp, 0, 5)),
-            'password'=> bcrypt('password'),
+            'password'=>bcrypt(substr($request->nip, 0, 5)),
         ]);
 
         $validatedData['user_id'] = $user->id;
