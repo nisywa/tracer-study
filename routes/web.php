@@ -8,6 +8,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\SurveyUserController;
 use Illuminate\Support\Facades\Route;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('welcome');
@@ -68,6 +70,18 @@ Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function
     Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 });
 
+
+// send email otomatis
+Route::get('/mail/send', function () {
+    $data = [
+        'subject' => 'Testing Kirim Email',
+        'title' => 'Testing Kirim Email',
+        'body' => 'Ini adalah email uji coba dari Tutorial Laravel: Send Email Via SMTP GMAIL @ qadrLabs.com'
+    ];
+
+    Mail::to('nisywazahrai.nzi@gmail.com')->send(new SendEmail($data));
+
+});
 
 
 require __DIR__ . '/auth.php';

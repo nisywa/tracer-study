@@ -284,4 +284,67 @@ setTimeout(() => {
     });
 }, 3000);
 </script>
+
+<!-- untuk fitur search by name dan nip alumni -->
+<script>
+    // Script pencarian untuk daftar alumni
+document.addEventListener('DOMContentLoaded', function() {
+    // Ambil elemen input pencarian
+    const searchInput = document.querySelector('input[placeholder="Type here..."]');
+    
+    // Fungsi untuk melakukan pencarian
+    function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const alumniRows = document.querySelectorAll('tbody tr');
+        
+        alumniRows.forEach(row => {
+            const namaElement = row.querySelector('h6');
+            const nipElement = row.querySelector('span');
+            
+            if (!namaElement || !nipElement) return;
+            
+            const nama = namaElement.textContent.toLowerCase();
+            const nip = nipElement.textContent.trim().toLowerCase();
+            
+            // Periksa apakah nama atau NIP mengandung kata kunci pencarian
+            if (nama.includes(searchTerm) || nip.includes(searchTerm)) {
+                row.style.display = ''; // Tampilkan baris
+            } else {
+                row.style.display = 'none'; // Sembunyikan baris
+            }
+        });
+    }
+    
+    // Tambahkan event listener untuk input pencarian
+    searchInput.addEventListener('input', performSearch);
+    
+    // Tambahkan fitur reset pencarian dengan tombol escape
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            searchInput.value = '';
+            performSearch();
+        }
+    });
+    
+    // Tambahkan tombol clear pencarian (opsional)
+    const searchContainer = searchInput.parentElement;
+    const clearButton = document.createElement('button');
+    clearButton.innerHTML = '<i class="fas fa-times"></i>';
+    clearButton.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white';
+    clearButton.style.display = 'none';
+    
+    clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        performSearch();
+        clearButton.style.display = 'none';
+    });
+    
+    searchContainer.appendChild(clearButton);
+    
+    // Tampilkan tombol clear saat ada teks di input
+    searchInput.addEventListener('input', function() {
+        clearButton.style.display = searchInput.value ? 'block' : 'none';
+    });
+});
+</script>
 @endsection

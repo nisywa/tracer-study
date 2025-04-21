@@ -158,4 +158,17 @@ class SurveyUserController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    public function sendEmail ($id){
+        $surveyUser = SurveyUser::with (['user'])->where('survey_id', $id)->get();
+        
+
+        $data = [
+            'subject' => 'Testing Kirim Email',
+            'title' => 'Testing Kirim Email',
+            'body' => 'Ini adalah email uji coba dari Tutorial Laravel: Send Email Via SMTP GMAIL @ qadrLabs.com'
+        ];
+    
+        Mail::cc('nisywazahrai.nzi@gmail.com')->send(new SendEmail($data));
+    }
 }
