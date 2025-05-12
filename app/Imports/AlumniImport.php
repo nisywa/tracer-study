@@ -27,47 +27,66 @@ class AlumniImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         try {
+            // Validate required fields
+            if (empty($row['email']) || empty($row['nama']) || empty($row['nip'])) {
+                Log::warning("Skipping row due to missing required fields", $row);
+                return null;
+            }
+
+            // Validate email format
+            if (!filter_var($row['email'], FILTER_VALIDATE_EMAIL)) {
+                throw new Exception("Invalid email format for: {$row['email']}");
+            }
+
             // Create the user
             $user = User::firstOrCreate(
                 ['email' => $row['email']], // Check for duplicate email
                 [
                     'name' => $row['nama'],
-                    'password' => bcrypt('default_password'), // Handle password securely
+                    'password' => bcrypt(substr($row['nip'], 0, 5)), // Use first 5 digits of NIP as password
+                    'role' => 'alumni',
                 ]
             );
 
+            // Assign role if not already assigned
+            if (!$user->hasRole('alumni')) {
+                $user->assignRole('alumni');
+            }
+
             // Create the alumni record
-            $alumni = Alumni::firstOrCreate(['nip' => $row['nip']], [
-                'user_id' => $user->id,
-                'nama' => $row['nama'],
-                'nip' => $row['nip'],
-                'email' => $row['email'],
-                'jabatan' => $row['jabatan'],
-                'satuan_kerja' => $row['satuan_kerja'],
-                'unit_kerja' => $row['unit_kerja'],
-                'no_hp' => $row['no_hp'],
-                'kepala_bps' => $row['kepala_bps'],
-                'nip_kepala_bps' => $row['nip_kepala_bps'],
-            ]);
+            $alumni = Alumni::firstOrCreate(
+                ['nip' => $row['nip']],
+                [
+                    'user_id' => $user->id,
+                    'nama' => $row['nama'],
+                    'nip' => $row['nip'],
+                    'email' => $row['email'],
+                    'jabatan' => $row['jabatan'] ?? '',
+                    'satuan_kerja' => $row['satuan_kerja'] ?? '',
+                    'unit_kerja' => $row['unit_kerja'] ?? '',
+                    'no_hp' => $row['no_hp'] ?? '',
+                    'kepala_bps' => $row['kepala_bps'] ?? '',
+                    'nip_kepala_bps' => $row['nip_kepala_bps'] ?? '',
+                ]
+            );
 
             // Create survey_user entry if survey_id is set
             if ($this->survey_id) {
-                SurveyUser::create([
-                    'survey_id' => $this->survey_id,
-                    'user_id' => $user->id,
-                ]);
+                SurveyUser::firstOrCreate(
+                    [
+                        'survey_id' => $this->survey_id,
+                        'user_id' => $user->id,
+                    ]
+                );
             }
+
             return $alumni;
         } catch (QueryException $e) {
-            // Log or handle the error
-            Log::error("message: {$e->getMessage()}");
-            throw $e;
+            Log::error("Database error during import: " . $e->getMessage());
+            throw new Exception("Error importing data: " . $e->getMessage());
         } catch (Exception $e) {
-
-
-            // Log or handle the error
-            Log::error("message: {$e->getMessage()}");
-            throw $e;
+            Log::error("Import error: " . $e->getMessage());
+            throw new Exception("Error importing data: " . $e->getMessage());
         }
     }
 }
