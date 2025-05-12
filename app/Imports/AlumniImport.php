@@ -47,6 +47,7 @@ class AlumniImport implements ToModel, WithHeadingRow
                 'unit_kerja' => $row['unit_kerja'],
                 'no_hp' => $row['no_hp'],
                 'kepala_bps' => $row['kepala_bps'],
+                'nip_kepala_bps' => $row['nip_kepala_bps'],
             ]);
 
             // Create survey_user entry if survey_id is set

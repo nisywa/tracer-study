@@ -142,7 +142,7 @@
                                         No HP</th>
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                                        Kepala BPS/NIP</th>
+                                        NIP Kepala BPS</th>
 
                                     <th
                                         class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
@@ -179,7 +179,7 @@
                                     </td>
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
                                         <div class="flex flex-col px-2 py-1 break-words">
-                                            <h6 class="mb-0 text-sm leading-normal dark:text-white break-words">{{ $alumnus->kepala_bps }}</h6>
+                                            
                                             <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">
                                             {{ $alumnus->nip_kepala_bps }}
                                             </span>
