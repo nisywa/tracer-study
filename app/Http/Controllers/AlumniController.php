@@ -14,9 +14,19 @@ class AlumniController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $daftarAlumni = Alumni::with('user:id,email')->paginate(10); // Adjust the number as needed
+        $query = Alumni::with('user:id,email');
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nip', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $daftarAlumni = $query->paginate(10)->withQueryString();
 
         return view('admin.views.alumni.index', compact('daftarAlumni'));
     }
@@ -140,5 +150,5 @@ class AlumniController extends Controller
         }
     }
 
-    
+
 }

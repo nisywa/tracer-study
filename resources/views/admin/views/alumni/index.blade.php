@@ -48,13 +48,19 @@
                     <h6 class="dark:text-white">Daftar User Alumni</h6>
                     <div class="relative flex items-center w-auto">
                         <div class="relative flex items-stretch">
-                            <span
-                                class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input type="text"
-                                class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
-                                placeholder="Type here..." />
+                            <form action="{{ route('admin.alumni.index') }}" method="GET" class="flex items-center">
+                                <span class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" name="search" value="{{ request('search') }}"
+                                    class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
+                                    placeholder="Search by name or NIP..." />
+                                @if(request('search'))
+                                    <a href="{{ route('admin.alumni.index') }}" class="ml-2 text-gray-500 hover:text-gray-700">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                @endif
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -179,13 +185,13 @@
                                     </td>
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
                                         <div class="flex flex-col px-2 py-1 break-words">
-                                            
+
                                             <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">
                                             {{ $alumnus->nip_kepala_bps }}
                                             </span>
                                         </div>
                                     </td>
-                                    
+
 
 
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
@@ -216,7 +222,7 @@
 
 
 
-                    
+
 
 
 
@@ -265,68 +271,6 @@ setTimeout(() => {
             e.target.style.height = (e.target.scrollHeight) + 'px';
         }
     });
-</script>
-<!-- untuk fitur search by name dan nip alumni -->
-<script>
-    // Script pencarian untuk daftar alumni
-document.addEventListener('DOMContentLoaded', function() {
-    // Ambil elemen input pencarian
-    const searchInput = document.querySelector('input[placeholder="Type here..."]');
-    
-    // Fungsi untuk melakukan pencarian
-    function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const alumniRows = document.querySelectorAll('tbody tr');
-        
-        alumniRows.forEach(row => {
-            const namaElement = row.querySelector('h6');
-            const nipElement = row.querySelector('span');
-            
-            if (!namaElement || !nipElement) return;
-            
-            const nama = namaElement.textContent.toLowerCase();
-            const nip = nipElement.textContent.trim().toLowerCase();
-            
-            // Periksa apakah nama atau NIP mengandung kata kunci pencarian
-            if (nama.includes(searchTerm) || nip.includes(searchTerm)) {
-                row.style.display = ''; // Tampilkan baris
-            } else {
-                row.style.display = 'none'; // Sembunyikan baris
-            }
-        });
-    }
-    
-    // Tambahkan event listener untuk input pencarian
-    searchInput.addEventListener('input', performSearch);
-    
-    // Tambahkan fitur reset pencarian dengan tombol escape
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            searchInput.value = '';
-            performSearch();
-        }
-    });
-    
-    // Tambahkan tombol clear pencarian (opsional)
-    const searchContainer = searchInput.parentElement;
-    const clearButton = document.createElement('button');
-    clearButton.innerHTML = '<i class="fas fa-times"></i>';
-    clearButton.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white';
-    clearButton.style.display = 'none';
-    
-    clearButton.addEventListener('click', function() {
-        searchInput.value = '';
-        performSearch();
-        clearButton.style.display = 'none';
-    });
-    
-    searchContainer.appendChild(clearButton);
-    
-    // Tampilkan tombol clear saat ada teks di input
-    searchInput.addEventListener('input', function() {
-        clearButton.style.display = searchInput.value ? 'block' : 'none';
-    });
-});
 </script>
 
 
