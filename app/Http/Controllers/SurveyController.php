@@ -199,7 +199,11 @@ class SurveyController extends Controller
      */
     public function destroy(survey $survey)
     {
-        //
+        var_dump($survey);
+        
+        $survey->delete();
+
+        return redirect()->route('admin.survey.index')->with('success', 'Survey deleted successfully.');
     }
 
     public function import(Request $request, Excel $excel)

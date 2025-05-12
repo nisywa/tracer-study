@@ -139,4 +139,6 @@ class AlumniController extends Controller
             return redirect()->route('admin.alumni.index')->with('error', 'Failed to import alumni.');
         }
     }
+
+    
 }

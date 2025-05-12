@@ -152,4 +152,28 @@
     });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector('input[type="text"]');
+        const tableRows = document.querySelectorAll("tbody tr");
+
+        searchInput.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const namaSurvei = row.children[0].innerText.toLowerCase();
+                const tipeSurvei = row.children[3].innerText.toLowerCase();
+
+                if (namaSurvei.includes(searchTerm) || tipeSurvei.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+
+
+
     @endsection

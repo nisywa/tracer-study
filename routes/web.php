@@ -40,9 +40,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('alumni/export', [AlumniController::class, 'export'])->name('alumni.export');
     Route::post('alumni/import', [AlumniController::class, 'import'])->name('alumni.import');
+    Route::delete('alumni/delete/{id}', [AlumniController::class, 'destroy'])->name('admin.alumni.destroy'); //hapus alumni
     Route::post('atasan/import', [AtasanController::class, 'import'])->name('atasan.import');
     Route::get('atasan/export', [AtasanController::class, 'export'])->name('atasan.export');
     Route::get('atasan/details/{id}', [AtasanController::class, 'details'])->name('atasan.details');
+    Route::delete('atasan/delete/{id}', [AtasanController::class, 'destroy'])->name('admin.atasan.destroy');
     Route::resource('alumni', AlumniController::class);
     Route::resource('atasan', AtasanController::class);
     Route::post('survey/import', [SurveyController::class, 'import'])->name('survey.import');

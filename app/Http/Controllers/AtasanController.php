@@ -108,7 +108,11 @@ class AtasanController extends Controller
      */
     public function destroy(Atasan $atasan)
     {
-        //
+        var_dump($atasan);
+        $atasan->user->delete();
+        $atasan->delete();
+
+        return redirect()->route('admin.atasan.index')->with('success', 'Atasan deleted successfully.');
     }
 
 

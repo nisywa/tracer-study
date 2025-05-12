@@ -41,12 +41,28 @@
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                 <h6 class="dark:text-white">Daftar Survei</h6>
-                <a href="{{route('admin.survey.create')}}">
-                <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                  <i class="fas fa-plus mr-2"></i> Tambah Survei
-                </button>
-                </a>
-                
+                <div class="flex items-center gap-4">
+       
+                  <!-- button tambah survei -->
+                  <a href="{{route('admin.survey.create')}}">
+                  <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                    <i class="fas fa-plus mr-2"></i> Tambah Survei
+                  </button>
+                  </a>
+
+                  <!-- Kolom Search -->
+                  <div class="relative flex items-center w-auto">
+                      <div class="relative flex items-stretch">
+                          <span
+                              class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
+                              <i class="fas fa-search"></i>
+                          </span>
+                          <input type="text"
+                              class="pl-9 text-sm focus:shadow-primary-outline ease w-full leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
+                              placeholder="Type here..." />
+                      </div>
+                </div>
+              </div> 
               </div>
               <div class="flex-auto px-0 pt-0 pb-2">
                 <div class="p-0 overflow-x-auto">
@@ -142,7 +158,7 @@
                             <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $srvy->id }}').submit();">
                                 <i class="fas fa-trash"></i>
                             </a>
-                            <form id="delete-form-{{ $srvy->id }}" action="{{ route('admin.survey.destroy', $srvy->id) }}" method="POST" style="display: none;">
+                            <form id="delete-form-{{ $srvy->id }}" action="{{ route('admin.survey.destroy', $srvy) }}" method="POST" style="display: none;">
                               @csrf
                               @method('DELETE')
                             </form>
@@ -209,5 +225,25 @@
     }, 3000);
     </script>
     
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector('input[type="text"]');
+        const tableRows = document.querySelectorAll("tbody tr");
 
+        searchInput.addEventListener("input", function () {
+            const searchTerm = this.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const namaSurvei = row.children[0].innerText.toLowerCase();
+                const tipeSurvei = row.children[3].innerText.toLowerCase();
+
+                if (namaSurvei.includes(searchTerm) || tipeSurvei.includes(searchTerm)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
 @endsection
