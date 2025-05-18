@@ -6,11 +6,13 @@ use App\Models\Survey;
 use App\Models\SurveyUser;
 use App\Models\SurveyUserJawaban;
 use App\Models\TemplatePertanyaan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
+use PhpParser\Node\Stmt\TryCatch;
 
 class SurveyUserController extends Controller
 {
@@ -73,14 +75,7 @@ class SurveyUserController extends Controller
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(SurveyUser $surveyUser)
-    {
-        //
-    }
+    
 
     public function survey()
     {
@@ -178,5 +173,73 @@ class SurveyUserController extends Controller
         }
 
         
+    }
+
+    public function search_user (Request $request){
+        $search = $request->input('search');
+        $type = $request->input('type', 'alumni');
+        $surveyId = $request->input('survey_id');
+
+        $query = User::query();
+
+        if ($type === 'alumni') {
+            $query->whereHas('roles', function($q) {
+                $q->where('name', 'alumni');
+            });
+        } else {
+            $query->whereHas('roles', function($q) {
+                $q->where('name', 'atasan');
+            });
+        }
+
+        // Exclude users that are already in the survey using leftJoin
+        if ($surveyId) {
+            $query->leftJoin('survey_user', function($join) use ($surveyId) {
+                $join->on('users.id', '=', 'survey_user.user_id')
+                     ->where('survey_user.survey_id', '=', $surveyId);
+            })
+            ->whereNull('survey_user.id'); // Only get users not in survey_user
+        }
+
+        $users = $query->where(function($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%");
+        })
+        ->with(['alumni' => function($q) {
+            $q->select('id', 'user_id', 'nama', 'nip');
+        }])
+        ->select('users.id', 'users.name', 'users.email')
+        ->distinct()
+        ->limit(10)
+        ->get();
+
+        return response()->json($users);
+    }
+
+    public function add_user (Request $request){
+        $userId = $request->input('user_id');
+        $surveyId = $request->input('survey_id');
+        try {
+            SurveyUser::updateOrCreate(
+                [
+                    'user_id' => $userId,
+                    'survey_id' => $surveyId
+                ],
+                [
+                    'status' => 0
+                ]
+            );
+        
+        return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }   
+        
+    }
+
+    public function destroy($survey_user_id){
+        $survey_user=SurveyUser::where('id','=', $survey_user_id);
+        SurveyUser::where('id', $survey_user_id)->delete();
+        return redirect()->route('admin.survey.details',['id'=>$survey_user->survey_id])->with('success', 'User Survei deleted successfully.');
     }
 }

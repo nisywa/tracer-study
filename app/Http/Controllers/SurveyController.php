@@ -216,7 +216,7 @@ class SurveyController extends Controller
             ]);
             $survey_id = $request->input('survey_id');
             $survey = Survey::findOrFail($survey_id);
-            if ($survey->type_survei='atasan'){
+            if ($survey->type_survei=='atasan'){
                 Excel::import(new AtasanImport($survey_id), ($request->file('file')));
             } else {
                 Excel::import(new AlumniImport($survey_id), $request->file('file'));

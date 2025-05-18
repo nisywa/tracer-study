@@ -23,7 +23,7 @@ class SurveyUser extends Model
     {
         $survey=Survey::where('id',$id_survey)->first();
         if ($survey){
-            $query=self::select('a.*')
+            $query=self::select('a.*','survey_user.id as survey_user_id','survey_user.survey_id')
             ->join('survey','survey.id','=','survey_user.survey_id')
             ->join('users','users.id','=','survey_user.user_id');
 

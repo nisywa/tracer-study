@@ -62,7 +62,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Route::resource('profile', ProfileController::class);
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::resource('user', ProfileController::class);
+    Route::get('search_user',[SurveyUserController::class, 'search_user'])->name('search_user');
+    Route::post('survey/add_user',[SurveyUserController::class, 'add_user'])->name('survey.add_user');
     Route::get('send_email/{surveyId}',[SurveyUserController::class, 'sendEmail'])->name('send_email');
+    Route::delete('survey_user/delete/{survey_user_id}', [SurveyUserController::class, 'destroy'])->name('survey_user.destroy');
 });
 
 // User route
