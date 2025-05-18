@@ -75,7 +75,7 @@ class SurveyUserController extends Controller
     {
         //
     }
-    
+
 
     public function survey()
     {
@@ -168,11 +168,11 @@ class SurveyUserController extends Controller
                 'password' => substr($nip, 0, 5),
                 'link' => route('user.survey.survey', $id),
             ];
-        
+
             Mail::to($surveyUser->user->email)->send(new SendEmail($data));
         }
 
-        
+
     }
 
     public function search_user (Request $request){
@@ -229,17 +229,25 @@ class SurveyUserController extends Controller
                     'status' => 0
                 ]
             );
-        
+
         return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }   
-        
+        }
+
     }
 
     public function destroy($survey_user_id){
-        $survey_user=SurveyUser::where('id','=', $survey_user_id);
-        SurveyUser::where('id', $survey_user_id)->delete();
-        return redirect()->route('admin.survey.details',['id'=>$survey_user->survey_id])->with('success', 'User Survei deleted successfully.');
+        $survey_user = SurveyUser::findOrFail($survey_user_id);
+        $survey_id = $survey_user->survey_id;
+
+        // Delete associated answers first
+        $survey_user->jawaban()->delete();
+
+        // Delete the survey user record
+        $survey_user->delete();
+
+        return redirect()->route('admin.survey.details', ['id' => $survey_id])
+            ->with('success', 'User Survei deleted successfully.');
     }
 }
