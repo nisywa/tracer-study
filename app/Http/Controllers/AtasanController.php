@@ -31,8 +31,8 @@ class AtasanController extends Controller
 
         return view('admin.views.atasan.index', compact('dataAtasan'));
     }
-    
-        
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -60,8 +60,7 @@ class AtasanController extends Controller
         $user = User::create([
             'name' => $request->nama,
             'email' => $request->email,
-            // 'password' => bcrypt(substr($request->nama, 0, 5) . substr($request->no_hp,offset: 0,length: 5)),
-            'password'=> bcrypt('password'),
+            'password' => bcrypt(substr($request->nip, 0, 5)),
             'role' => 'atasan',
         ]);
         $user->assignRole('atasan');
@@ -107,7 +106,6 @@ class AtasanController extends Controller
         $user->update([
             'name' => $request->nama,
             'email' => $request->email,
-            'password'=>bcrypt(substr($request->nip, 0, 5)),
         ]);
 
         $validatedData['user_id'] = $user->id;
@@ -145,7 +143,7 @@ class AtasanController extends Controller
             return redirect()->route('admin.atasan.index')->with('success', 'Atasan imported successfully.');
         }catch(\Exception $e){
             return redirect()->route('admin.atasan.index')->with('error', 'Failed to import atasan.');
-        }   
+        }
     }
 
     public function details($id)

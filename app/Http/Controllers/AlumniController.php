@@ -60,7 +60,6 @@ class AlumniController extends Controller
             'name' => $request->nama,
             'email' => $request->email,
             'role' => 'alumni',
-            // 'password' => bcrypt(substr($request->nama, 0, 5) . $request->tahun_lulus),
             'password'=>bcrypt(substr($request->nip, 0, 5)),
             'role' => 'alumni',
         ]);
@@ -109,8 +108,6 @@ class AlumniController extends Controller
         $user->update([
             'name' => $request->nama,
             'email' => $request->email,
-            // 'password' => bcrypt(substr($request->nama, 0, 5) . $request->tahun_lulus),
-            'password'=> bcrypt('password'),
         ]);
 
         $validatedData['user_id'] = $user->id;
