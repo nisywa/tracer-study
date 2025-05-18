@@ -70,7 +70,7 @@
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
 
                     <div class="flex items-center gap-4">
-                    <button type="button"
+                        <button type="button"
                             id="openModal" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             <i class="fas fa-file-upload mr-2"></i> Import Excel
                         </button>
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                         </form>
-                        </div>
+                    </div>
 
                         <a href="{{ route('admin.alumni.export') }}">
                             <button type="button"
@@ -106,12 +106,7 @@
                                 <i class="fas fa-file-excel mr-2"></i> Export Excel
                             </button>
                         </a>
-                    <a href="tambah_survei.html">
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
-                        </button>
-                    </a>
+                    
                     <a href="{{ route('admin.alumni.create') }}">
                         <button type="button"
                             class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">

@@ -26,39 +26,63 @@ class AtasanImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         try{
+            // Validate required fields
+            if (empty($row['email']) || empty($row['nama']) || empty($row['nip'])) {
+                Log::warning("Skipping row due to missing required fields", $row);
+                return null;
+            }
+
+            // Validate email format
+            if (!filter_var($row['email'], FILTER_VALIDATE_EMAIL)) {
+                throw new Exception("Invalid email format for: {$row['email']}");
+            }
+
             // Create the user
             $user = User::updateOrCreate(
             ['email' => $row['email']], // Check for duplicate email
             [
                 'name' => $row['nama'],
-                'password' => bcrypt('default_password'), // Handle password securely
+                'password' => bcrypt(substr($row['nip'], 0, 5)), // Use first 5 digits of NIP as password
+                'role' => 'atasan',
             ]
         );
 
+        // Assign role if not already assigned
+        if (!$user->hasRole('atasan')) {
+            $user->assignRole('atasan');
+        }
+
         // Create the atasan record
-        $atasan = Atasan::updateOrCreate(['email'=> $row['email']],[
-            'user_id' => $user->id,
-            'nama' => $row['nama'],
-            'nip' => $row['nip'],
-            'email' => $row['email'],
-            'jabatan' => $row['jabatan'],
-            'satuan_kerja' => $row['satuan_kerja'],
-            'unit_kerja' => $row['unit_kerja'],
-            'no_hp' => $row['no_hp'],
-        ]);
+        $atasan = Atasan::firstOrCreate(
+            ['nip' => $row['nip']],
+            [
+                'user_id' => $user->id,
+                'nama' => $row['nama'],
+                'nip' => $row['nip'],
+                'email' => $row['email'],
+                'jabatan' => $row['jabatan'] ?? '',
+                'satuan_kerja' => $row['satuan_kerja'] ?? '',
+                'unit_kerja' => $row['unit_kerja'] ?? '',
+                'no_hp' => $row['no_hp'] ?? '',
+            ]
+        );
 
         // Create survey_user entry if survey_id is set
         if ($this->survey_id) {
-            SurveyUser::updateOrcreate([
-                'survey_id' => $this->survey_id,
-                'user_id' => $user->id,
-            ]);
+            SurveyUser::firstOrCreate(
+                [
+                    'survey_id' => $this->survey_id,
+                    'user_id' => $user->id,
+                ]
+            );
         }
         return $atasan;
     } catch (QueryException $e) {
-        // Log or handle the error
-        Log::error("message: {$e->getMessage()}");
-        throw $e;
-    }
+        Log::error("Database error during import: " . $e->getMessage());
+            throw new Exception("Error importing data: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error("Import error: " . $e->getMessage());
+            throw new Exception("Error importing data: " . $e->getMessage());
   }
+    }
 }

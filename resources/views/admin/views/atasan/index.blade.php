@@ -55,13 +55,19 @@
                    
                     <div class="relative flex items-center w-auto">
                         <div class="relative flex items-stretch">
-                            <span
-                                class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input type="text"
-                                class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
-                                placeholder="Type here..." />
+                            <form action="{{ route('admin.atasan.index') }}" method="GET" class="flex items-center">
+                                <span class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" name="search" value="{{ request('search') }}"
+                                    class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
+                                    placeholder="Search by name or NIP..." />
+                                @if(request('search'))
+                                    <a href="{{ route('admin.atasan.index') }}" class="ml-2 text-gray-500 hover:text-gray-700">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                @endif
+                            </form>   
                         </div>
                     </div>
                 </div>
@@ -70,51 +76,48 @@
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                
-                    <button type="button" id="openModal"
-                        class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                        <i class="fas fa-file-upload mr-2"></i> Import Excel
-                    </button>
+                    <div class="flex items-center gap-4">
+                        <button type="button" id="openModal"
+                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-file-upload mr-2"></i> Import Excel
+                        </button>
 
-                    <!-- pop up modal import  -->
-                    <form action="{{ route('admin.atasan.import') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div id="uploadModal"
-                            class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
-                            <div class="bg-white rounded-lg shadow-lg w-96">
-                                <div class="flex items-center justify-between p-4 border-b">
-                                    <h3 class="text-lg font-bold">Upload File</h3>
-                                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
-                                </div>
-                                <div class="p-4">
-                                    <form id="uploadForm">
-                                        <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose
-                                            Excel File</label>
-                                        <input type="file" id="fileInput" name="file" accept=".xls,.xlsx"
-                                            class="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
-                                        <p class="mt-2 text-sm text-gray-500">Only .xls and .xlsx files are supported.</p>
-                                        <div class="mt-4 flex justify-end">
-                                            <button type="button" id="cancelUpload"
-                                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
-                                            <button type="submit"
-                                                class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600">Upload</button>
-                                        </div>
-                                    </form>
+                        <!-- pop up modal import  -->
+                        <form action="{{ route('admin.atasan.import') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div id="uploadModal"
+                                class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
+                                <div class="bg-white rounded-lg shadow-lg w-96">
+                                    <div class="flex items-center justify-between p-4 border-b">
+                                        <h3 class="text-lg font-bold">Upload File</h3>
+                                        <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+                                    </div>
+                                    <div class="p-4">
+                                        <form id="uploadForm">
+                                            <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose
+                                                Excel File</label>
+                                            <input type="file" id="fileInput" name="file" accept=".xls,.xlsx"
+                                                class="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
+                                            <p class="mt-2 text-sm text-gray-500">Only .xls and .xlsx files are supported.</p>
+                                            <div class="mt-4 flex justify-end">
+                                                <button type="button" id="cancelUpload"
+                                                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
+                                                <button type="submit"
+                                                    class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600">Upload</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                     <a href="{{ route('admin.atasan.export') }}">
                         <button type="button"
                             class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             <i class="fas fa-file-excel mr-2"></i> Export Excel
                         </button>
                     </a>
-                    <a href="tambah_survei.html">
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
-                        </button>
-                    </a>
+                    
                     
                     <a href="{{ route('admin.atasan.create') }}">
                         <button type="button"
@@ -214,16 +217,16 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form> 
-                                                <!-- Details -->
-                                                <a href="{{ route('admin.atasan.details',$atasan) }}" class="icon-link" data-tooltip="Details">
-                                                    <i class="fas fa-info-circle"></i>
-                                                </a>
+                                                
                                             </div>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="p-4">
+                            {{ $dataAtasan->links() }}
+                        </div>
                     </div>
                     
                 </div>
@@ -267,66 +270,5 @@ setTimeout(() => {
 }, 3000);
 </script>
 
-<!-- untuk fitur search by name dan nip alumni -->
-<script>
-    // Script pencarian untuk daftar alumni
-document.addEventListener('DOMContentLoaded', function() {
-    // Ambil elemen input pencarian
-    const searchInput = document.querySelector('input[placeholder="Type here..."]');
-    
-    // Fungsi untuk melakukan pencarian
-    function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const alumniRows = document.querySelectorAll('tbody tr');
-        
-        alumniRows.forEach(row => {
-            const namaElement = row.querySelector('h6');
-            const nipElement = row.querySelector('span');
-            
-            if (!namaElement || !nipElement) return;
-            
-            const nama = namaElement.textContent.toLowerCase();
-            const nip = nipElement.textContent.trim().toLowerCase();
-            
-            // Periksa apakah nama atau NIP mengandung kata kunci pencarian
-            if (nama.includes(searchTerm) || nip.includes(searchTerm)) {
-                row.style.display = ''; // Tampilkan baris
-            } else {
-                row.style.display = 'none'; // Sembunyikan baris
-            }
-        });
-    }
-    
-    // Tambahkan event listener untuk input pencarian
-    searchInput.addEventListener('input', performSearch);
-    
-    // Tambahkan fitur reset pencarian dengan tombol escape
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            searchInput.value = '';
-            performSearch();
-        }
-    });
-    
-    // Tambahkan tombol clear pencarian (opsional)
-    const searchContainer = searchInput.parentElement;
-    const clearButton = document.createElement('button');
-    clearButton.innerHTML = '<i class="fas fa-times"></i>';
-    clearButton.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white';
-    clearButton.style.display = 'none';
-    
-    clearButton.addEventListener('click', function() {
-        searchInput.value = '';
-        performSearch();
-        clearButton.style.display = 'none';
-    });
-    
-    searchContainer.appendChild(clearButton);
-    
-    // Tampilkan tombol clear saat ada teks di input
-    searchInput.addEventListener('input', function() {
-        clearButton.style.display = searchInput.value ? 'block' : 'none';
-    });
-});
-</script>
+
 @endsection

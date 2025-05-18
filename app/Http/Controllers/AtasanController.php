@@ -15,11 +15,24 @@ class AtasanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $dataAtasan = Atasan::with('user:id,email')->paginate(10);
+        $query = Atasan::with('user:id,email');
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nip', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $dataAtasan = $query->paginate(10)->withQueryString();
+
         return view('admin.views.atasan.index', compact('dataAtasan'));
     }
+    
+        
 
     /**
      * Show the form for creating a new resource.

@@ -170,7 +170,7 @@ class SurveyUserController extends Controller
                 'title' => 'Akun Tracer Study Politeknik Statistika STIS',
                 'nama' => $surveyUser->user->name,
                 'email' => $surveyUser->user->email,
-                'password' => $nip,
+                'password' => substr($nip, 0, 5),
                 'link' => route('user.survey.survey', $id),
             ];
         
