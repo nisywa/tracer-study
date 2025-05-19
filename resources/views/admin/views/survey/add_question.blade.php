@@ -148,8 +148,8 @@
                                                 <select name="visualisasi[]"
                                                     class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 input-type">
                                                     <option value="">Pilih Visualisasi</option>
-                                                    <option value="barChart" {{ $question->visualisasi == 'barChart' ? 'selected' : '' }}>Bar Chart</option>
-                                                    <option value="pieChart" {{ $question->visualisasi == 'pieChart' ? 'selected' : '' }}>Pie Chart</option>
+                                                    <option value="bar" {{ $question->visualisasi == 'bar' ? 'selected' : '' }}>Bar Chart</option>
+                                                    <option value="pie" {{ $question->visualisasi == 'pie' ? 'selected' : '' }}>Pie Chart</option>
                                                 </select>
                                             </td>
 
@@ -249,8 +249,8 @@
                     <select name="visualisasi[]"
                         class="text-xs font-semibold leading-tight border border-gray-400 rounded px-2 py-1 input-type">
                         <option value="">Pilih Visualisasi</option>
-                        <option value="barChart">Bar Chart</option>
-                        <option value="pieChart">Pie Chart</option>
+                        <option value="bar">Bar Chart</option>
+                        <option value="pie">Pie Chart</option>
                         <option value="lineChart">Line Chart</option>
                     </select>
                 </td>
