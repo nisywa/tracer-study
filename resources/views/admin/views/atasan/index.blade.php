@@ -217,7 +217,10 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form> 
-                                                
+                                                <!-- details -->
+                                                 <a href="{{ route('admin.atasan.details',$atasan) }}" class="icon-link" data-tooltip="Details">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

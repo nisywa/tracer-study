@@ -183,7 +183,7 @@
                                             <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $responden->survey_user_id }}').submit();">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                            <form id="delete-form-{{ $responden->survey_user_id }}" action="{{ route('admin.survey_user.destroy', $responden) }}" method="POST" style="display: none;">
+                                            <form id="delete-form-{{ $responden->survey_user_id }}" action="{{ route('admin.survey_user.destroy', $responden->survey_user_id) }}" method="POST" style="display: none;">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>

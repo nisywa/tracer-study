@@ -251,7 +251,7 @@
                         <option value="">Pilih Visualisasi</option>
                         <option value="barChart">Bar Chart</option>
                         <option value="pieChart">Pie Chart</option>
-                        <option value="lineChart">Line Chart</option>
+                        
                     </select>
                 </td>
 
