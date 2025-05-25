@@ -10,12 +10,12 @@
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                   <h6 class="dark:text-white">Informasi Survei</h6>
                   @if(!auth()->user()->hasRole('supervisor'))
-                  <a href="{{ route('admin.send_email',$survey->id) }}">
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
-                        </button>
-                    </a>
+                    <button type="button"
+                        id="sendEmailBtn"
+                        data-survey-id="{{ $survey->id }}"
+                        class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                        <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
+                    </button>
                   @endif
                 </div>
                 @if(session('error'))
@@ -340,6 +340,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+});
+
+$(document).ready(function() {
+    $('#sendEmailBtn').on('click', function() {
+        var surveyId = $(this).data('survey-id');
+        $.ajax({
+            url: '{{ route("admin.send_email", ":id") }}'.replace(':id', surveyId),
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                const alertDiv = $(
+                    `<div class="fixed top-4 right-4 bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md" role="alert">
+                        <div class="flex">
+                            <div class="py-1">
+                                <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 7.5l-6.25 6.25-3.75-3.75 1.41-1.41 2.34 2.34 4.84-4.84L15 7.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-bold">${response.message}</p>
+                            </div>
+                        </div>
+                    </div>`
+                );
+                $('body').append(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
+            },
+            error: function(xhr) {
+                const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan.';
+                const alertDiv = $(
+                    `<div class="fixed top-4 right-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+                        <div class="flex">
+                            <div class="py-1">
+                                <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-bold">${msg}</p>
+                            </div>
+                        </div>
+                    </div>`
+                );
+                $('body').append(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
+            }
+        });
+    });
+    setTimeout(() => {
+    document.querySelectorAll('.alert-danger').forEach(el => {
+        el.classList.add('opacity-0', 'transition-opacity', 'duration-500'); // Fade out
+        setTimeout(() => el.remove(), 500); // Remove after fade
+    });
+}, 3000); // 3 seconds
 });
 </script>
 @endpush

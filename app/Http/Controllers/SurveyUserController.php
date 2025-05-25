@@ -156,30 +156,32 @@ class SurveyUserController extends Controller
         }
     }
 
-    public function sendEmail ($id){
-        $surveyUsers = SurveyUser::with (['user.alumni','user.atasan'])->where('survey_id', $id)->get();
-        if($surveyUsers->isEmpty()) {
-            return redirect()->back()->with('error', 'Tidak ada pengguna yang terdaftar untuk survei ini.');
+    public function sendEmail($id){
+        try {
+            $surveyUsers = SurveyUser::with(['user.alumni','user.atasan'])->where('survey_id', $id)->get();
+            if($surveyUsers->isEmpty()) {
+                return response()->json(['success'=>false, 'message'=>'Tidak ada pengguna yang terdaftar untuk survei ini.'], 400);
+            }
+            $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
+            if($template_pertanyaan->isEmpty()) {
+                return response()->json(['success'=>false, 'message'=>'Tidak ada pertanyaan yang tersedia untuk survei ini.'], 400);
+            }
+            foreach ($surveyUsers as $surveyUser) {
+                $nip = $surveyUser->user->alumni->nip ?? $surveyUser->user->atasan->nip;
+                $data = [
+                    'subject' => 'Akun Tracer Study Politeknik Statistika STIS',
+                    'title' => 'Akun Tracer Study Politeknik Statistika STIS',
+                    'nama' => $surveyUser->user->name,
+                    'email' => $surveyUser->user->email,
+                    'password' => substr($nip, 0, 5),
+                    'link' => route('user.survey.survey', $id),
+                ];
+                \Mail::to($surveyUser->user->email)->send(new \App\Mail\SendEmail($data));
+            }
+            return response()->json(['success'=>true, 'message'=>'Email berhasil dikirim ke semua!']);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false, 'message'=>'Gagal mengirim email: ' . $e->getMessage()], 500);
         }
-        $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
-        if($template_pertanyaan->isEmpty()) {
-            return redirect()->back()->with('error', 'Tidak ada pertanyaan yang tersedia untuk survei ini.');
-        }
-        foreach ($surveyUsers as $surveyUser) {
-            $nip = $surveyUser->user->alumni->nip ?? $surveyUser->user->atasan->nip;
-            $data = [
-                'subject' => 'Akun Tracer Study Politeknik Statistika STIS',
-                'title' => 'Akun Tracer Study Politeknik Statistika STIS',
-                'nama' => $surveyUser->user->name,
-                'email' => $surveyUser->user->email,
-                'password' => substr($nip, 0, 5),
-                'link' => route('user.survey.survey', $id),
-            ];
-
-            Mail::to($surveyUser->user->email)->send(new SendEmail($data));
-        }
-
-
     }
 
     public function search_user (Request $request){
