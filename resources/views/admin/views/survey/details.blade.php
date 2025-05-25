@@ -18,13 +18,24 @@
                     </a>
                   @endif
                 </div>
+                @if(session('error'))
+                  <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md alert alert-danger mb-6" role="alert">
+                      <div class="flex">
+                          <div class="py-1">
+                              <svg class="fill-current h-6 w-6 text-red-500 mr-4" ...></svg>
+                          </div>
+                          <div>
+                              <p class="font-bold">{{ session('error') }}</p>
+                          </div>
+                      </div>
+                  </div>
+              @endif
 
-  
                 <div class="flex-auto px-0 pt-0 pb-2">
                   <div class="p-0 overflow-x-auto">
                     <div class="flex-auto p-6">
                         <div class="flex flex-wrap -mx-3">
-                        
+
                           <div class="w-full max-w-full px-3 shrink-0 md:w-3/12 md:flex-0">
                             <div class="mb-4">
                               <label for="username" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama Survei</label>
@@ -50,20 +61,20 @@
                               <h6 class="text-slate-700 dark:text-white/80">{{ $survey->type_survei }}</h6>
                             </div>
                           </div>
-                          
-                        
+
+
                         </div>
-                        
-                        
-                        
+
+
+
                       </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        
-        
+
+
 
         <!-- table 2 -->
 
@@ -82,17 +93,17 @@
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Pertanyaan</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Blok</th>
                         <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tipe Jawaban</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Keterangan Jawaban</th> 
+                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Keterangan Jawaban</th>
                       </tr>
                     </thead>
                     <tbody>
-                    @foreach($template_pertanyaan as $tanya)  
+                    @foreach($template_pertanyaan as $tanya)
                     <tr>
                       <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
                         <div class="flex flex-col px-2 py-1">
                           <h6 class="mb-0 text-sm leading-normal dark:text-white break-words whitespace-normal">
                             {{ $tanya->pertanyaan }}
-                          </h6> 
+                          </h6>
                         </div>
                       </td>
 
@@ -144,9 +155,9 @@
                   @endif
                   </div>
                 </div>
-                
-               
-                
+
+
+
                 <div class="flex-auto px-0 pt-0 pb-2">
                   <div class="p-0 overflow-x-auto">
                     <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
@@ -161,7 +172,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        
+
                         @foreach($survey_user as $responden)
                                 <tr>
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
