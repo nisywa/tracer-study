@@ -66,10 +66,12 @@
                 </div>
 
                 <!-- button import export email dropdown -->
+                @if(!auth()->user()->hasRole('supervisor'))
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
-
+                   
                     <div class="flex items-center gap-4">
+                    
                         <button type="button"
                             id="openModal" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             <i class="fas fa-file-upload mr-2"></i> Import Excel
@@ -107,13 +109,14 @@
                             </button>
                         </a>
                     
-                    <a href="{{ route('admin.alumni.create') }}">
-                        <button type="button"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-plus mr-2"></i> Tambah Alumni
-                        </button>
-                    </a>
+                        <a href="{{ route('admin.alumni.create') }}">
+                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-plus mr-2"></i> Tambah Alumni
+                            </button>
+                        </a>
+                     
                 </div>
+                @endif
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table

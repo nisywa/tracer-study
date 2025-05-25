@@ -51,10 +51,10 @@ class AtasanController extends Controller
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:255',
             'email'=> 'required|string|email',
-            'jabatan' => 'required|string|max:255',
-            'satuan_kerja' => 'required|string|max:255',
-            'unit_kerja' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:15',
+            'jabatan' => 'string|max:255',
+            'satuan_kerja' => 'string|max:255',
+            'unit_kerja' => 'string|max:255',
+            'no_hp' => 'string|max:15',
         ]);
 
         $user = User::create([
@@ -96,10 +96,10 @@ class AtasanController extends Controller
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:255',
             'email'=> 'required|string|email',
-            'jabatan' => 'required|string|max:255',
-            'satuan_kerja' => 'required|string|max:255',
-            'unit_kerja' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:15',
+            'jabatan' => 'string|max:255',
+            'satuan_kerja' => 'string|max:255',
+            'unit_kerja' => 'string|max:255',
+            'no_hp' => 'string|max:15',
         ]);
 
         $user = $atasan->user;

@@ -73,6 +73,7 @@
                 </div>
 
                 <!-- button import export email dropdown -->
+                @if(!auth()->user()->hasRole('supervisor'))
                 <div
                     class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                
@@ -126,7 +127,7 @@
                         </button>
                     </a>
                 </div>
-                
+                @endif
                 <div class="flex-auto px-0 pt-0 pb-2">
                     <div class="p-0 overflow-x-auto">
                         <table
@@ -204,6 +205,7 @@
                                         <td
                                             class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                             <div class="icon-container">
+                                            @if(!auth()->user()->hasRole('supervisor'))
                                                 <!-- edit -->
                                                 <a href="{{ route('admin.atasan.edit', $atasan) }}" class="icon-link"
                                                     data-tooltip="Edit">
@@ -217,6 +219,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form> 
+                                            @endif
                                                 <!-- details -->
                                                  <a href="{{ route('admin.atasan.details',$atasan) }}" class="icon-link" data-tooltip="Details">
                                                     <i class="fas fa-info-circle"></i>

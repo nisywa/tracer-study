@@ -44,11 +44,13 @@
                 <div class="flex items-center gap-4">
        
                   <!-- button tambah survei -->
+                  @if(!auth()->user()->hasRole('supervisor')) 
                   <a href="{{route('admin.survey.create')}}">
                   <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                     <i class="fas fa-plus mr-2"></i> Tambah Survei
                   </button>
                   </a>
+                  @endif
 
                   <!-- Kolom Search -->
                   <div class="relative flex items-center w-auto">
@@ -105,6 +107,7 @@
                         </td>
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
+                            @if(!auth()->user()->hasRole('supervisor'))
                             <!-- Add question -->
                             <a href="{{ route('admin.survey.add_question', $srvy) }}" class="icon-link" data-tooltip="Tambah Pertanyaan">
                                 <i class="fas fa-file-alt"></i>
@@ -162,6 +165,7 @@
                               @csrf
                               @method('DELETE')
                             </form>
+                            @endif
                             <!-- Details -->
                             <a href="{{ route('admin.survey.details', $srvy) }}" class="icon-link" data-tooltip="Details">
                                 <i class="fas fa-info-circle"></i>

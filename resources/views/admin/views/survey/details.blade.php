@@ -9,12 +9,14 @@
               <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                   <h6 class="dark:text-white">Informasi Survei</h6>
+                  @if(!auth()->user()->hasRole('supervisor'))
                   <a href="{{ route('admin.send_email',$survey->id) }}">
                         <button type="button"
                             class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
                         </button>
                     </a>
+                  @endif
                 </div>
 
   
@@ -133,11 +135,13 @@
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                   <h6 class="dark:text-white">Daftar User</h6>
                   <div class="flex items-center gap-4">
+                  @if(!auth()->user()->hasRole('supervisor'))
                     <div class="relative w-64">
                       <select id="userSelect" class="w-full form-select focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                             <option></option>
                         </select>
                     </div>
+                  @endif
                   </div>
                 </div>
                 
