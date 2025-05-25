@@ -65,7 +65,7 @@ class AlumniImport implements ToModel, WithHeadingRow
                     'satuan_kerja' => $row['satuan_kerja'] ?? '',
                     'unit_kerja' => $row['unit_kerja'] ?? '',
                     'no_hp' => $row['no_hp'] ?? '',
-                    'kepala_bps' => $row['kepala_bps'] ?? '',
+                   
                     'nip_kepala_bps' => $row['nip_kepala_bps'] ?? '',
                 ]
             );

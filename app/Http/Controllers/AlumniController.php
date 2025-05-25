@@ -48,10 +48,10 @@ class AlumniController extends Controller
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:255',
             'email' => 'required|string|email',
-            'jabatan' => 'sometimes|string|max:255',
-            'satuan_kerja' => 'sometimes|string|max:255',
-            'unit_kerja'  => 'sometimes|string|max:255',
-            'no_hp' => 'sometimes|string|max:15',
+            'jabatan' => 'nullable|string|max:255',
+            'satuan_kerja' => 'nullable|string|max:255',
+            'unit_kerja'  => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:15',
             'nip_kepala_bps' => 'required|string|max:255',
         ]);
 
@@ -95,10 +95,10 @@ class AlumniController extends Controller
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:255',
             'email' => 'required|string|email',
-            'jabatan' => 'sometimes|string|max:255',
-            'satuan_kerja' => 'sometimes|string|max:255',
-            'unit_kerja'  => 'sometimes|string|max:255',
-            'no_hp' => 'sometimes|string|max:15',
+            'jabatan' => 'nullable|string|max:255',
+            'satuan_kerja' => 'nullable|string|max:255',
+            'unit_kerja'  => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:15',
             'nip_kepala_bps' => 'required|string|max:255',
         ]);
 

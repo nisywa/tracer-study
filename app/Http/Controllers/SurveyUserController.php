@@ -158,6 +158,13 @@ class SurveyUserController extends Controller
 
     public function sendEmail ($id){
         $surveyUsers = SurveyUser::with (['user.alumni','user.atasan'])->where('survey_id', $id)->get();
+        if($surveyUsers->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada pengguna yang terdaftar untuk survei ini.');
+        }
+        $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
+        if($template_pertanyaan->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada pertanyaan yang tersedia untuk survei ini.');
+        }
         foreach ($surveyUsers as $surveyUser) {
             $nip = $surveyUser->user->alumni->nip ?? $surveyUser->user->atasan->nip;
             $data = [
