@@ -60,6 +60,8 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::get('monitoring/grafik/{id}', [MonitoringController::class, 'grafik'])->name('monitoring.grafik');
     Route::get('monitoring/chart-data/{surveyId}/{questionId}', [MonitoringController::class, 'getChartData'])->name('monitoring.chartData');
     // Route::resource('profile', ProfileController::class);
+    Route::get('profile/edit', [ProfileController::class, 'editAdmin'])->name('profile.edit');
+    Route::put('profile/update', [ProfileController::class, 'updateAdmin'])->name('profile.update');
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::resource('user', ProfileController::class);
     Route::get('search_user',[SurveyUserController::class, 'search_user'])->name('search_user');

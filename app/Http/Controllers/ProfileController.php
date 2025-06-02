@@ -93,7 +93,31 @@ class ProfileController extends Controller
     //     ]);
     // }
 
-    public function editAdmin({
-        
-    })
+    public function editAdmin(){
+        return view('admin.views.profileAdmin.index', ['user' => Auth::user()]);
+    }
+
+    public function updateAdmin(Request $request){
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),  
+        ]);
+
+        if ($request->filled('new_password')) {
+            $request->validate([
+                'new_password' => 'required|string|min:8|confirmed',
+                'old_password' => 'required|current_password',
+            ]);
+        }
+
+        $user = Auth::user();
+        $user->email = $request->input('email');
+
+        if ($request->filled('new_password')) {
+            $user->password = bcrypt($request->input('new_password'));
+        }
+
+        $user->save();
+
+        return Redirect::route('admin.profile.edit')->with('status', 'profile-updated');
+    }
 }
