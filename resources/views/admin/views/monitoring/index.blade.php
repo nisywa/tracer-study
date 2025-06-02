@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Tabel Monitoring Survei')
+@section('title', 'Monitoring Survei')
 
 @section('content')
     <!-- table 1 -->
@@ -57,7 +57,7 @@
                                     @foreach ($survey as $srvy)
                                         <tr>
                                             <td
-                                                class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                                class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                                 <div class="flex  flec-col px-2 py-1">
                                                     <h6 class="mb-0 text-sm leading-normal dark:text-white">
                                                         {{ $srvy->nama }}
@@ -82,7 +82,7 @@
                                                     class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $srvy->type_survei == 'alumni' ? 'lulusan' : 'pengguna lulusan' }}</span>
                                             </td>
                                             <td
-                                                class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
+                                                class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                                 <span
                                                     class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">{{ $srvy->deskripsi }}</span>
                                             </td>
@@ -176,4 +176,4 @@
 
 
 
-    @endsection
+@endsection

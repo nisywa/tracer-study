@@ -92,4 +92,8 @@ class ProfileController extends Controller
     //         'profil'=>$alumni
     //     ]);
     // }
+
+    public function editAdmin({
+        
+    })
 }

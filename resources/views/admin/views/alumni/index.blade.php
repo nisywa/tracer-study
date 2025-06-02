@@ -166,16 +166,16 @@
                                     </div>
                                 </td>
 
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 break-words shadow-transparent">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->user->email }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">{{ $alumnus->jabatan }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $alumnus->satuan_kerja }}</span>
                                     </td>
-                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent break-words">
+                                    <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                         <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words">{{ $alumnus->unit_kerja }}</span>
                                     </td>
                                     <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">

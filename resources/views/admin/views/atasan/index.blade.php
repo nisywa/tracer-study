@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Managemen Atasan')
+@section('title', 'Manajemen Atasan')
 
 @section('content')
 
@@ -164,7 +164,7 @@
                                 @foreach ($dataAtasan as $atasan)
                                     <tr>
                                         <td
-                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                             <div class="flex  flec-col px-2 py-1">
                                                 <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $atasan->nama }}
                                                 </h6>
@@ -176,22 +176,22 @@
                                                 class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $atasan->nip }}</span>
                                         </td>
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                             <span
                                                 class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $atasan->email }}</span>
                                         </td>
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                             <span
                                                 class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $atasan->jabatan }}</span>
                                         </td>
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                             <span
                                                 class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $atasan->satuan_kerja }}</span>
                                         </td>
                                         <td
-                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                            class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent break-words">
                                             <span
                                                 class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $atasan->unit_kerja }}</span>
                                         </td>
