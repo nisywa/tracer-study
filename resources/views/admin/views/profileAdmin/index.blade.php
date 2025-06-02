@@ -39,12 +39,11 @@
                               <label for="new_password_confirmation" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Confirm Password</label>
                               <input type="text" name="new_password_confirmation" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                             </div>
-                            </div>
                         </div>
-                        <div class="flex justify-end items-center mt-2 mb-2">
-                        <button type="submit" class="inline-block px-8 py-2 w-36 h-10 font-bold text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">Simpan</button>
-                        <a href="{{ route('admin.profile.edit') }}" class="inline-block px-8 py-2 w-36 h-10 font-bold text-center align-middle transition-all ease-in border border-gray-300 rounded-lg text-gray-700 bg-transparent hover:bg-gray-100 text-xs tracking-tight-rem cursor-pointer mr-4">Batal</a>
-                        
+                        <div class="flex items-center justify-end mt-2 mb-2 gap-4">
+                            <a href="{{ route('admin.profile.edit') }}" class="inline-block px-8 py-2 w-36 h-10 font-bold text-center text-gray-700 align-middle transition-all ease-in border border-gray-300 rounded-lg shadow-sm bg-white hover:bg-gray-100 text-xs tracking-tight-rem cursor-pointer">Batal</a>
+                            <button type="submit" class="inline-block px-8 py-2 w-36 h-10 font-bold text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">Simpan</button>
+                        </div>
                     </div>
                     <!-- form end -->
                 </div>
