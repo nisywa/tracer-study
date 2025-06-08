@@ -103,17 +103,7 @@
                         <!-- Use template body if available -->
                         {!! $data['body'] !!}
 
-                        @if(isset($data['password']) && $data['password'])
-                            <div class="account-info">
-                                <div class="info-label">Email:</div>
-                                <div class="info-value">{{ $data['email'] }}</div>
-
-                                <div class="info-label">Password:</div>
-                                <div class="info-value">{{ $data['password'] }}</div>
-                            </div>
-                        @endif
-
-                        <a href="{{ $data['link'] }}" class="cta-button">Login Sekarang</a>
+                        
                     @else
                         <!-- Fallback to old format -->
                         <h2>Halo {{ $data['nama'] }}!</h2>

@@ -167,9 +167,9 @@ class SurveyUserController extends Controller
                 \Illuminate\Support\Facades\Log::error("Failed to send thank you email: " . $e->getMessage());
             }
 
-            return redirect()->back()->with('success', 'Jawaban survey berhasil disimpan');
+            return redirect()->route('user.profile.index')->with('success', 'Jawaban survey berhasil disimpan');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->route('user.profile.index')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

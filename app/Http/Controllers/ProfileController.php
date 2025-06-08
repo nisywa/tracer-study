@@ -66,9 +66,31 @@ class ProfileController extends Controller
     // controller buat index user
     public function index()
     {
-        $survey = Survey::whereHas('surveyUsers', function ($query) {
-            $query->where('user_id', Auth::id());
-        })->get();
+        
+        // Get surveys with user's status from survey_user table
+        $survey = Survey::select('survey.*', 'survey_user.status', 'survey_user.tanggal_mengisi')
+            ->join('survey_user', 'survey.id', '=', 'survey_user.survey_id')
+            ->where('survey_user.user_id', Auth::id())
+            ->get()
+            ->map(function ($survey) {
+                // Store original dates for comparison
+                $startDate = Carbon::parse($survey->tanggal_mulai);
+                $endDate = Carbon::parse($survey->tanggal_selesai);
+                $now = now();
+                
+                // Format dates for display
+                $survey->tanggal_mulai = $startDate->format("d-m-Y");
+                $survey->tanggal_selesai = $endDate->format("d-m-Y");
+                
+                // Determine if survey is still active
+                if ($now >= $startDate && $now <= $endDate) {
+                    $survey->status_aktif = "Aktif";
+                } else {
+                    $survey->status_aktif = "Selesai";
+                }
+                
+                return $survey;
+            });
 
         foreach ($survey as $item) {
             $item->status_aktif = Carbon::parse($item->tanggal_selesai) >= now() ? "Aktif" : "Selesai";
