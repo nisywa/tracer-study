@@ -10,12 +10,28 @@
                 <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                   <h6 class="dark:text-white">Informasi Survei</h6>
                   @if(!auth()->user()->hasRole('supervisor'))
-                    <button type="button"
+                    <!-- <button type="button"
                         id="sendEmailBtn"
                         data-survey-id="{{ $survey->id }}"
                         class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                         <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
-                    </button>
+                    </button> -->
+                    <a href="{{route('admin.survey.template_email')}}">
+                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-paper-plane mr-2"></i> Kirim Email ke Semua
+                            </button>
+                    </a>
+                    <a href="{{route('admin.survey.template_email')}}">
+                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-bell mr-2"></i> Reminder Pengerjaan ke Semua
+                            </button>
+                    </a>
+                    <a href="{{route('admin.survey.template_email')}}">
+                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-handshake mr-2"></i> Ucapan Terima Kasih ke Semua
+                            </button>
+                    </a>
+                    
                   @endif
                 </div>
                 @if(session('error'))

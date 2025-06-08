@@ -7,6 +7,7 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\SurveyUserController;
+use App\Http\Controllers\TemplateEmailController;
 use Illuminate\Support\Facades\Route;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
     Route::post('survey/create_question', [SurveyController::class, 'create_question'])->name('survey.create_question');
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
+    
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('monitoring/export/{surveyId}', [MonitoringController::class, 'export'])->name('monitoring.export');
@@ -68,6 +70,7 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::post('survey/add_user',[SurveyUserController::class, 'add_user'])->name('survey.add_user');
     Route::post('send_email/{surveyId}',[SurveyUserController::class, 'sendEmail'])->name('send_email');
     Route::delete('survey_user/destroy/{survey_user_id}', [SurveyUserController::class, 'destroy'])->name('survey_user.destroy');
+    Route::get('survey/template_email', [TemplateEmailController::class, 'template_email'])->name('survey.template_email'); //template email
 });
 
 // User route
