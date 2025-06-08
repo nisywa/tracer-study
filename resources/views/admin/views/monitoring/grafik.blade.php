@@ -8,7 +8,17 @@
                 <div
                     class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                     <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                        <h6 class="dark:text-white mb-4">Visualisasi Survey: {{ $survey->nama }}</h6>
+                        <div class="flex justify-between items-center mb-4">
+                            <h6 class="dark:text-white">Visualisasi Survey: {{ $survey->nama }}</h6>
+                            <div class="flex gap-3">
+
+                                <a href="{{ route('admin.monitoring.export', $survey->id) }}"
+                                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-800">
+                                    <i class="fas fa-file-excel mr-2"></i>
+                                    Export Excel
+                                </a>
+                            </div>
+                        </div>
 
                         @php
                             $totalResponses = $survey->surveyUsers()->count();
@@ -40,10 +50,17 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @foreach ($questions as $question)
                                     <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
-                                        <div class="mb-4">
-                                            <h3 class="text-lg font-semibold dark:text-white">{{ $question->pertanyaan }}
-                                            </h3>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $question->blok }}</p>
+                                        <div class="mb-4 flex justify-between items-start">
+                                            <div>
+                                                <h3 class="text-lg font-semibold dark:text-white">{{ $question->pertanyaan }}
+                                                </h3>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $question->blok }}</p>
+                                            </div>
+                                            <button onclick="downloadChart('{{ $question->id }}', '{{ addslashes($question->pertanyaan) }}')"
+                                                class="ml-4 px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 border border-blue-600 dark:border-blue-400 rounded hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors"
+                                                title="Download chart as PNG">
+                                                <i class="fas fa-download"></i>
+                                            </button>
                                         </div>
                                         <div class="chart-container bg-white dark:bg-slate-800 rounded-lg"
                                             style="position: relative; height:300px;">
@@ -74,6 +91,8 @@
     @push('scripts')
         <!-- Load Chart.js from CDN -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+        <!-- Load JSZip for bulk chart downloads -->
+        <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
         <script>
             console.log('Available questions:', @json($questions->pluck('pertanyaan', 'id')));
 
@@ -97,6 +116,35 @@
 
             // Create a map to store chart instances
             const chartInstances = new Map();
+
+            // Function to download individual chart as PNG
+            function downloadChart(questionId, questionText) {
+                const chart = chartInstances.get(questionId);
+                if (!chart) {
+                    alert('Chart not found or still loading');
+                    return;
+                }
+
+                // Create a temporary canvas with white background
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = chart.canvas.width;
+                canvas.height = chart.canvas.height;
+
+                // Fill with white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw the chart on top
+                ctx.drawImage(chart.canvas, 0, 0);
+
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `chart-${questionText.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+
 
             // Function to update chart themes
             function updateChartThemes() {
@@ -132,7 +180,14 @@
             });
 
             document.addEventListener('DOMContentLoaded', () => {
-                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const csrfElement = document.querySelector('meta[name="csrf-token"]');
+                const token = csrfElement ? csrfElement.getAttribute('content') : '';
+
+                if (!token) {
+                    console.error('CSRF token not found');
+                    return;
+                }
+
                 const fetchOptions = {
                     headers: {
                         'X-CSRF-TOKEN': token,
