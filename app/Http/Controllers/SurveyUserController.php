@@ -333,4 +333,38 @@ class SurveyUserController extends Controller
             return response()->json(['success'=>false, 'message'=>'Gagal mengirim email terima kasih: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Send bulk thank you emails to all users who have completed the survey
+     */
+    public function sendBulkThankYou($surveyId)
+    {
+        try {
+            $survey = Survey::find($surveyId);
+            if (!$survey) {
+                return response()->json(['success'=>false, 'message'=>'Survei tidak ditemukan.'], 404);
+            }
+
+            // Get users who have completed the survey (status = true)
+            $completedUsers = SurveyUser::with('user')
+                ->where('survey_id', $surveyId)
+                ->where('status', true)
+                ->get()
+                ->pluck('user');
+
+            if($completedUsers->isEmpty()) {
+                return response()->json(['success'=>false, 'message'=>'Tidak ada pengguna yang telah menyelesaikan survei.'], 400);
+            }
+
+            // Send bulk thank you emails using the service
+            $result = $this->emailService->sendBulkThankYouToCollection($completedUsers, $survey);
+            
+            return response()->json([
+                'success'=>true, 
+                'message'=>"Email terima kasih berhasil dikirim ke {$result['success']} pengguna!"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false, 'message'=>'Gagal mengirim email terima kasih: ' . $e->getMessage()], 500);
+        }
+    }
 }

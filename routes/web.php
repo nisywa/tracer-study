@@ -71,11 +71,12 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::post('send_email/{surveyId}',[SurveyUserController::class, 'sendEmail'])->name('send_email');
     Route::post('send_reminders/{surveyId}',[SurveyUserController::class, 'sendReminders'])->name('send_reminders');
     Route::post('send_thank_you/{surveyUserId}',[SurveyUserController::class, 'sendThankYou'])->name('send_thank_you');
+    Route::post('send_bulk_thank_you/{surveyId}',[SurveyUserController::class, 'sendBulkThankYou'])->name('send_bulk_thank_you');
     Route::delete('survey_user/destroy/{survey_user_id}', [SurveyUserController::class, 'destroy'])->name('survey_user.destroy');
     Route::get('survey/template_email', [TemplateEmailController::class, 'template_email'])->name('survey.template_email'); //template email
     Route::get('template_email', [TemplateEmailController::class, 'template_email'])->name('template_email.index'); //template email index
-    Route::post('template_email/update', [TemplateEmailController::class, 'update'])->name('admin.template_email.update');
-    Route::get('template_email/preview', [TemplateEmailController::class, 'preview'])->name('admin.template_email.preview');
+    Route::post('template_email/update', [TemplateEmailController::class, 'update'])->name('template_email.update');
+    Route::get('template_email/preview', [TemplateEmailController::class, 'preview'])->name('template_email.preview');
 });
 
 // User route

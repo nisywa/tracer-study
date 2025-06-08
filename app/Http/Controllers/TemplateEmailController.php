@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\TemplateEmail;
+use App\Models\Survey;
 use App\Services\SurveyEmailService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 
 class TemplateEmailController extends Controller
 {
@@ -28,7 +30,10 @@ class TemplateEmailController extends Controller
             'appreciation' => $this->emailService->getTemplate('survey_appreciation'),
         ];
 
-        return view('admin.views.survey.template_email', compact('templates'));
+        // Get active surveys for bulk email operations
+        $surveys = Survey::whereDate('tanggal_selesai', '>=', now())->get();
+
+        return view('admin.views.survey.template_email', compact('templates', 'surveys'));
     }
 
     /**

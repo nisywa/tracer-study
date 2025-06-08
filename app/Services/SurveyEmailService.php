@@ -255,6 +255,31 @@ class SurveyEmailService
     }
 
     /**
+     * Send bulk thank you emails to a collection of users
+     */
+    public function sendBulkThankYouToCollection($users, Survey $survey)
+    {
+        $successCount = 0;
+        $failCount = 0;
+
+        foreach ($users as $user) {
+            if ($this->sendThankYou($user, $survey)) {
+                $successCount++;
+            } else {
+                $failCount++;
+            }
+        }
+
+        Log::info("Bulk thank you completed for survey {$survey->nama}: {$successCount} success, {$failCount} failed");
+        
+        return [
+            'success' => $successCount,
+            'failed' => $failCount,
+            'total' => $users->count()
+        ];
+    }
+
+    /**
      * Replace placeholders in email template
      */
     private function replacePlaceholders(string $text, User $user, Survey $survey, ?string $password = null): string

@@ -16,22 +16,33 @@
                         class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                         <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
                     </button> -->
-                    <a href="{{route('admin.survey.template_email')}}">
-                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                <i class="fas fa-paper-plane mr-2"></i> Kirim Email ke Semua
-                            </button>
+                    <button type="button"
+                            id="sendInvitationBtn"
+                            data-survey-id="{{ $survey->id }}"
+                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                        <i class="fas fa-paper-plane mr-2"></i> Kirim Email ke Semua
+                    </button>
+
+                    <button type="button"
+                            id="sendReminderBtn"
+                            data-survey-id="{{ $survey->id }}"
+                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-orange-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                        <i class="fas fa-bell mr-2"></i> Reminder Pengerjaan ke Semua
+                    </button>
+
+                    <button type="button"
+                            id="sendThankYouBtn"
+                            data-survey-id="{{ $survey->id }}"
+                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                        <i class="fas fa-handshake mr-2"></i> Ucapan Terima Kasih ke Semua
+                    </button>
+
+                    <a href="{{route('admin.template_email.index')}}">
+                        <button type="button" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-cog mr-2"></i> Kelola Template Email
+                        </button>
                     </a>
-                    <a href="{{route('admin.survey.template_email')}}">
-                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                <i class="fas fa-bell mr-2"></i> Reminder Pengerjaan ke Semua
-                            </button>
-                    </a>
-                    <a href="{{route('admin.survey.template_email')}}">
-                            <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                <i class="fas fa-handshake mr-2"></i> Ucapan Terima Kasih ke Semua
-                            </button>
-                    </a>
-                    
+
                   @endif
                 </div>
                 @if(session('error'))
@@ -359,6 +370,146 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function() {
+    // Function to show success message
+    function showSuccessMessage(message) {
+        const alertDiv = $(
+            `<div class="fixed top-4 right-4 bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md z-50" role="alert">
+                <div class="flex">
+                    <div class="py-1">
+                        <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 7.5l-6.25 6.25-3.75-3.75 1.41-1.41 2.34 2.34 4.84-4.84L15 7.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold">${message}</p>
+                    </div>
+                </div>
+            </div>`
+        );
+        $('body').append(alertDiv);
+        setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    // Function to show error message
+    function showErrorMessage(message) {
+        const alertDiv = $(
+            `<div class="fixed top-4 right-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md z-50" role="alert">
+                <div class="flex">
+                    <div class="py-1">
+                        <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold">${message}</p>
+                    </div>
+                </div>
+            </div>`
+        );
+        $('body').append(alertDiv);
+        setTimeout(() => alertDiv.remove(), 5000);
+    }
+
+    // Function to show loading state
+    function setButtonLoading(btn, loading) {
+        if (loading) {
+            btn.prop('disabled', true);
+            btn.find('i').removeClass().addClass('fas fa-spinner fa-spin mr-2');
+            btn.append(' <span class="loading-text">Mengirim...</span>');
+        } else {
+            btn.prop('disabled', false);
+            btn.find('.loading-text').remove();
+        }
+    }
+
+    // Send invitation emails to all users
+    $('#sendInvitationBtn').on('click', function() {
+        const btn = $(this);
+        const surveyId = btn.data('survey-id');
+
+        if (confirm('Apakah Anda yakin ingin mengirim email undangan ke semua pengguna survei ini?')) {
+            setButtonLoading(btn, true);
+
+            $.ajax({
+                url: '{{ route("admin.send_email", ":id") }}'.replace(':id', surveyId),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    setButtonLoading(btn, false);
+                    btn.find('i').removeClass().addClass('fas fa-paper-plane mr-2');
+                    showSuccessMessage(response.message || 'Email undangan berhasil dikirim ke semua pengguna!');
+                },
+                error: function(xhr) {
+                    setButtonLoading(btn, false);
+                    btn.find('i').removeClass().addClass('fas fa-paper-plane mr-2');
+                    const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat mengirim email undangan.';
+                    showErrorMessage(msg);
+                }
+            });
+        }
+    });
+
+    // Send reminder emails to all incomplete users
+    $('#sendReminderBtn').on('click', function() {
+        const btn = $(this);
+        const surveyId = btn.data('survey-id');
+
+        if (confirm('Apakah Anda yakin ingin mengirim email reminder ke semua pengguna yang belum mengisi survei?')) {
+            setButtonLoading(btn, true);
+
+            $.ajax({
+                url: '{{ route("admin.send_reminders", ":id") }}'.replace(':id', surveyId),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    setButtonLoading(btn, false);
+                    btn.find('i').removeClass().addClass('fas fa-bell mr-2');
+                    showSuccessMessage(response.message || 'Email reminder berhasil dikirim!');
+                },
+                error: function(xhr) {
+                    setButtonLoading(btn, false);
+                    btn.find('i').removeClass().addClass('fas fa-bell mr-2');
+                    const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat mengirim email reminder.';
+                    showErrorMessage(msg);
+                }
+            });
+        }
+    });
+
+    // Send thank you emails to all completed users
+    $('#sendThankYouBtn').on('click', function() {
+        const btn = $(this);
+        const surveyId = btn.data('survey-id');
+
+        if (confirm('Apakah Anda yakin ingin mengirim email terima kasih ke semua pengguna yang sudah mengisi survei?')) {
+            setButtonLoading(btn, true);
+
+            $.ajax({
+                url: '{{ route("admin.send_bulk_thank_you", ":id") }}'.replace(':id', surveyId),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    setButtonLoading(btn, false);
+                    btn.find('i').removeClass().addClass('fas fa-handshake mr-2');
+                    showSuccessMessage(response.message || 'Email terima kasih berhasil dikirim!');
+                },
+                error: function(xhr) {
+                    setButtonLoading(btn, false);
+                    btn.find('i').removeClass().addClass('fas fa-handshake mr-2');
+                    const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat mengirim email terima kasih.';
+                    showErrorMessage(msg);
+                }
+            });
+        }
+    });
+
+    // Existing sendEmailBtn handler (keep for backward compatibility)
     $('#sendEmailBtn').on('click', function() {
         var surveyId = $(this).data('survey-id');
         $.ajax({
@@ -368,50 +519,22 @@ $(document).ready(function() {
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                const alertDiv = $(
-                    `<div class="fixed top-4 right-4 bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md" role="alert">
-                        <div class="flex">
-                            <div class="py-1">
-                                <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 7.5l-6.25 6.25-3.75-3.75 1.41-1.41 2.34 2.34 4.84-4.84L15 7.5z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-bold">${response.message}</p>
-                            </div>
-                        </div>
-                    </div>`
-                );
-                $('body').append(alertDiv);
-                setTimeout(() => alertDiv.remove(), 3000);
+                showSuccessMessage(response.message);
             },
             error: function(xhr) {
                 const msg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan.';
-                const alertDiv = $(
-                    `<div class="fixed top-4 right-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
-                        <div class="flex">
-                            <div class="py-1">
-                                <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="font-bold">${msg}</p>
-                            </div>
-                        </div>
-                    </div>`
-                );
-                $('body').append(alertDiv);
-                setTimeout(() => alertDiv.remove(), 3000);
+                showErrorMessage(msg);
             }
         });
     });
+
+    // Auto-hide existing alert messages
     setTimeout(() => {
-    document.querySelectorAll('.alert-danger').forEach(el => {
-        el.classList.add('opacity-0', 'transition-opacity', 'duration-500'); // Fade out
-        setTimeout(() => el.remove(), 500); // Remove after fade
-    });
-}, 3000); // 3 seconds
+        document.querySelectorAll('.alert-danger').forEach(el => {
+            el.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+            setTimeout(() => el.remove(), 500);
+        });
+    }, 3000);
 });
 </script>
 @endpush

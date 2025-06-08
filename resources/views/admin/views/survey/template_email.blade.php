@@ -236,9 +236,3 @@ document.getElementById('previewModal').addEventListener('click', function(e) {
 </script>
 @endsection
 
-
-            </div>
-          </div>
-        </div>
-</form>
-@endsection
