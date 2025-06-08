@@ -1,6 +1,17 @@
 @extends('admin.layouts.app')
 @section('title', 'Edit Template Email')
 
+@push('styles')
+<style>
+    .ck-editor {
+        border-radius: 0.5rem !important;
+    }
+    .ck-editor__editable {
+        min-height: 400px;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="flex flex-wrap -mx-3">
     <div class="flex-none w-full max-w-full px-3">
@@ -53,8 +64,8 @@
 
                         <div class="mb-4">
                             <label for="invitation_body" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Content</label>
-                            <textarea name="body" id="invitation_body" rows="10"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">{{ $templates['invitation']->body ?? '' }}</textarea>
+                            <textarea name="body" id="invitation_body" rows="15"
+                                class="ckeditor focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">{{ $templates['invitation']->body ?? '' }}</textarea>
                         </div>
 
                         <div class="flex justify-between items-center">
@@ -82,8 +93,8 @@
 
                         <div class="mb-4">
                             <label for="reminder_body" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Content</label>
-                            <textarea name="body" id="reminder_body" rows="10"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">{{ $templates['reminder']->body ?? '' }}</textarea>
+                            <textarea name="body" id="reminder_body" rows="15"
+                                class="ckeditor focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">{{ $templates['reminder']->body ?? '' }}</textarea>
                         </div>
 
                         <div class="flex justify-between items-center">
@@ -111,8 +122,8 @@
 
                         <div class="mb-4">
                             <label for="appreciation_body" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Content</label>
-                            <textarea name="body" id="appreciation_body" rows="10"
-                                class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">{{ $templates['appreciation']->body ?? '' }}</textarea>
+                            <textarea name="body" id="appreciation_body" rows="15"
+                                class="ckeditor focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">{{ $templates['appreciation']->body ?? '' }}</textarea>
                         </div>
 
                         <div class="flex justify-between items-center">
@@ -163,15 +174,60 @@
             </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Body:</label>
-                <div id="previewBody" class="p-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm whitespace-pre-wrap"></div>
+                <div id="previewBody" class="p-3 bg-gray-100 dark:bg-gray-700 rounded border text-sm" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
-// Tab functionality
+// Initialize CKEditor
+let editors = {};
+
+// Initialize CKEditor for all textareas with ckeditor class
 document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.querySelectorAll('.ckeditor');
+    
+    textareas.forEach(textarea => {
+        ClassicEditor
+            .create(textarea, {
+                toolbar: {
+                    items: [
+                        'undo', 'redo', '|',
+                        'heading', '|',
+                        'bold', 'italic', 'underline', '|',
+                        'link', '|',
+                        'bulletedList', 'numberedList', '|',
+                        'alignment', '|',
+                        'insertTable', '|',
+                        'removeFormat'
+                    ]
+                },
+                language: 'en',
+                table: {
+                    contentToolbar: [
+                        'tableColumn',
+                        'tableRow',
+                        'mergeTableCells'
+                    ]
+                },
+                licenseKey: '',
+            })
+            .then(editor => {
+                editors[textarea.id] = editor;
+                
+                // Sync editor content back to textarea when content changes
+                editor.model.document.on('change:data', () => {
+                    textarea.value = editor.getData();
+                });
+            })
+            .catch(error => {
+                console.error('Error initializing CKEditor:', error);
+            });
+    });
+
+    // Tab functionality
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -199,11 +255,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Preview functionality
+    // Preview functionality with CKEditor content
     const previewButtons = document.querySelectorAll('.preview-btn');
     previewButtons.forEach(button => {
         button.addEventListener('click', function() {
             const type = this.getAttribute('data-type');
+            
+            // Update textarea values with CKEditor content before preview
+            Object.keys(editors).forEach(editorId => {
+                const editor = editors[editorId];
+                const textarea = document.getElementById(editorId);
+                if (textarea) {
+                    textarea.value = editor.getData();
+                }
+            });
+            
             fetch(`{{ route('admin.template_email.preview') }}?type=${type}`)
                 .then(response => response.json())
                 .then(data => {
@@ -212,13 +278,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     document.getElementById('previewSubject').textContent = data.subject;
-                    document.getElementById('previewBody').textContent = data.body;
+                    document.getElementById('previewBody').innerHTML = data.body;
                     document.getElementById('previewModal').classList.remove('hidden');
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     alert('Terjadi kesalahan saat mengambil preview');
                 });
+        });
+    });
+
+    // Form submission handler to ensure CKEditor content is saved
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function() {
+            // Update textarea values with CKEditor content before submit
+            Object.keys(editors).forEach(editorId => {
+                const editor = editors[editorId];
+                const textarea = document.getElementById(editorId);
+                if (textarea) {
+                    textarea.value = editor.getData();
+                }
+            });
         });
     });
 });

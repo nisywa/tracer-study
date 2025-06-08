@@ -99,10 +99,42 @@
             </div>
             <div class="content">
                 <div class="content-wrapper">
-                    {{ $data['body'] }}
+                    @if(isset($data['body']) && $data['body'])
+                        <!-- Use template body if available -->
+                        {!! $data['body'] !!}
+
+                        @if(isset($data['password']) && $data['password'])
+                            <div class="account-info">
+                                <div class="info-label">Email:</div>
+                                <div class="info-value">{{ $data['email'] }}</div>
+
+                                <div class="info-label">Password:</div>
+                                <div class="info-value">{{ $data['password'] }}</div>
+                            </div>
+                        @endif
+
+                        <a href="{{ $data['link'] }}" class="cta-button">Login Sekarang</a>
+                    @else
+                        <!-- Fallback to old format -->
+                        <h2>Halo {{ $data['nama'] }}!</h2>
+
+                        <p>Berikut akun tracer study kamu:</p>
+
+                        <div class="account-info">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value">{{ $data['email'] }}</div>
+
+                            <div class="info-label">Password:</div>
+                            <div class="info-value">{{$data['password']}}</div>
+                        </div>
+
+                        <p>Yuk, langsung isi surveimu! Terima kasih </p>
+
+                        <a href="{{ $data['link'] }}" class="cta-button">Login Sekarang</a>
+                    @endif
                 </div>
             </div>
-            
+
             <div class="footer">
                 © 2025 Tracer Study. All rights reserved.
             </div>
