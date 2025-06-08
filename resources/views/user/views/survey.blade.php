@@ -162,12 +162,10 @@
                                 @endforeach
                             @endforeach
                             <div class="mb-0 flex justify-end gap-4">
-                                <a href="/"
-                                    class="inline-flex items-center justify-center px-10 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark">
+                                <a href="/" class="inline-flex items-center justify-center px-10 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark">
                                     Batal
                                 </a>
-                                <button type="submit"
-                                    class="inline-flex items-center justify-center px-10 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark">
+                                <button type="submit" class="inline-flex items-center justify-center px-10 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark">
                                     Kirim
                                 </button>
                             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\Alumni;
+use App\Models\Atasan;
 use App\Models\Survey;
 use App\Models\SurveyUser;
 use Illuminate\Http\RedirectResponse;
@@ -74,10 +75,18 @@ class ProfileController extends Controller
             $item->tanggal_mulai = Carbon::parse($item->tanggal_mulai)->format("d-m-Y");
             $item->tanggal_selesai = Carbon::parse($item->tanggal_selesai)->format("d-m-Y");
         }
-
-        $alumni = Alumni::where('user_id', Auth::id())->first();
+        
+        $user=Auth::user();
+        if ($user->role=='alumni') {
+            $user = Alumni::where('user_id', Auth::id())->first();
+        } elseif ($user->role=='atasan') {
+            $user = Atasan::where('user_id', Auth::id())->first();
+        } else {
+            $user = [];
+        }
+        
         return view('user.views.index', [
-            'alumni' => $alumni,
+            'user' => $user,
             'survey' => $survey,
         ]);
     }

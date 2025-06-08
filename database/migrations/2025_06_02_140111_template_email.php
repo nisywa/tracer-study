@@ -42,33 +42,33 @@ Atas perhatiannya, kami ucapkan terima kasih.',
             ],
             [
                 'type' => 'survey_reminder',
-                'subject' => 'Pengingat: Silakan Lengkapi Survei {{survey_name}}',
-                'body' => 'Kepada Yth. {{name}},
+                        'subject' => 'Pengingat: Silakan Lengkapi Survei {{survey_name}}',
+                        'body' => 'Kepada Yth. {{name}},
 
-Kami ingin mengingatkan bahwa Anda belum mengisi survei {{survey_name}}.
-Batas waktu pengisian survei adalah {{end_date}}.
+        Kami ingin mengingatkan bahwa Anda belum mengisi survei {{survey_name}}.
+        Batas waktu pengisian survei adalah {{end_date}}.
 
-Berikut akun tracer study Anda:
-Email: {{email}}
-Password: {{password}}
+        Berikut akun tracer study Anda:
+        Email: {{email}}
+        Password: {{password}}
 
-Atas perhatiannya, kami ucapkan terima kasih.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'type' => 'survey_appreciation',
-                'subject' => 'Terima Kasih atas Partisipasi Anda',
-                'body' => 'Kepada Yth. {{name}},
+        Atas perhatiannya, kami ucapkan terima kasih.',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'type' => 'survey_appreciation',
+                        'subject' => 'Terima Kasih atas Partisipasi Anda',
+                        'body' => 'Kepada Yth. {{name}},
 
-Terima kasih kami sampaikan atas kesediaan dan waktu yang telah Anda luangkan untuk mengisi survei {{survey_name}}.
-Partisipasi Anda sangat berarti bagi kelancaran survei ini.
+        Terima kasih kami sampaikan atas kesediaan dan waktu yang telah Anda luangkan untuk mengisi survei {{survey_name}}.
+        Partisipasi Anda sangat berarti bagi kelancaran survei ini.
 
-Atas perhatiannya, kami ucapkan terima kasih.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        Atas perhatiannya, kami ucapkan terima kasih.',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                ]);
     }
 
     /**

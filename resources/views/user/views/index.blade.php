@@ -49,7 +49,7 @@
                     <div class="text-center">
                         <h1
                             class="mb-4 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.2]">
-                            Halo, {{ $alumni->nama }}</h1>
+                            Halo, {{ $user->nama }}</h1>
                         <p class="mb-5 text-base text-body-color dark:text-dark-6">
                             Yuk isi surveinya sekarang!
                         </p>
@@ -137,58 +137,53 @@
                         <div class="mb-[22px]">
                             <label for="nama"
                                 class="block mb-4 text-sm text-body-color dark:text-dark-6">Nama</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->nama }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->nama }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
                         <div class="mb-[22px]">
                             <label for="email"
                                 class="block mb-4 text-sm text-body-color dark:text-dark-6">Email</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->email }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->email }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
                         <div class="mb-[22px]">
                             <label for="email"
                                 class="block mb-4 text-sm text-body-color dark:text-dark-6">NIP</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->nip }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->nip }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
                         <div class="mb-[22px]">
                             <label for="email"
                                 class="block mb-4 text-sm text-body-color dark:text-dark-6">Jabatan</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->jabatan }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->jabatan }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
                         <div class="mb-[22px]">
                             <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Satuan
                                 Kerja</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->satuan_kerja }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->satuan_kerja }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
                         <div class="mb-[22px]">
                             <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Unit
                                 Kerja</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->unit_kerja }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->unit_kerja }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
                         <div class="mb-[22px]">
                             <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">No
                                 HP</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->no_hp }}</p>
+                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $user->no_hp }}</p>
                             <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
                         </div>
 
-                        <div class="mb-[22px]">
-                            <label for="email" class="block mb-4 text-sm text-body-color dark:text-dark-6">Nama
-                                Kepala BPS Tempat Bekerja</label>
-                            <p class="text-body-color/60 dark:text-dark-6 pb-3">{{ $alumni->kepala_bps }}</p>
-                            <div class="bg-transparent border-b border-[#f1f1f1] dark:border-dark-3 mt-2"></div>
-                        </div>
+                        
 
                     </div>
                 </div>
