@@ -7,6 +7,7 @@ use App\Models\SurveyUser;
 use App\Models\SurveyUserJawaban;
 use App\Models\TemplatePertanyaan;
 use App\Models\User;
+use App\Services\SurveyEmailService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,12 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class SurveyUserController extends Controller
 {
+    protected $emailService;
+
+    public function __construct(SurveyEmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -149,6 +156,16 @@ class SurveyUserController extends Controller
             $surveyUser->status = 1;
             $surveyUser->save();
 
+            // Automatically send thank you email
+            try {
+                $survey = Survey::find($id);
+                if ($survey) {
+                    $this->emailService->sendThankYou(Auth::user(), $survey);
+                }
+            } catch (\Exception $e) {
+                // Log error but don't fail the survey submission
+                \Illuminate\Support\Facades\Log::error("Failed to send thank you email: " . $e->getMessage());
+            }
 
             return redirect()->back()->with('success', 'Jawaban survey berhasil disimpan');
         } catch (\Exception $e) {
@@ -166,18 +183,13 @@ class SurveyUserController extends Controller
             if($template_pertanyaan->isEmpty()) {
                 return response()->json(['success'=>false, 'message'=>'Tidak ada pertanyaan yang tersedia untuk survei ini.'], 400);
             }
-            foreach ($surveyUsers as $surveyUser) {
-                $nip = $surveyUser->user->alumni->nip ?? $surveyUser->user->atasan->nip;
-                $data = [
-                    'subject' => 'Akun Tracer Study Politeknik Statistika STIS',
-                    'title' => 'Akun Tracer Study Politeknik Statistika STIS',
-                    'nama' => $surveyUser->user->name,
-                    'email' => $surveyUser->user->email,
-                    'password' => substr($nip, 0, 5),
-                    'link' => route('user.survey.survey', $id),
-                ];
-                \Mail::to($surveyUser->user->email)->send(new \App\Mail\SendEmail($data));
-            }
+
+            $survey = Survey::find($id);
+            $users = $surveyUsers->pluck('user');
+            
+            // Send bulk invitations using the new service
+            $result = $this->emailService->sendBulkInvitationsToCollection($users, $survey);
+            
             return response()->json(['success'=>true, 'message'=>'Email berhasil dikirim ke semua!']);
         } catch (\Exception $e) {
             return response()->json(['success'=>false, 'message'=>'Gagal mengirim email: ' . $e->getMessage()], 500);
@@ -258,5 +270,67 @@ class SurveyUserController extends Controller
 
         return redirect()->route('admin.survey.details', ['id' => $survey_id])
             ->with('success', 'User Survei deleted successfully.');
+    }
+
+    /**
+     * Send reminder emails to users who haven't completed the survey
+     */
+    public function sendReminders($id)
+    {
+        try {
+            $survey = Survey::find($id);
+            if (!$survey) {
+                return response()->json(['success'=>false, 'message'=>'Survei tidak ditemukan.'], 404);
+            }
+
+            // Get users who haven't completed the survey (status = false)
+            $incompleteUsers = SurveyUser::with('user')
+                ->where('survey_id', $id)
+                ->where('status', false)
+                ->get()
+                ->pluck('user');
+
+            if($incompleteUsers->isEmpty()) {
+                return response()->json(['success'=>false, 'message'=>'Semua pengguna sudah mengisi survei.'], 400);
+            }
+
+            // Send bulk reminders using the new service
+            $result = $this->emailService->sendBulkRemindersToCollection($incompleteUsers, $survey);
+            
+            return response()->json(['success'=>true, 'message'=>'Email reminder berhasil dikirim!']);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false, 'message'=>'Gagal mengirim reminder: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Send thank you email after survey completion
+     */
+    public function sendThankYou($surveyUserId)
+    {
+        try {
+            $surveyUser = SurveyUser::with(['user', 'user.alumni', 'user.atasan'])
+                ->find($surveyUserId);
+            
+            if (!$surveyUser) {
+                return response()->json(['success'=>false, 'message'=>'Data survei pengguna tidak ditemukan.'], 404);
+            }
+
+            $survey = Survey::find($surveyUser->survey_id);
+            if (!$survey) {
+                return response()->json(['success'=>false, 'message'=>'Survei tidak ditemukan.'], 404);
+            }
+
+            // Send thank you email
+            $result = $this->emailService->sendThankYou($surveyUser->user, $survey);
+            
+            if ($result) {
+                return response()->json(['success'=>true, 'message'=>'Email terima kasih berhasil dikirim!']);
+            } else {
+                return response()->json(['success'=>false, 'message'=>'Gagal mengirim email terima kasih.'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false, 'message'=>'Gagal mengirim email terima kasih: ' . $e->getMessage()], 500);
+        }
     }
 }

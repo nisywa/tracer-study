@@ -53,7 +53,7 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
     Route::post('survey/create_question', [SurveyController::class, 'create_question'])->name('survey.create_question');
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
-    
+
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('monitoring/export/{surveyId}', [MonitoringController::class, 'export'])->name('monitoring.export');
@@ -69,8 +69,13 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::get('search_user',[SurveyUserController::class, 'search_user'])->name('search_user');
     Route::post('survey/add_user',[SurveyUserController::class, 'add_user'])->name('survey.add_user');
     Route::post('send_email/{surveyId}',[SurveyUserController::class, 'sendEmail'])->name('send_email');
+    Route::post('send_reminders/{surveyId}',[SurveyUserController::class, 'sendReminders'])->name('send_reminders');
+    Route::post('send_thank_you/{surveyUserId}',[SurveyUserController::class, 'sendThankYou'])->name('send_thank_you');
     Route::delete('survey_user/destroy/{survey_user_id}', [SurveyUserController::class, 'destroy'])->name('survey_user.destroy');
     Route::get('survey/template_email', [TemplateEmailController::class, 'template_email'])->name('survey.template_email'); //template email
+    Route::get('template_email', [TemplateEmailController::class, 'template_email'])->name('template_email.index'); //template email index
+    Route::post('template_email/update', [TemplateEmailController::class, 'update'])->name('admin.template_email.update');
+    Route::get('template_email/preview', [TemplateEmailController::class, 'preview'])->name('admin.template_email.preview');
 });
 
 // User route
