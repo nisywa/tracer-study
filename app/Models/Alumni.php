@@ -17,10 +17,18 @@ class Alumni extends Model
         'unit_kerja',
         'no_hp',
         'nip_kepala_bps',
+        'tanggal_lahir',
+        'tahun_lulus',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getCleanNameAttribute()
+    {
+        $nameParts = explode(',', $this->nama, 2);
+        return trim($nameParts[0]);
     }
 }

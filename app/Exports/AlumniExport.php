@@ -14,7 +14,7 @@ class AlumniExport implements FromCollection, WithHeadings
     public function collection()
     {
         return Alumni::join('users', 'alumni.user_id', '=', 'users.id')
-        ->get(['alumni.id', 'alumni.nama', 'alumni.nip', 'users.email', 'alumni.jabatan','alumni.satuan_kerja','alumni.unit_kerja', 'alumni.no_hp', 'alumni.nip_kepala_bps', 'alumni.created_at', 'alumni.updated_at']);
+        ->get(['alumni.id', 'alumni.nama', 'alumni.nip', 'users.email', 'alumni.jabatan','alumni.satuan_kerja','alumni.unit_kerja', 'alumni.no_hp', 'alumni.nip_kepala_bps', 'alumni.tanggal_lahir','alumni.tahun_lulus','alumni.created_at', 'alumni.updated_at']);
     }
 
     /**
@@ -33,6 +33,8 @@ class AlumniExport implements FromCollection, WithHeadings
             'No HP',
             'Kepala BPS',
             'NIP Kepala BPS',
+            'Tanggal Lahir',
+            'Tahun Lulus',
             'Created At',
             'Updated At',
         ];

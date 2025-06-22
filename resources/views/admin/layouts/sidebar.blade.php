@@ -40,7 +40,7 @@
       <hr class="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
 
       <li class="mt-0.5 w-full">
-        <a href="{{ route('admin.survey.index') }}" class="{{ request()->routeIs('admin.survey.index') ? 'bg-blue-500/13' : '' }} py-2.7 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors" >
+        <a href="{{ route('admin.survey.index') }}" class="{{ request()->routeIs('admin.survey.*') ? 'bg-blue-500/13' : '' }} py-2.7 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors" >
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
             <i class="relative top-0 text-sm leading-normal text-orange-500 ni ni-calendar-grid-58"></i>
           </div>
@@ -58,7 +58,7 @@
       </li>
 
       <li class="mt-0.5 w-full">
-        <a href="{{ route('admin.alumni.index') }}" class="{{ request()->routeIs('admin.alumni.index') ? 'bg-blue-500/13' : '' }} py-2.7 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors" >
+        <a href="{{ route('admin.alumni.index') }}" class="{{ request()->routeIs('admin.alumni.*') ? 'bg-blue-500/13' : '' }} py-2.7 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors" >
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center fill-current stroke-0 text-center xl:p-2.5">
             <i class="relative top-0 text-sm leading-normal text-emerald-500 ni ni-credit-card"></i>
           </div>
@@ -67,7 +67,7 @@
       </li>
 
       <li class="mt-0.5 w-full">
-        <a href="{{ route('admin.atasan.index') }}" class="{{ request()->routeIs('admin.atasan.index') ? 'bg-blue-500/13' : '' }} py-2.7 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors" >
+        <a href="{{ route('admin.atasan.index') }}" class="{{ request()->routeIs('admin.atasan.*') ? 'bg-blue-500/13' : '' }} py-2.7 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors" >
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center fill-current stroke-0 text-center xl:p-2.5">
             <i class="relative top-0 text-sm leading-normal text-emerald-500 ni ni-credit-card"></i>
           </div>
