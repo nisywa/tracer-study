@@ -367,4 +367,87 @@ class SurveyUserController extends Controller
             return response()->json(['success'=>false, 'message'=>'Gagal mengirim email terima kasih: ' . $e->getMessage()], 500);
         }
     }
+
+    public function add_alumni_by_graduation_year(Request $request)
+    {
+        $graduationYear = $request->input('tahun_lulus');
+        $surveyId = $request->input('survey_id');
+        
+        try {
+            // Get all alumni with the specified graduation year
+            $alumni = \App\Models\Alumni::where('tahun_lulus', $graduationYear)
+                ->whereHas('user') // Make sure they have associated user accounts
+                ->get();
+            
+            if ($alumni->isEmpty()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Tidak ada alumni yang lulus pada tahun ' . $graduationYear
+                ]);
+            }
+            
+            $addedCount = 0;
+            $skippedCount = 0;
+            
+            foreach ($alumni as $alumnus) {
+                // Check if user is already in this survey
+                $existingSurveyUser = SurveyUser::where('user_id', $alumnus->user_id)
+                    ->where('survey_id', $surveyId)
+                    ->first();
+                
+                if (!$existingSurveyUser) {
+                    SurveyUser::create([
+                        'user_id' => $alumnus->user_id,
+                        'survey_id' => $surveyId,
+                        'status' => 0
+                    ]);
+                    $addedCount++;
+                } else {
+                    $skippedCount++;
+                }
+            }
+            
+            $message = "Berhasil menambahkan {$addedCount} alumni dari tahun lulus {$graduationYear}";
+            if ($skippedCount > 0) {
+                $message .= ". {$skippedCount} alumni sudah terdaftar dalam survey ini.";
+            }
+            
+            return response()->json([
+                'success' => true, 
+                'message' => $message,
+                'added_count' => $addedCount,
+                'skipped_count' => $skippedCount
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function get_graduation_years()
+    {
+        try {
+            $years = \App\Models\Alumni::whereNotNull('tahun_lulus')
+                ->where('tahun_lulus', '!=', '')
+                ->distinct()
+                ->orderBy('tahun_lulus', 'desc')
+                ->pluck('tahun_lulus')
+                ->filter() // Remove any null or empty values
+                ->values(); // Reset array keys
+            
+            return response()->json([
+                'success' => true,
+                'years' => $years
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
 }

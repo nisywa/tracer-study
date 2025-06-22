@@ -175,6 +175,13 @@
                   <div class="flex items-center gap-4">
                   @if(!auth()->user()->hasRole('supervisor'))
                     <div class="relative w-64">
+                      <label for="graduationYearSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tambah Alumni by Tahun Lulus:</label>
+                      <select id="graduationYearSelect" class="w-full form-select focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                        <option value="">Pilih Tahun Lulus...</option>
+                      </select>
+                    </div>
+                    <div class="relative w-64">
+                      <label for="userSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tambah Alumni Individual:</label>
                       <select id="userSelect" class="w-full form-select focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                             <option></option>
                         </select>
@@ -366,6 +373,109 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => alertDiv.remove(), 3000);
             }
         });
+    });
+
+    // Load graduation years on page load
+    $.ajax({
+        url: '{{ route("admin.get_graduation_years") }}',
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                const graduationYearSelect = $('#graduationYearSelect');
+                response.years.forEach(function(year) {
+                    graduationYearSelect.append(`<option value="${year}">${year}</option>`);
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error('Error loading graduation years:', xhr.responseJSON);
+        }
+    });
+
+    // Handle graduation year selection
+    $('#graduationYearSelect').on('change', function() {
+        const selectedYear = $(this).val();
+        
+        if (selectedYear) {
+            if (confirm(`Apakah Anda yakin ingin menambahkan semua alumni yang lulus pada tahun ${selectedYear} ke dalam survey ini?`)) {
+                $.ajax({
+                    url: '{{ route("admin.survey.add_alumni_by_graduation_year") }}',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        tahun_lulus: selectedYear,
+                        survey_id: '{{ $survey->id }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            const alertDiv = $(`
+                                <div class="fixed top-4 right-4 bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md" role="alert">
+                                    <div class="flex">
+                                        <div class="py-1">
+                                            <svg class="fill-current h-6 w-6 text-green-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 7.5l-6.25 6.25-3.75-3.75 1.41-1.41 2.34 2.34 4.84-4.84L15 7.5z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold">${response.message}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                            $('body').append(alertDiv);
+                            setTimeout(() => alertDiv.remove(), 5000);
+                            
+                            // Reset the select
+                            $('#graduationYearSelect').val('');
+                            
+                            // Reload the page to show updated user list
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            const alertDiv = $(`
+                                <div class="fixed top-4 right-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+                                    <div class="flex">
+                                        <div class="py-1">
+                                            <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold">${response.message}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                            $('body').append(alertDiv);
+                            setTimeout(() => alertDiv.remove(), 5000);
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat menambahkan alumni.';
+                        const alertDiv = $(`
+                            <div class="fixed top-4 right-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
+                                <div class="flex">
+                                    <div class="py-1">
+                                        <svg class="fill-current h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                            <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold">Error: ${message}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                        $('body').append(alertDiv);
+                        setTimeout(() => alertDiv.remove(), 5000);
+                    }
+                });
+            } else {
+                // Reset selection if user cancels
+                $('#graduationYearSelect').val('');
+            }
+        }
     });
 });
 

@@ -68,6 +68,8 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::resource('user', ProfileController::class);
     Route::get('search_user',[SurveyUserController::class, 'search_user'])->name('search_user');
     Route::post('survey/add_user',[SurveyUserController::class, 'add_user'])->name('survey.add_user');
+    Route::post('survey/add_alumni_by_graduation_year',[SurveyUserController::class, 'add_alumni_by_graduation_year'])->name('survey.add_alumni_by_graduation_year');
+    Route::get('get_graduation_years',[SurveyUserController::class, 'get_graduation_years'])->name('get_graduation_years');
     Route::post('send_email/{surveyId}',[SurveyUserController::class, 'sendEmail'])->name('send_email');
     Route::post('send_reminders/{surveyId}',[SurveyUserController::class, 'sendReminders'])->name('send_reminders');
     Route::post('send_thank_you/{surveyUserId}',[SurveyUserController::class, 'sendThankYou'])->name('send_thank_you');

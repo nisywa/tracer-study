@@ -69,6 +69,10 @@ class AlumniImport implements ToModel, WithHeadingRow
             // Clean the name before saving
             $cleanedName = $cleanName($row['nama']);
 
+            if($row['nip']){
+                $row['tanggal_lahir'] = \Carbon\Carbon::createFromFormat('dmY', substr($row['nip'], 0, 8))->format('Y-m-d');
+            }
+
             // Process dates before creating/updating
             $tanggalLahir = null;
             if (!empty($row['tanggal_lahir'])) {
