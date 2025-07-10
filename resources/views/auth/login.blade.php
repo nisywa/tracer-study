@@ -135,7 +135,7 @@
 
 
   <!-- ====== Forms Section Start -->
-  <section class="bg-[#F4F7FF] w-full py-14 lg:py-20 dark:bg-dark">
+  <section class="min-h-screen bg-[#F4F7FF] w-full py-14 lg:py-20 dark:bg-dark">
     <div class="container">
       <div class="flex flex-wrap -mx-4">
         <div class="w-full px-4">

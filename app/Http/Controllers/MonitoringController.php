@@ -17,9 +17,23 @@ class MonitoringController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $survey = Survey::paginate(10);
+        // $survey = Survey::paginate(10);
+        $query=Survey::query();
+
+        if ($request->has('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('type_survei', 'like','%'. $searchTerm . '%');
+            });
+        }
+
+        $survey = $query->orderBy('created_at', 'desc')
+                        ->paginate(10)
+                        ->withQueryString();
+                        
         foreach ($survey as $srvy) {
             $srvy->tanggal_mulai = Carbon::parse($srvy->tanggal_mulai)->format("d-m-Y");
             $srvy->tanggal_selesai = Carbon::parse($srvy->tanggal_selesai)->format("d-m-Y");

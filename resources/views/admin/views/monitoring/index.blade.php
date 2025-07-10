@@ -13,13 +13,18 @@
                     <h6 class="dark:text-white">Daftar Survei</h6>
                     <div class="relative flex items-center w-auto">
                         <div class="relative flex items-stretch">
-                            <span
-                                class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input type="text"
-                                class="pl-9 text-sm focus:shadow-primary-outline ease w-1/4 leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow"
-                                placeholder="Type here..." />
+                            
+                        <form action="{{ route('admin.monitoring.index') }}" method="GET" class="flex items-center">
+                              <span class="text-sm ease leading-5.6 absolute z-50 flex h-full items-center whitespace-nowrap rounded-lg rounded-tr-none rounded-br-none border border-r-0 border-transparent bg-transparent py-2 px-2.5 text-center font-normal text-slate-500 transition-all">
+                                  <i class="fas fa-search"></i>
+                              </span>
+                              <input type="text" name="search" value="{{ request('search') }}" class="pl-9 text-sm focus:shadow-primary-outline ease w-full leading-5.6 relative block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 dark:bg-slate-850 dark:text-white bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none focus:transition-shadow" placeholder="Type here..." />
+                              @if(request('search'))
+                                  <a href="{{ route('admin.survey.index') }}" class="ml-2 text-gray-500 hover:text-gray-700">
+                                      <i class="fas fa-times"></i>
+                                  </a>
+                              @endif
+                          </form>
                         </div>
                     </div>
                 </div>
@@ -152,27 +157,7 @@
     });
 </script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.querySelector('input[type="text"]');
-        const tableRows = document.querySelectorAll("tbody tr");
 
-        searchInput.addEventListener("input", function () {
-            const searchTerm = this.value.toLowerCase();
-
-            tableRows.forEach(row => {
-                const namaSurvei = row.children[0].innerText.toLowerCase();
-                const tipeSurvei = row.children[3].innerText.toLowerCase();
-
-                if (namaSurvei.includes(searchTerm) || tipeSurvei.includes(searchTerm)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        });
-    });
-</script>
 
 
 

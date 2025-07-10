@@ -258,6 +258,35 @@ class SurveyUserController extends Controller
 
     }
 
+    public function add_tahun_lulus (Request $request){
+        $tahunLulus = $request->input('tahun_lulus');
+        $surveyId = $request->input('survey_id');
+        try {
+            // Get all alumni with matching tahun_lulus
+            $alumni = Alumni::where('tahun_lulus', $tahunLulus)->get();
+            
+            // Create survey_user entries for each matching alumni
+            foreach($alumni as $alum) {
+                if($alum->user) {
+                    SurveyUser::updateOrCreate(
+                        [
+                            'user_id' => $alum->user->id,
+                            'survey_id' => $surveyId
+                        ],
+                        [
+                            'status' => 0
+                        ]
+                    );
+                }
+            }
+
+        return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+
+    }
+
     public function destroy($survey_user_id){
         $survey_user = SurveyUser::findOrFail($survey_user_id);
         $survey_id = $survey_user->survey_id;

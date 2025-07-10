@@ -69,8 +69,9 @@ class AlumniImport implements ToModel, WithHeadingRow
             // Clean the name before saving
             $cleanedName = $cleanName($row['nama']);
 
+            //mengeluarkan 8 angka NIP untuk menjadi variabel tanggal_lahir
             if($row['nip']){
-                $row['tanggal_lahir'] = \Carbon\Carbon::createFromFormat('dmY', substr($row['nip'], 0, 8))->format('Y-m-d');
+                $row['tanggal_lahir'] = \Carbon\Carbon::createFromFormat('Ymd', substr($row['nip'], 0, 8))->format('Y-m-d');
             }
 
             // Process dates before creating/updating
@@ -152,8 +153,8 @@ class AlumniImport implements ToModel, WithHeadingRow
             $alumni = Alumni::create([
                 'user_id' => $user->id,
                 'nama' => $cleanedName,
-                'nip' => $row['nip'],
-                'email' => $row['email'],
+                'nip' => $row['nip'] ?? '',
+                'email' => $row['email'] ?? '',
                 'jabatan' => $row['jabatan'] ?? '',
                 'satuan_kerja' => $row['satuan_kerja'] ?? '',
                 'unit_kerja' => $row['unit_kerja'] ?? '',

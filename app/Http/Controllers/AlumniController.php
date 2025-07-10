@@ -53,7 +53,7 @@ class AlumniController extends Controller
             'unit_kerja'  => 'nullable|string|max:255',
             'no_hp' => 'nullable|string|max:15',
             'nip_kepala_bps' => 'required|string|max:255',
-            'tanggal_lahir' => 'nullable|string|max:255',
+            'tanggal_lahir' => 'nullable|date_format:Y-m-d',
             'tahun_lulus' => 'nullable|string|max:255',
         ]);
 
@@ -102,7 +102,7 @@ class AlumniController extends Controller
             'unit_kerja'  => 'nullable|string|max:255',
             'no_hp' => 'nullable|string|max:15',
             'nip_kepala_bps' => 'required|string|max:255',
-            'tanggal_lahir' => 'nullable|string|max:255',
+            'tanggal_lahir' => 'nullable|date_format:Y-m-d',
             'tahun_lulus' => 'nullable|string|max:255',
         ]);
 

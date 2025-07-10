@@ -16,33 +16,42 @@
                         class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                         <i class="fas fa-envelope mr-2"></i> Kirim Email ke Semua
                     </button> -->
-                    <button type="button"
-                            id="sendInvitationBtn"
-                            data-survey-id="{{ $survey->id }}"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                        <i class="fas fa-paper-plane mr-2"></i> Kirim Email ke Semua
-                    </button>
-
-                    <button type="button"
-                            id="sendReminderBtn"
-                            data-survey-id="{{ $survey->id }}"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-orange-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                        <i class="fas fa-bell mr-2"></i> Reminder Pengerjaan ke Semua
-                    </button>
-
-                    <button type="button"
-                            id="sendThankYouBtn"
-                            data-survey-id="{{ $survey->id }}"
-                            class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                        <i class="fas fa-handshake mr-2"></i> Ucapan Terima Kasih ke Semua
-                    </button>
-
-                    <a href="{{route('admin.template_email.index')}}">
-                        <button type="button" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-cog mr-2"></i> Kelola Template Email
+                    <div class="flex flex-wrap gap-2 my-4">
+                                <button type="button"
+                                id="sendInvitationBtn"
+                                data-survey-id="{{ $survey->id }}"
+                                class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-paper-plane mr-2"></i> 
+                            <span class="hidden sm:inline">Kirim Email</span>
+                            <span class="sm:hidden">Email</span>
                         </button>
-                    </a>
 
+                        <button type="button"
+                                id="sendReminderBtn"
+                                data-survey-id="{{ $survey->id }}"
+                                class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-orange-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-bell mr-2"></i> 
+                            <span class="hidden sm:inline">Reminder Pengerjaan</span>
+                            <span class="sm:hidden">Reminder</span>
+                        </button>
+
+                        <button type="button"
+                                id="sendThankYouBtn"
+                                data-survey-id="{{ $survey->id }}"
+                                class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                            <i class="fas fa-handshake mr-2"></i> 
+                            <span class="hidden sm:inline">Ucapan Terima Kasih</span>
+                            <span class="sm:hidden">Thanks</span>
+                        </button>
+
+                        <a href="{{route('admin.template_email.index')}}">
+                            <button type="button" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-cog mr-2"></i> 
+                                <span class="hidden sm:inline">Kelola Template Email</span>
+                                <span class="sm:hidden">Template</span>
+                            </button>
+                        </a>
+                    </div>
                   @endif
                 </div>
                 @if(session('error'))

@@ -117,12 +117,12 @@
                             <a href="{{ route('admin.survey.add_question', $srvy) }}" class="icon-link" data-tooltip="Tambah Pertanyaan">
                                 <i class="fas fa-file-alt"></i>
                             </a>
-                            <!-- Add user -->
 
-                            <button type="button"
+                            <!-- Add user -->
+                            <!-- <button type="button"
                             onclick="openModal({{ $srvy->id }})" class="icon-link" data-tooltip="Tambah User">
                             <i class="fas fa-user-plus"></i>
-                            </button>
+                            </button> -->
 
                             <a href="javascript:;" class="icon-link" data-tooltip="Duplicate Survei" onclick="event.preventDefault(); document.getElementById('duplicate-form-{{ $srvy->id }}').submit();">
                                 <i class="fas fa-copy"></i>
@@ -134,7 +134,7 @@
 
 
                             <!-- pop up modal import  -->
-                          <form action="{{ route('admin.survey.import') }}" method="POST"  enctype="multipart/form-data">
+                          <!-- <form action="{{ route('admin.survey.import') }}" method="POST"  enctype="multipart/form-data">
                           @csrf
                           <div id="uploadModal-{{ $srvy->id }}" class="fixed inset-0 z-50 items-center justify-center hidden bg-gray-800 bg-opacity-50">
                               <div class="bg-white rounded-lg shadow-lg w-96">
@@ -156,7 +156,7 @@
                                   </div>
                               </div>
                           </div>
-                          </form>
+                          </form> -->
 
                             <!-- Edit -->
                             <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit">

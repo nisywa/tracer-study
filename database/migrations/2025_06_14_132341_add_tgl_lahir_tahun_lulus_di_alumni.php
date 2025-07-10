@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::table('alumni', function (Blueprint $table) {
             $table->string('tanggal_lahir');
-            $table->string('tahun_lulus');
+            $table->string('tahun_lulus')->nullable();
+            $table->string('email')->nullable()->change();
+            $table->string('nip')->nullable()->change();
+
         });
     }
 
@@ -24,6 +27,8 @@ return new class extends Migration
     {
         Schema::table('alumni', function (Blueprint $table) {
             $table->dropColumn('tanggal_lahir', 'tahun_lulus');
+            $table->string('email')->nullable(false)->change();
+            $table->string('nip')->nullable(false)->change();
         });
     }
 };
