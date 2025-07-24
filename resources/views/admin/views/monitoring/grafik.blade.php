@@ -9,7 +9,25 @@
                     class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                     <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                         <div class="flex justify-between items-center mb-4">
-                            <h6 class="dark:text-white">Visualisasi Survey: {{ $survey->nama }}</h6>
+                            <div class="flex items-center">
+                                <h6 class="dark:text-white mr-2">Visualisasi Survey:</h6>
+                                <!-- <select id="surveySelect" class="form-select rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="{{ $survey->id }}" selected>{{ $survey->nama }}</option>
+                                    @foreach($allSurveys ?? [] as $s)
+                                        @if($s->id != $survey->id)
+                                            <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                                        @endif
+                                    @endforeach
+                                </select> -->
+                                <select id="surveySelect" class="select2 w-64">
+                                    <option value="{{ $survey->id }}" selected>{{ $survey->nama }}</option>
+                                    @foreach($allSurveys ?? [] as $s)
+                                        @if($s->id != $survey->id)
+                                            <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="flex gap-3">
 
                                 <a href="{{ route('admin.monitoring.export', $survey->id) }}"
@@ -19,6 +37,13 @@
                                 </a>
                             </div>
                         </div>
+
+                        <script>
+                            document.getElementById('surveySelect').addEventListener('change', function() {
+                                const selectedId = this.value;
+                                window.location.href = `http://127.0.0.1:8000/admin/monitoring/grafik/${selectedId}`;
+                            });
+                        </script>
 
                         @php
                             $totalResponses = $survey->surveyUsers()->count();
@@ -87,6 +112,32 @@
             </div>
         </div>
     </div>
+
+
+    @push('styles')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    placeholder: "Pilih Survey",
+                    allowClear: true,
+                    width: '100%'
+                });
+                
+                $('#surveySelect').on('change', function() {
+                    const selectedId = $(this).val();
+                    window.location.href = `http://127.0.0.1:8000/admin/monitoring/grafik/${selectedId}`;
+                });
+            });
+        </script>
+    @endpush
+
+
 
     @push('scripts')
         <!-- Load Chart.js from CDN -->

@@ -57,7 +57,9 @@ class MonitoringController extends Controller
             ->whereNotNull('visualisasi')
             ->get();
 
-        return view('admin.views.monitoring.grafik', compact('survey', 'questions'));
+        $allSurveys = Survey::all();
+
+        return view('admin.views.monitoring.grafik', compact('survey', 'questions', 'allSurveys'));
     }
 
     /**

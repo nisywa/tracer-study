@@ -8,18 +8,8 @@
             <img src="assets/images/logo/ts_white.svg" alt="logo" class="hidden w-full dark:block" />
           </a>
         </div>
-        <div class="flex items-center justify-between w-full px-4">
-          <div> 
-            <button id="navbarToggler" class="absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden">
-              <span class="relative my-[6px] block h-[2px] w-[30px] bg-dark dark:bg-white"></span>
-              <span class="relative my-[6px] block h-[2px] w-[30px] bg-dark dark:bg-white"></span>
-              <span class="relative my-[6px] block h-[2px] w-[30px] bg-dark dark:bg-white"></span>
-            </button> 
-            <nav id="navbarCollapse" class="absolute right-4 top-full hidden w-full max-w-[250px] rounded-lg bg-white dark:bg-dark-2 py-5 shadow-lg lg:static lg:block lg:w-full lg:max-w-full lg:bg-transparent dark:lg:bg-transparent lg:py-0 lg:px-4 lg:shadow-none xl:px-6">
-              
-            </nav>
-          </div>
-          <div class="flex items-center justify-end pr-16 lg:pr-0">
+        <div class="flex items-center justify-end w-full px-4">
+          <div class="flex items-center justify-end">
             <label for="themeSwitcher" class="inline-flex items-center cursor-pointer" aria-label="themeSwitcher"
               name="themeSwitcher">
               <input type="checkbox" name="themeSwitcher" id="themeSwitcher" class="sr-only" />
@@ -83,11 +73,11 @@
                 </svg>
               </span>
             </label>
-            
+
               @if (Route::has('login'))
                 <nav class="flex items-center gap-4">
                     @auth
-                       
+
                          <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="px-6 py-2 text-base font-medium text-white duration-300 ease-in-out rounded-md signUpBtn bg-primary hover:bg-blue-dark">
@@ -95,7 +85,7 @@
                             </button>
                           </form>
                     @else
-                        <a 
+                        <a
                           class="loginBtn py-2 px-[22px] text-base font-medium text-dark dark:text-white hover:opacity-70">
                           <!-- Sign In -->
                         </a>
@@ -105,7 +95,7 @@
                     @endauth
                 </nav>
             @endif
-             
+
             </div>
           </div>
         </div>

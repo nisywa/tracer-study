@@ -61,10 +61,12 @@ function fadeout() {
   let navbarToggler = document.querySelector("#navbarToggler");
   const navbarCollapse = document.querySelector("#navbarCollapse");
 
-  navbarToggler.addEventListener("click", () => {
-    navbarToggler.classList.toggle("navbarTogglerActive");
-    navbarCollapse.classList.toggle("hidden");
-  });
+  if (navbarToggler && navbarCollapse) {
+    navbarToggler.addEventListener("click", () => {
+      navbarToggler.classList.toggle("navbarTogglerActive");
+      navbarCollapse.classList.toggle("hidden");
+    });
+  }
 
   //===== close navbar-collapse when a  clicked
   document
@@ -136,7 +138,7 @@ function fadeout() {
 
   // Theme Vars
   const userTheme = localStorage.getItem('theme');
-  const systemTheme = window.matchMedia('(prefers-color0scheme: dark)').matches;
+  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   // Initial Theme Check
   const themeCheck = () => {
