@@ -5,25 +5,24 @@
     >
       <div class="container">
         <div class="-mx-4 flex flex-wrap">
-          <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-4/12 xl:w-3/12">
+          <div class="w-full px-4 lg:w-4/12">
             <div class="mb-10 w-full">
               <a
                 href="javascript:void(0)"
                 class="mb-6 inline-block max-w-[160px]"
               >
                 <img
-                  src="assets/images/logo/logo-white.svg"
+                  src="{{ asset('assets/images/logo/ts_white.svg') }}"
                   alt="logo"
                   class="max-w-full"
                 />
               </a>
               <p class="mb-8 max-w-[270px] text-base text-gray-7">
-                We create digital experiences for brands and companies by using
-                technology.
+                Pelaksanaan survei Tracer Study bagi lulusan dan pengguna lulusan di instansi tempat lulusan bekerja.
               </p>
               <div class="-mx-3 flex items-center">
                 <a
-                  href="javascript:void(0)"
+                  href="https://www.facebook.com/stis.ac.id"
                   class="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -40,7 +39,7 @@
                   </svg>
                 </a>
                 <a
-                  href="javascript:void(0)"
+                  href="https://x.com/PolstatSTIS"
                   class="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -57,7 +56,7 @@
                   </svg>
                 </a>
                 <a
-                  href="javascript:void(0)"
+                  href="https://www.instagram.com/polstatstis/"
                   class="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -80,7 +79,7 @@
                   </svg>
                 </a>
                 <a
-                  href="javascript:void(0)"
+                  href="https://id.linkedin.com/school/politeknik-statistika-stis/"
                   class="px-3 text-gray-7 hover:text-white"
                 >
                   <svg
@@ -99,164 +98,79 @@
               </div>
             </div>
           </div>
-          <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
-            <div class="mb-10 w-full">
-              <h4 class="mb-9 text-lg font-semibold text-white">About Us</h4>
-              <ul>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    Testimonial
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
-            <div class="mb-10 w-full">
-              <h4 class="mb-9 text-lg font-semibold text-white">Features</h4>
-              <ul>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    How it works
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    Privacy policy
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="javascript:void(0)"
-                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
-                  >
-                    Refund policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
+          
+          
+          <div class="w-full px-4 lg:w-4/12">
             <div class="mb-10 w-full">
               <h4 class="mb-9 text-lg font-semibold text-white">
-                Our Products
+                Lokasi Kami
+              </h4>
+              <div class="mb-6">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.6665!2d106.8148!3d-6.2297!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sPoliteknik%20Statistika%20STIS!5e0!3m2!1sen!2sid!4v1642000000000!5m2!1sen!2sid"
+                  width="100%" 
+                  height="200" 
+                  style="border:0;" 
+                  allowfullscreen="" 
+                  loading="lazy"
+                  class="rounded-lg">
+                </iframe>
+              </div>
+              
+            </div>
+          </div>
+          
+
+          <div class="w-full px-4 lg:w-4/12">
+            <div class="mb-10 w-full">
+              <h4 class="mb-9 text-lg font-semibold text-white">
+                Tautan Terkait
               </h4>
               <ul>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="https://www.bps.go.id/"
                     class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
-                    LineIcons
+                    Badan Pusat Statistik
                   </a>
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="https://www.stis.ac.id/"
                     class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
-                    Ecommerce HTML
+                    Politeknik Statistika STIS
                   </a>
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="https://spmb.stis.ac.id/"
                     class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
-                    TailAdmin
+                    SPMB STIS
                   </a>
                 </li>
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="https://spm.stis.ac.id/"
                     class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
                   >
-                    PlainAdmin
+                    SPM STIS
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://pppm.stis.ac.id/"
+                    class="mb-3 inline-block text-base text-gray-7 hover:text-primary"
+                  >
+                    PPPM STIS
                   </a>
                 </li>
               </ul>
             </div>
           </div>
-          <div class="w-full px-4 md:w-2/3 lg:w-6/12 xl:w-3/12">
-            <div class="mb-10 w-full">
-              <h4 class="mb-9 text-lg font-semibold text-white">Latest blog</h4>
-              <div class="flex flex-col gap-8">
-                <a
-                  href="blog-details.html"
-                  class="group flex items-center gap-[22px]"
-                >
-                  <div class="overflow-hidden rounded">
-                    <img
-                      src="./assets/images/blog/blog-footer-01.jpg"
-                      alt="blog"
-                    />
-                  </div>
-                  <span
-                    class="max-w-[180px] text-base text-gray-7 group-hover:text-white"
-                  >
-                    I think really important to design with...
-                  </span>
-                </a>
-                <a
-                  href="blog-details.html"
-                  class="group flex items-center gap-[22px]"
-                >
-                  <div class="overflow-hidden rounded">
-                    <img
-                      src="./assets/images/blog/blog-footer-02.jpg"
-                      alt="blog"
-                    />
-                  </div>
-                  <span
-                    class="max-w-[180px] text-base text-gray-7 group-hover:text-white"
-                  >
-                    Recognizing the need is the primary...
-                  </span>
-                </a>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -267,7 +181,7 @@
           <div class="-mx-4 flex flex-wrap">
             <div class="w-full px-4 md:w-2/3 lg:w-1/2">
               <div class="my-1">
-                <div
+                <!-- <div
                   class="-mx-3 flex items-center justify-center md:justify-start"
                 >
                   <a
@@ -288,7 +202,7 @@
                   >
                     Terms of service
                   </a>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="w-full px-4 md:w-1/3 lg:w-1/2">
@@ -296,12 +210,12 @@
                 <p class="text-base text-gray-7">
                   Designed and Developed by
                   <a
-                    href="https://tailgrids.com"
+                    href="https://spm.stis.ac.id/"
                     rel="nofollow noopner"
                     target="_blank"
                     class="text-gray-1 hover:underline"
                   >
-                    TailGrids and UIdeck
+                    SPM STIS
                   </a>
                 </p>
               </div>
@@ -312,11 +226,11 @@
 
       <div>
         <span class="absolute left-0 top-0 z-[-1]">
-          <img src="assets/images/footer/shape-1.svg" alt="" />
+          <img src="{{ asset('assets/images/footer/shape-1.svg') }}" alt="" />
         </span>
 
         <span class="absolute bottom-0 right-0 z-[-1]">
-          <img src="assets/images/footer/shape-3.svg" alt="" />
+          <img src="{{ asset('assets/images/footer/shape-3.svg') }}" alt="" />
         </span>
 
         <span class="absolute right-0 top-0 z-[-1]">

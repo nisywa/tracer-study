@@ -23,6 +23,20 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <style>
+        .question-box {
+            background-color: #f0f9ff !important; /* Light blue for light theme */
+        }
+        
+        .dark .question-box {
+            background-color: var(--dark-3) !important; /* Respect dark theme */
+        }
+        
+        html.dark .question-box {
+            background-color: #374151 !important; /* Dark gray for dark theme */
+        }
+    </style>
 </head>
 
 <body>
@@ -51,7 +65,7 @@
             <div class="flex justify-center items-start min-h-screen">
                 <!-- Survey Header -->
                 <div class="w-full max-w-4xl mx-auto px-4 py-8">
-                    <div class="text-center mb-8">
+                    <div class="text-center mb-8 pt-12 sm:pt-16 md:pt-20 lg:pt-24">
                         <h1 class="mb-4 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.2]">
                             {{ $survey->nama }}
                         </h1>
@@ -68,39 +82,39 @@
                         <div class="bg-white dark:bg-dark-2 rounded-lg shadow-lg p-6 md:p-8 lg:p-10">
                             @foreach ($surveyPertanyaan as $blok => $pertanyaans)
                                 <div class="mb-8">
-                                    <h3 class="mb-6 text-xl font-semibold md:text-2xl text-dark dark:text-white border-b border-gray-200 dark:border-dark-3 pb-3">
+                                    <h3 class="mb-6 text-xl font-semibold md:text-2xl text-blue-800 dark:text-white border-b border-blue-200 dark:border-dark-3 pb-3">
                                         {{ $blok }}
                                     </h3>
                                 </div>
                                 @foreach ($pertanyaans as $pertanyaan)
-                                    <div class="mb-8 p-4 bg-gray-50 dark:bg-dark-3 rounded-lg">
+                                    <div class="mb-8 p-4 bg-sky-50 border border-sky-100 dark:bg-dark-3 dark:border-dark-3 rounded-lg shadow-sm question-box">
                                         <label for="{{ $pertanyaan->id }}"
-                                            class="font-semibold block mb-3 text-base text-dark dark:text-white">{{ $pertanyaan->pertanyaan }}</label>
+                                            class="font-semibold block mb-3 text-base text-blue-900 dark:text-white">{{ $pertanyaan->pertanyaan }}</label>
                                         <label for="{{ $pertanyaan->id }}"
-                                            class="block mb-4 text-sm text-body-color dark:text-dark-6">{{ $pertanyaan->deskripsi_pertanyaan }}</label>
+                                            class="block mb-4 text-sm text-blue-700 dark:text-dark-6">{{ $pertanyaan->deskripsi_pertanyaan }}</label>
                                         @if ($pertanyaan->tipe == 'text')
                                             <input type="text" name="{{ $pertanyaan->id }}"
-                                                class="w-full p-3 text-body-color dark:text-dark-6 bg-white dark:bg-dark-2 border border-gray-200 dark:border-dark-3 rounded-md focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                                                class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-primary dark:focus:ring-primary/20" />
                                         @elseif($pertanyaan->tipe == 'textarea')
                                             <textarea name="{{ $pertanyaan->id }}" rows="4"
-                                                class="w-full p-3 text-body-color dark:text-dark-6 bg-white dark:bg-dark-2 border border-gray-200 dark:border-dark-3 rounded-md focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"></textarea>
+                                                class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-primary dark:focus:ring-primary/20"></textarea>
                                         @elseif($pertanyaan->tipe == 'radio')
-                                            <div class="flex flex-col gap-y-3 mb-2 text-body-color dark:text-dark-6">
+                                            <div class="flex flex-col gap-y-3 mb-2 text-blue-700 dark:text-dark-6">
                                                 @foreach ($pertanyaan->template_jawaban as $option)
-                                                    <label class="flex items-center gap-x-3 p-2 hover:bg-white dark:hover:bg-dark-2 rounded cursor-pointer">
+                                                    <label class="flex items-center gap-x-3 p-2 hover:bg-blue-100 dark:hover:bg-dark-2 rounded cursor-pointer transition-colors">
                                                         <input type="radio" name="{{ $pertanyaan->id }}"
                                                             value="{{ $option->pilihan_jawaban }}"
-                                                            class="text-primary focus:ring-primary">
+                                                            class="text-blue-600 focus:ring-blue-500 dark:text-primary dark:focus:ring-primary">
                                                         <span>{{ $option->pilihan_jawaban }}</span>
                                                     </label>
                                                 @endforeach
                                             </div>
                                         @elseif($pertanyaan->tipe == 'file')
                                             <input type="file" name="{{ $pertanyaan->id }}"
-                                                class="w-full p-3 text-body-color dark:text-dark-6 bg-white dark:bg-dark-2 border border-gray-200 dark:border-dark-3 rounded-md focus:border-primary focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary file:text-white" />
+                                                class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white dark:file:bg-primary" />
                                         @elseif($pertanyaan->tipe == 'select')
                                             <select name="{{ $pertanyaan->id }}"
-                                                class="w-full p-3 text-body-color dark:text-dark-6 bg-white dark:bg-dark-2 border border-gray-200 dark:border-dark-3 rounded-md focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20">
+                                                class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-primary dark:focus:ring-primary/20">
                                                 <option value="" disabled selected hidden>Choose</option>
                                                 @foreach ($pertanyaan->template_jawaban as $option)
                                                     <option value="{{ $option->pilihan_jawaban }}">
@@ -110,7 +124,7 @@
                                         @elseif($pertanyaan->tipe == 'date')
                                             <input type="text" id="{{ $pertanyaan->id }}"
                                                 name="{{ $pertanyaan->id }}" placeholder="Pilih tanggal"
-                                                class="w-full p-3 text-body-color dark:text-dark-6 bg-white dark:bg-dark-2 border border-gray-200 dark:border-dark-3 rounded-md focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 datepicker" />
+                                                class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-primary dark:focus:ring-primary/20 datepicker" />
                                             <script>
                                                 document.addEventListener("DOMContentLoaded", function() {
                                                     flatpickr(".datepicker", {
@@ -127,11 +141,11 @@
                                             <div class="space-y-2">
                                                 @foreach ($pertanyaan->template_jawaban as $option)
                                                     <label for="option_{{ $pertanyaan->id }}_{{ $loop->index }}"
-                                                        class="flex items-center text-sm text-body-color dark:text-dark-6 p-2 hover:bg-white dark:hover:bg-dark-2 rounded cursor-pointer">
+                                                        class="flex items-center text-sm text-blue-700 dark:text-dark-6 p-2 hover:bg-blue-100 dark:hover:bg-dark-2 rounded cursor-pointer transition-colors">
                                                         <input type="checkbox" id="option_{{ $pertanyaan->id }}_{{ $loop->index }}"
                                                             name="{{ $pertanyaan->id }}[]"
                                                             value="{{ $option->pilihan_jawaban }}"
-                                                            class="w-4 h-4 text-primary border border-gray-300 dark:border-dark-3 focus:ring-primary rounded" />
+                                                            class="w-4 h-4 text-blue-600 border border-blue-300 dark:border-dark-3 focus:ring-blue-500 dark:text-primary dark:focus:ring-primary rounded" />
                                                         <span class="ml-3">{{ $option->pilihan_jawaban }}</span>
                                                     </label>
                                                 @endforeach
@@ -142,11 +156,11 @@
                             @endforeach
                             
                             <!-- Form Actions -->
-                            <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-dark-3">
-                                <a href="/" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-gray-600 dark:text-dark-6 bg-gray-100 dark:bg-dark-3 hover:bg-gray-200 dark:hover:bg-dark-2 transition duration-300 ease-in-out rounded-md border border-gray-200 dark:border-dark-3">
+                            <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-blue-200 dark:border-dark-3">
+                                <a href="/" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-blue-600 dark:text-dark-6 bg-blue-50 dark:bg-dark-3 hover:bg-blue-100 dark:hover:bg-dark-2 transition duration-300 ease-in-out rounded-md border border-blue-200 dark:border-dark-3">
                                     Batal
                                 </a>
-                                <button type="submit" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-primary hover:bg-blue-dark focus:ring-4 focus:ring-primary/20">
+                                <button type="submit" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-blue-600 hover:bg-blue-700 dark:bg-primary dark:hover:bg-blue-dark focus:ring-4 focus:ring-blue-200 dark:focus:ring-primary/20">
                                     Kirim
                                 </button>
                             </div>

@@ -84,7 +84,7 @@ class SurveyController extends Controller
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'type_survei' => 'required|string',
-            'deskripsi' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string|max:255',
         ]);
 
         Survey::create($validatedData);
@@ -127,7 +127,7 @@ class SurveyController extends Controller
             'nama' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'deskripsi' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string|max:255',
         ]);
         $survey = Survey::findOrFail($id);
         $survey->update($validatedData);

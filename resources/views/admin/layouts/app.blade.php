@@ -71,7 +71,7 @@
             class="z-sticky backdrop-blur-2xl backdrop-saturate-200 dark:bg-slate-850/80 shadow-3xl w-90 ease -right-90 fixed top-0 left-auto flex h-full min-w-0 flex-col break-words rounded-none border-0 bg-white/80 bg-clip-border px-2.5 duration-200">
             <div class="px-6 pt-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
                 <div class="float-left">
-                    <h5 class="mt-4 mb-0 dark:text-white">Argon Configurator</h5>
+                    <h5 class="mt-4 mb-0 dark:text-white">Theme Configurator</h5>
                     <p class="dark:text-white dark:opacity-80">See our dashboard options.</p>
                 </div>
                 <div class="float-right mt-6">
@@ -86,11 +86,11 @@
                 class="h-px mx-0 my-1 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
             <div class="flex-auto p-6 pt-0 overflow-auto sm:pt-4">
                 <!-- Sidebar Backgrounds -->
-                <div>
+                <!-- <div>
                     <h6 class="mb-0 dark:text-white">Sidebar Colors</h6>
-                </div>
+                </div> -->
                 <a href="javascript:void(0)">
-                    <div class="my-2 text-left" sidenav-colors>
+                    <!-- <div class="my-2 text-left" sidenav-colors>
                         <span
                             class="py-2.2 text-xs rounded-circle h-5.6 mr-1.25 w-5.6 ease-in-out bg-gradient-to-tl from-blue-500 to-violet-500 relative inline-block cursor-pointer whitespace-nowrap border border-solid border-slate-700 text-center align-baseline font-bold uppercase leading-none text-white transition-all duration-200 hover:border-slate-700"
                             active-color data-color="blue" onclick="sidebarColor(this)"></span>
@@ -109,7 +109,7 @@
                         <span
                             class="py-2.2 text-xs rounded-circle h-5.6 mr-1.25 w-5.6 ease-in-out bg-gradient-to-tl from-red-600 to-orange-600 relative inline-block cursor-pointer whitespace-nowrap border border-solid border-white text-center align-baseline font-bold uppercase leading-none text-white transition-all duration-200 hover:border-slate-700"
                             data-color="red" onclick="sidebarColor(this)"></span>
-                    </div>
+                    </div> -->
                 </a>
                 <!-- Sidenav Type -->
                 <div class="mt-4">
