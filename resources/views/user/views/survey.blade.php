@@ -36,6 +36,49 @@
         html.dark .question-box {
             background-color: #374151 !important; /* Dark gray for dark theme */
         }
+        
+        html .submit-btn, 
+        body .submit-btn,
+        .submit-btn {
+            background-color: #2563eb !important; /* blue-600 */
+            color: #ffffff !important;
+            border: 2px solid #2563eb !important;
+        }
+        
+        html .submit-btn:hover,
+        body .submit-btn:hover, 
+        .submit-btn:hover {
+            background-color: #1d4ed8 !important; /* blue-700 */
+            border-color: #1d4ed8 !important;
+        }
+        
+        html .submit-btn:focus,
+        body .submit-btn:focus,
+        .submit-btn:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3) !important;
+            outline: none !important;
+        }
+        
+        html.dark .submit-btn,
+        body.dark .submit-btn,
+        .dark .submit-btn {
+            background-color: #f3f4f6 !important; /* gray-100 */
+            color: #111827 !important; /* gray-900 */
+            border: 2px solid #f3f4f6 !important;
+        }
+        
+        html.dark .submit-btn:hover,
+        body.dark .submit-btn:hover,
+        .dark .submit-btn:hover {
+            background-color: #e5e7eb !important; /* gray-200 */
+            border-color: #e5e7eb !important;
+        }
+        
+        html.dark .submit-btn:focus,
+        body.dark .submit-btn:focus,
+        .dark .submit-btn:focus {
+            box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.3) !important;
+        }
     </style>
 </head>
 
@@ -160,7 +203,7 @@
                                 <a href="/" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-blue-600 dark:text-dark-6 bg-blue-50 dark:bg-dark-3 hover:bg-blue-100 dark:hover:bg-dark-2 transition duration-300 ease-in-out rounded-md border border-blue-200 dark:border-dark-3">
                                     Batal
                                 </a>
-                                <button type="submit" class="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white transition duration-300 ease-in-out rounded-md bg-blue-600 hover:bg-blue-700 dark:bg-primary dark:hover:bg-blue-dark focus:ring-4 focus:ring-blue-200 dark:focus:ring-primary/20">
+                                <button type="submit" class="submit-btn inline-flex items-center justify-center px-8 py-3 text-base font-medium transition duration-300 ease-in-out rounded-md focus:ring-4 focus:ring-blue-300 dark:focus:ring-gray-400" style="background-color: #2563eb !important; color: #ffffff !important; border: 2px solid #2563eb !important;">
                                     Kirim
                                 </button>
                             </div>

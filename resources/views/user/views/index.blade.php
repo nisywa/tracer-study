@@ -49,7 +49,15 @@
                     <div class="text-center">
                         <h1
                             class="mb-4 text-2xl sm:text-3xl md:text-4xl lg:text-[40px] lg:leading-[1.2] font-bold text-dark dark:text-white">
-                            Halo, <span class="block sm:inline">{{ $user->nama }}</span></h1>
+                            Halo, <span class="block sm:inline">
+                                @if($user->hasRole('alumni') && $user->alumni)
+                                    {{ $user->alumni->nama }}
+                                @elseif($user->hasRole('atasan') && $user->atasan)
+                                    {{ $user->atasan->nama }}
+                                @else
+                                    {{ $user->name }}
+                                @endif
+                            </span></h1>
                         <p class="mb-5 text-sm sm:text-base text-body-color dark:text-dark-6 px-4 sm:px-0">
                             Yuk isi surveinya sekarang!
                         </p>
@@ -228,7 +236,15 @@
                         <div class="space-y-4 md:space-y-6">
                             <div class="pb-3 border-b border-[#f1f1f1] dark:border-dark-3">
                                 <label class="block mb-2 text-sm font-medium text-body-color dark:text-dark-6">Nama</label>
-                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">{{ $user->nama }}</p>
+                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">
+                                    @if($user->hasRole('alumni') && $user->alumni)
+                                        {{ $user->alumni->nama }}
+                                    @elseif($user->hasRole('atasan') && $user->atasan)
+                                        {{ $user->atasan->nama }}
+                                    @else
+                                        {{ $user->name }}
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="pb-3 border-b border-[#f1f1f1] dark:border-dark-3">
@@ -238,27 +254,67 @@
 
                             <div class="pb-3 border-b border-[#f1f1f1] dark:border-dark-3">
                                 <label class="block mb-2 text-sm font-medium text-body-color dark:text-dark-6">NIP</label>
-                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base">{{ $user->nip }}</p>
+                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base">
+                                    @if($user->hasRole('alumni') && $user->alumni)
+                                        {{ $user->alumni->nip }}
+                                    @elseif($user->hasRole('atasan') && $user->atasan)
+                                        {{ $user->atasan->nip }}
+                                    @else
+                                        -
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="pb-3 border-b border-[#f1f1f1] dark:border-dark-3">
                                 <label class="block mb-2 text-sm font-medium text-body-color dark:text-dark-6">Jabatan</label>
-                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">{{ $user->jabatan }}</p>
+                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">
+                                    @if($user->hasRole('alumni') && $user->alumni)
+                                        {{ $user->alumni->jabatan }}
+                                    @elseif($user->hasRole('atasan') && $user->atasan)
+                                        {{ $user->atasan->jabatan }}
+                                    @else
+                                        -
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="pb-3 border-b border-[#f1f1f1] dark:border-dark-3">
                                 <label class="block mb-2 text-sm font-medium text-body-color dark:text-dark-6">Satuan Kerja</label>
-                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">{{ $user->satuan_kerja }}</p>
+                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">
+                                    @if($user->hasRole('alumni') && $user->alumni)
+                                        {{ $user->alumni->satuan_kerja }}
+                                    @elseif($user->hasRole('atasan') && $user->atasan)
+                                        {{ $user->atasan->satuan_kerja }}
+                                    @else
+                                        -
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="pb-3 border-b border-[#f1f1f1] dark:border-dark-3">
                                 <label class="block mb-2 text-sm font-medium text-body-color dark:text-dark-6">Unit Kerja</label>
-                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">{{ $user->unit_kerja }}</p>
+                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base break-words">
+                                    @if($user->hasRole('alumni') && $user->alumni)
+                                        {{ $user->alumni->unit_kerja }}
+                                    @elseif($user->hasRole('atasan') && $user->atasan)
+                                        {{ $user->atasan->unit_kerja }}
+                                    @else
+                                        -
+                                    @endif
+                                </p>
                             </div>
 
                             <div class="pb-3">
                                 <label class="block mb-2 text-sm font-medium text-body-color dark:text-dark-6">No HP</label>
-                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base">{{ $user->no_hp }}</p>
+                                <p class="text-body-color/80 dark:text-dark-6 text-sm sm:text-base">
+                                    @if($user->hasRole('alumni') && $user->alumni)
+                                        {{ $user->alumni->no_hp }}
+                                    @elseif($user->hasRole('atasan') && $user->atasan)
+                                        {{ $user->atasan->no_hp }}
+                                    @else
+                                        -
+                                    @endif
+                                </p>
                             </div>
                         </div>
 

@@ -98,13 +98,13 @@ class ProfileController extends Controller
             $item->tanggal_selesai = Carbon::parse($item->tanggal_selesai)->format("d-m-Y");
         }
         
-        $user=Auth::user();
-        if ($user->role=='alumni') {
-            $user = Alumni::where('user_id', Auth::id())->first();
-        } elseif ($user->role=='atasan') {
-            $user = Atasan::where('user_id', Auth::id())->first();
-        } else {
-            $user = [];
+        $user = Auth::user();
+        
+        // Load relasi berdasarkan role user
+        if ($user->hasRole('alumni')) {
+            $user->load('alumni');
+        } elseif ($user->hasRole('atasan')) {
+            $user->load('atasan');
         }
         
         return view('user.views.index', [

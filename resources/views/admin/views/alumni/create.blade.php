@@ -68,7 +68,7 @@
                             </div>
                             <div class="w-full px-3 mb-4">
                                 <label for="tanggal_lahir" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tanggal Lahir</label>
-                                <input type="text" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
+                                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('tanggal_lahir')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror

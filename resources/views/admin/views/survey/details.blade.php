@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#userSelect').on('select2:select', function(e) {
         const selectedUser = e.params.data.user;
-
+        
         $.ajax({
             url: '{{ route("admin.survey.add_user") }}',
             method: 'POST',

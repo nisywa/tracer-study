@@ -5,7 +5,7 @@
         <!-- row 1 -->
         <div class="flex flex-wrap -mx-3">
           <!-- card1 -->
-          <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+          <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/3">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="flex-auto p-4">
                 <div class="flex flex-row -mx-3">
@@ -14,7 +14,7 @@
                       <p class="mb-0 font-sans text-sm font-semibold leading-tight text-ellipsis overflow-hidden whitespace-nowrap uppercase dark:text-white dark:opacity-60">
                         Survei
                       </p>
-                      <h5 class="mb-2 font-bold dark:text-white">119</h5>
+                      <h5 class="mb-2 font-bold dark:text-white">{{ $totalSurvey }}</h5>
                     </div>
                   </div>
                   <div class="px-3 text-right basis-1/3">
@@ -28,16 +28,16 @@
           </div>
 
           <!-- card2 -->
-          <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+          <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/3">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="flex-auto p-4">
                 <div class="flex flex-row -mx-3">
                   <div class="flex-none w-2/3 max-w-full px-3">
                     <div>
                       <p class="mb-0 font-sans text-sm font-semibold leading-tight text-ellipsis overflow-hidden whitespace-nowrap uppercase dark:text-white dark:opacity-60">
-                        Atasan Aktif
+                        pengguna lulusan
                       </p>
-                      <h5 class="mb-2 font-bold dark:text-white">180</h5>
+                      <h5 class="mb-2 font-bold dark:text-white">{{$totalAtasan}}</h5>
                     </div>
                   </div>
                   <div class="px-3 text-right basis-1/3">
@@ -50,20 +50,17 @@
             </div>
           </div>
 
-
-
-
           <!-- card3 -->
-          <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+          <div class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/3">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="flex-auto p-4">
                 <div class="flex flex-row -mx-3">
                   <div class="flex-none w-2/3 max-w-full px-3">
                     <div>
                       <p class="mb-0 font-sans text-sm font-semibold leading-tight text-ellipsis overflow-hidden whitespace-nowrap uppercase dark:text-white dark:opacity-60">
-                        Alumni Aktif
+                        lulusan
                       </p>
-                      <h5 class="mb-2 font-bold dark:text-white">20</h5>
+                      <h5 class="mb-2 font-bold dark:text-white">{{$totalAlumni}}</h5>
                     </div>
                   </div>
                   <div class="px-3 text-right basis-1/3">

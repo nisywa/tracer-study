@@ -121,10 +121,12 @@ class SurveyUserController extends Controller
     {
         try {
             // Get current user's survey assignment
+
             $surveyUser = SurveyUser::where('user_id', Auth::id())->where('survey_id', $id)->first();
             if (!$surveyUser) {
                 return redirect()->back()->with('error', 'Survey tidak ditemukan');
             }
+            
 
             // Process each question response
             foreach ($request->except('_token') as $questionId => $answer) {
@@ -240,6 +242,7 @@ class SurveyUserController extends Controller
     public function add_user (Request $request){
         $userId = $request->input('user_id');
         $surveyId = $request->input('survey_id');
+        //var_dump($request);
         try {
             SurveyUser::updateOrCreate(
                 [

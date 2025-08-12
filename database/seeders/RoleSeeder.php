@@ -7,6 +7,8 @@ use App\Models\Atasan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RoleSeeder extends Seeder
@@ -42,8 +44,10 @@ class RoleSeeder extends Seeder
             'jabatan' => 'Staff',
             'satuan_kerja' => 'Divisi IT',
             'unit_kerja' => 'Pengembangan',
-            'kepala_bps' => 'Kepala BPS',
+            // 'kepala_bps' => 'Kepala BPS',
             'email'=> 'alumni@gmail.com',
+            'tanggal_lahir' => '1990-01-01',
+            'nip_kepala_bps' => '123456789',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -63,7 +67,10 @@ class RoleSeeder extends Seeder
             'jabatan' => 'Manager',
             'satuan_kerja' => 'Divisi IT',
             'unit_kerja' => 'Pengembangan',
-            'alamat_kantor' => 'Jl. Atasan No. 1',
+            'email' => 'atasan@gmail.com',
+            'no_hp' => '08123456789',
+            'nip' => '123456789',
+            // 'alamat_kantor' => 'Jl. Atasan No. 1',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -78,5 +85,21 @@ class RoleSeeder extends Seeder
         );
 
         $userAlumni->assignRole($adminRole);
+        // Tambahkan supervisor role dan user
+        // $supervisorRole = Role::firstOrCreate([
+        //     'name' => 'supervisor'
+        // ]);
+        
+        // $userSupervisor = User::firstOrCreate(
+        //     ['email' => 'supervisor@example.com'],
+        //     [
+        //         'name' => 'Supervisor',
+        //         'email' => 'supervisor@example.com',
+        //         'password' => bcrypt('123123123')
+        //     ]
+        // );
+        
+        // $userSupervisor->assignRole($supervisorRole);
+        
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Models\Survey;
+use App\Models\Alumni;
+use App\Models\Atasan;
 
 use Illuminate\Http\Request;
 
@@ -12,9 +14,19 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        // Statistik Survei
+        $totalSurvey = Survey::count();
+        
+        // Statistik Users
+        $totalAlumni = Alumni::count();
+        $totalAtasan = Atasan::count();
+        $totalUsers = $totalAlumni + $totalAtasan;
+
         $query=Survey::where('tanggal_mulai', '<=', now())
                      ->where('tanggal_selesai', '>=', now())
                      ->orderBy('created_at', 'desc');
+
+        
 
         $surveyAktif = $query->paginate(10)->withQueryString();
         foreach ($surveyAktif as $survey) {
@@ -27,7 +39,13 @@ class DashboardController extends Controller
         }
 
                           
-        return view('admin.views.dashboard',compact('surveyAktif'));
+        return view('admin.views.dashboard', compact(
+            'surveyAktif',
+            'totalSurvey',
+            'totalAlumni',
+            'totalAtasan', 
+            'totalUsers'
+        ));
     }
 
 }

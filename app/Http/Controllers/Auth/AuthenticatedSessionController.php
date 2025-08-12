@@ -27,9 +27,22 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        
+        $user = Auth::user();
+        
+        // Debug: Tampilkan informasi user dan role
+        \Log::info('=== LOGIN DEBUG ===');
+        \Log::info('User Email: ' . $user->email);
+        \Log::info('User Roles: ' . json_encode($user->getRoleNames()->toArray()));
+        \Log::info('Has admin role: ' . ($user->hasRole('admin') ? 'YES' : 'NO'));
+        \Log::info('Has supervisor role: ' . ($user->hasRole('supervisor') ? 'YES' : 'NO'));
+        \Log::info('HasAnyRole result: ' . ($user->hasAnyRole(['admin','supervisor']) ? 'TRUE' : 'FALSE'));
+        
         if (Auth::user()->hasAnyRole(['admin','supervisor'])) {
+            \Log::info('REDIRECT: Going to admin dashboard');
             return redirect()->intended(route('admin.dashboard'));
         } else {
+            \Log::info('REDIRECT: Going to user profile');
             return redirect()->intended(route('user.profile.index'));
         }
     }

@@ -122,7 +122,7 @@ class AlumniController extends Controller
      */
     public function destroy(Alumni $alumnus)
     {
-        var_dump($alumnus);
+        //var_dump($alumnus);
         $alumnus->user->delete();
         $alumnus->delete();
 
