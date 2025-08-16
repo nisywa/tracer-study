@@ -25,4 +25,20 @@ class Survey extends Model
     {
         return $this->hasMany(SurveyUser::class, 'survey_id');
     }
+
+    /**
+     * Get blocks for this survey
+     */
+    public function blocks()
+    {
+        return $this->hasMany(SurveyBlock::class, 'survey_id')->orderBy('urutan');
+    }
+
+    /**
+     * Get branch rules for this survey
+     */
+    public function branchRules()
+    {
+        return $this->hasMany(SurveyBranchRule::class, 'survey_id');
+    }
 }

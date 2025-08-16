@@ -9,12 +9,37 @@
                 <div
                     class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                     <div
-                        class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
-                        <h6 class="dark:text-white">Daftar Pertanyaan</h6>
-                        <button type="button"
-                            class="add-row inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-plus mr-2"></i> Tambah Pertanyaan
-                        </button>
+                        class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+                        <div class="flex items-center justify-between mb-4">
+                            <h6 class="dark:text-white">Daftar Pertanyaan - {{ $survey->nama }}</h6>
+                            <div class="flex space-x-2">
+                                <a href="{{ route('admin.survey.blocks.index', $survey->id) }}"
+                                   class="inline-block px-4 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                    <i class="fas fa-layer-group mr-2"></i> Kelola Blok
+                                </a>
+                                <button type="button"
+                                    class="add-row inline-block px-4 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                    <i class="fas fa-plus mr-2"></i> Tambah Pertanyaan
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Info Panel for Block Management -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-info-circle text-blue-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-blue-800">Manajemen Blok & Percabangan</h3>
+                                    <div class="mt-2 text-sm text-blue-700">
+                                        <p>• Gunakan <strong>Kelola Blok</strong> untuk membuat dan mengatur blok (seksi) dalam survei</p>
+                                        <p>• Setelah membuat pertanyaan, klik ikon percabangan untuk mengatur alur berdasarkan jawaban</p>
+                                        <p>• Blok memungkinkan responden melompat ke bagian lain survei sesuai jawaban mereka</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex-auto px-0 pt-0 pb-2">
                         <input type="hidden" name="survey_id" value="{{ $survey->id }}">
@@ -156,6 +181,14 @@
                                             <td
                                                 class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                                 <div class="icon-container">
+                                                    @if($question->id)
+                                                        <a href="{{ route('admin.survey.questions.branch-rules.index', ['survey' => $survey->id, 'question' => $question->id]) }}" 
+                                                           class="icon-link text-purple-600 hover:text-purple-800" 
+                                                           data-tooltip="Aturan Percabangan"
+                                                           title="Aturan Percabangan">
+                                                            <i class="fas fa-code-branch"></i>
+                                                        </a>
+                                                    @endif
                                                     <a class="icon-link duplicate-row" data-tooltip="Duplicate">
                                                         <i class="fas fa-copy"></i>
                                                     </a>

@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class SurveyUser extends Model
 {
     protected $table = 'survey_user';
-    protected $fillable = ['survey_id', 'user_id', 'status'];
+    protected $fillable = ['survey_id', 'user_id', 'status', 'current_question_id', 'guest_token', 'tanggal_mengisi'];
+    
+    // Set default values
+    protected $attributes = [
+        'status' => 0,
+        'tanggal_mengisi' => null,
+    ];
 
     public function user()
     {

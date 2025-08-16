@@ -240,51 +240,84 @@ class SurveyUserController extends Controller
     }
 
     public function add_user (Request $request){
+        // Enable detailed logging
+        \Log::info('=== ADD USER FUNCTION CALLED ===');
+        \Log::info('Request method: ' . $request->method());
+        \Log::info('Request URL: ' . $request->url());
+        \Log::info('Request all data: ', $request->all());
+        \Log::info('Request headers: ', $request->headers->all());
+        
         $userId = $request->input('user_id');
         $surveyId = $request->input('survey_id');
-        //var_dump($request);
-        try {
-            SurveyUser::updateOrCreate(
-                [
-                    'user_id' => $userId,
-                    'survey_id' => $surveyId
-                ],
-                [
-                    'status' => 0
-                ]
-            );
-
-        return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        
+        // Debug logging
+        \Log::info('Add User Debug', [
+            'user_id' => $userId,
+            'survey_id' => $surveyId,
+            'request_data' => $request->all()
+        ]);
+        
+        // Validate input
+        if (!$userId || !$surveyId) {
+            \Log::error('Missing parameters', [
+                'user_id' => $userId,
+                'survey_id' => $surveyId
+            ]);
+            return response()->json([
+                'success' => false, 
+                'message' => 'Parameter user_id dan survey_id diperlukan'
+            ], 400);
         }
-
-    }
-
-    public function add_tahun_lulus (Request $request){
-        $tahunLulus = $request->input('tahun_lulus');
-        $surveyId = $request->input('survey_id');
+        
         try {
-            // Get all alumni with matching tahun_lulus
-            $alumni = Alumni::where('tahun_lulus', $tahunLulus)->get();
-            
-            // Create survey_user entries for each matching alumni
-            foreach($alumni as $alum) {
-                if($alum->user) {
-                    SurveyUser::updateOrCreate(
-                        [
-                            'user_id' => $alum->user->id,
-                            'survey_id' => $surveyId
-                        ],
-                        [
-                            'status' => 0
-                        ]
-                    );
-                }
+            // Check if user exists
+            $user = \App\Models\User::find($userId);
+            if (!$user) {
+                \Log::error('User not found', ['user_id' => $userId]);
+                return response()->json(['success' => false, 'message' => 'User not found']);
             }
-
-        return response()->json(['success' => true]);
+            
+            // Check if survey exists
+            $survey = \App\Models\Survey::find($surveyId);
+            if (!$survey) {
+                \Log::error('Survey not found', ['survey_id' => $surveyId]);
+                return response()->json(['success' => false, 'message' => 'Survey not found']);
+            }
+            
+            // Check if already exists
+            $existingSurveyUser = SurveyUser::where('user_id', $userId)
+                ->where('survey_id', $surveyId)
+                ->first();
+                
+            if ($existingSurveyUser) {
+                \Log::info('User already in survey', ['survey_user_id' => $existingSurveyUser->id]);
+                return response()->json(['success' => false, 'message' => 'User sudah terdaftar dalam survey ini']);
+            }
+            
+            $surveyUser = SurveyUser::create([
+                'user_id' => $userId,
+                'survey_id' => $surveyId,
+                'status' => 0
+            ]);
+            
+            \Log::info('SurveyUser created successfully', ['survey_user_id' => $surveyUser->id]);
+            
+            return response()->json([
+                'success' => true, 
+                'message' => 'User berhasil ditambahkan',
+                'survey_user_id' => $surveyUser->id,
+                'debug_info' => [
+                    'user_name' => $user->name,
+                    'survey_name' => $survey->nama,
+                    'created_at' => $surveyUser->created_at
+                ]
+            ]);
+            
         } catch (\Exception $e) {
+            \Log::error('Add user error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
 
@@ -402,14 +435,39 @@ class SurveyUserController extends Controller
 
     public function add_alumni_by_graduation_year(Request $request)
     {
+        // Enable detailed logging
+        \Log::info('=== ADD ALUMNI BY GRADUATION YEAR FUNCTION CALLED ===');
+        \Log::info('Request method: ' . $request->method());
+        \Log::info('Request URL: ' . $request->url());
+        \Log::info('Request all data: ', $request->all());
+        
         $graduationYear = $request->input('tahun_lulus');
         $surveyId = $request->input('survey_id');
         
+        // Debug logging
+        \Log::info('Add Alumni by Graduation Year Debug', [
+            'tahun_lulus' => $graduationYear,
+            'survey_id' => $surveyId,
+            'request_data' => $request->all()
+        ]);
+        
         try {
+            // Check if survey exists
+            $survey = \App\Models\Survey::find($surveyId);
+            if (!$survey) {
+                \Log::error('Survey not found', ['survey_id' => $surveyId]);
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Survey tidak ditemukan'
+                ]);
+            }
+            
             // Get all alumni with the specified graduation year
             $alumni = \App\Models\Alumni::where('tahun_lulus', $graduationYear)
                 ->whereHas('user') // Make sure they have associated user accounts
                 ->get();
+                
+            \Log::info('Alumni found', ['count' => $alumni->count()]);
             
             if ($alumni->isEmpty()) {
                 return response()->json([
@@ -428,13 +486,21 @@ class SurveyUserController extends Controller
                     ->first();
                 
                 if (!$existingSurveyUser) {
-                    SurveyUser::create([
+                    $surveyUser = SurveyUser::create([
                         'user_id' => $alumnus->user_id,
                         'survey_id' => $surveyId,
                         'status' => 0
                     ]);
+                    \Log::info('Alumni added to survey', [
+                        'user_id' => $alumnus->user_id, 
+                        'survey_user_id' => $surveyUser->id
+                    ]);
                     $addedCount++;
                 } else {
+                    \Log::info('Alumni already in survey', [
+                        'user_id' => $alumnus->user_id, 
+                        'existing_survey_user_id' => $existingSurveyUser->id
+                    ]);
                     $skippedCount++;
                 }
             }
@@ -444,6 +510,11 @@ class SurveyUserController extends Controller
                 $message .= ". {$skippedCount} alumni sudah terdaftar dalam survey ini.";
             }
             
+            \Log::info('Bulk add alumni result', [
+                'added_count' => $addedCount,
+                'skipped_count' => $skippedCount
+            ]);
+            
             return response()->json([
                 'success' => true, 
                 'message' => $message,
@@ -452,6 +523,10 @@ class SurveyUserController extends Controller
             ]);
             
         } catch (\Exception $e) {
+            \Log::error('Add alumni by graduation year error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
                 'success' => false, 
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()

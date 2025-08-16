@@ -153,6 +153,95 @@ class SurveyController extends Controller
         ]);
     }
 
+    public function form_builder($id)
+    {
+        $survey = Survey::findOrFail($id);
+
+        // Get existing questions with their template answers
+        $questions = TemplatePertanyaan::with(['template_jawaban' => function ($query) {
+            $query->orderBy('urutan', 'asc');
+        }])
+            ->where('id_survey', $id)
+            ->orderBy('urutan')
+            ->get()
+            ->map(function ($question) {
+                return [
+                    'id' => $question->id,
+                    'pertanyaan' => $question->pertanyaan,
+                    'deskripsi_pertanyaan' => $question->deskripsi_pertanyaan,
+                    'tipe' => $question->tipe_jawaban,
+                    'block_id' => $question->id_blok ?? '',
+                    'required' => $question->wajib_diisi == 1,
+                    'visualisasi' => $question->visualisasi ?? '',
+                    'options' => $question->template_jawaban->map(function ($jawaban) {
+                        return ['text' => $jawaban->pilihan_jawaban];
+                    })->toArray()
+                ];
+            });
+
+        // If no questions exist, provide a sample question for better UX
+        if ($questions->isEmpty()) {
+            $questions = collect([
+                [
+                    'id' => 'sample-1',
+                    'pertanyaan' => 'Nama Lengkap',
+                    'deskripsi_pertanyaan' => 'Silakan masukkan nama lengkap Anda',
+                    'tipe' => 'text',
+                    'block_id' => '',
+                    'required' => true,
+                    'visualisasi' => '',
+                    'options' => []
+                ],
+                [
+                    'id' => 'sample-2',
+                    'pertanyaan' => 'Apakah Anda sudah bekerja?',
+                    'deskripsi_pertanyaan' => 'Pilih status pekerjaan Anda saat ini',
+                    'tipe' => 'radio',
+                    'block_id' => '',
+                    'required' => true,
+                    'visualisasi' => 'pie',
+                    'options' => [
+                        ['text' => 'Sudah bekerja'],
+                        ['text' => 'Belum bekerja'],
+                        ['text' => 'Sedang mencari kerja']
+                    ]
+                ]
+            ]);
+        }
+
+        // Sample blocks for demonstration (you can create Block model later)
+        $blocks = collect([
+            [
+                'id' => 1,
+                'survey_id' => $id,
+                'kode' => 'A',
+                'nama' => 'Basic Information',
+                'deskripsi' => 'Basic demographic and contact information',
+                'urutan' => 1,
+                'is_terminal' => false
+            ],
+            [
+                'id' => 2,
+                'survey_id' => $id,
+                'kode' => 'B',
+                'nama' => 'Employment Status',
+                'deskripsi' => 'Current employment status and job information',
+                'urutan' => 2,
+                'is_terminal' => false
+            ]
+        ]);
+
+        // Sample branch rules (you can create BranchRule model later)
+        $branchRules = collect([]);
+
+        return view('admin.views.survey.form-builder', [
+            'survey' => $survey,
+            'questions' => $questions,
+            'blocks' => $blocks,
+            'branchRules' => $branchRules
+        ]);
+    }
+
     public function details($id)
     {
         
@@ -175,37 +264,93 @@ class SurveyController extends Controller
             DB::beginTransaction();
 
             $survey_id = $request->input('survey_id');
+            Log::info('Creating questions for survey: ' . $survey_id);
+            Log::info('Request data:', $request->all());
 
-            // Delete existing questions and their options
-            $existingQuestions = TemplatePertanyaan::where('id_survey', $survey_id)->get();
-            foreach ($existingQuestions as $question) {
-                TemplateJawaban::where('id_template_pertanyaan', $question->id)->delete();
-            }
-            TemplatePertanyaan::where('id_survey', $survey_id)->delete();
-
-            // Create new questions
+            // Handle both old format and new form-builder format
             $questions = $request->input('questions', []);
-            foreach ($questions as $questionData) {
-                $question = TemplatePertanyaan::create([
-                    'id_survey' => $survey_id,
-                    'pertanyaan' => $questionData['question'],
-                    'deskripsi_pertanyaan' => $questionData['description'] ?? null,
-                    'blok' => $questionData['blok'] ?? null,
-                    'tipe' => $questionData['type'],
-                    'urutan' => $questionData['order'],
-                    'visualisasi' => $questionData['visualisasi'],
-                ]);
+            
+            // If it's from form builder (new format)
+            if ($request->has('blocks') || $request->has('branchRules')) {
+                Log::info('Processing form builder format');
+                
+                // Delete existing questions and their options
+                $existingQuestions = TemplatePertanyaan::where('id_survey', $survey_id)->get();
+                foreach ($existingQuestions as $question) {
+                    TemplateJawaban::where('id_template_pertanyaan', $question->id)->delete();
+                }
+                TemplatePertanyaan::where('id_survey', $survey_id)->delete();
 
-                if (
-                    in_array($questionData['type'], ['radio', 'checkbox', 'select'])
-                    && !empty($questionData['options'])
-                ) {
-                    foreach ($questionData['options'] as $option) {
-                        TemplateJawaban::create([
-                            'id_template_pertanyaan' => $question->id,
-                            'pilihan_jawaban' => $option['text'],
-                            'urutan' => $option['order'],
-                        ]);
+                // Process questions from form builder
+                foreach ($questions as $index => $questionData) {
+                    $question = TemplatePertanyaan::create([
+                        'id_survey' => $survey_id,
+                        'pertanyaan' => $questionData['pertanyaan'] ?? '',
+                        'deskripsi_pertanyaan' => $questionData['deskripsi_pertanyaan'] ?? null,
+                        'id_blok' => $questionData['block_id'] ?? null,
+                        'tipe_jawaban' => $questionData['tipe'] ?? 'text',
+                        'urutan' => $index + 1,
+                        'visualisasi' => $questionData['visualisasi'] ?? null,
+                        'wajib_diisi' => isset($questionData['required']) && $questionData['required'] ? 1 : 0,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+
+                    // Add options for choice-based questions
+                    if (
+                        in_array($questionData['tipe'] ?? 'text', ['radio', 'checkbox', 'select'])
+                        && !empty($questionData['options'])
+                    ) {
+                        foreach ($questionData['options'] as $optionIndex => $option) {
+                            TemplateJawaban::create([
+                                'id_template_pertanyaan' => $question->id,
+                                'pilihan_jawaban' => $option['text'] ?? '',
+                                'urutan' => $optionIndex + 1,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            ]);
+                        }
+                    }
+                }
+
+                // TODO: Handle blocks and branch rules when models are ready
+                // $blocks = $request->input('blocks', []);
+                // $branchRules = $request->input('branchRules', []);
+                
+            } else {
+                // Handle old format (existing functionality)
+                Log::info('Processing legacy format');
+                
+                // Delete existing questions and their options
+                $existingQuestions = TemplatePertanyaan::where('id_survey', $survey_id)->get();
+                foreach ($existingQuestions as $question) {
+                    TemplateJawaban::where('id_template_pertanyaan', $question->id)->delete();
+                }
+                TemplatePertanyaan::where('id_survey', $survey_id)->delete();
+
+                // Create new questions (legacy format)
+                foreach ($questions as $questionData) {
+                    $question = TemplatePertanyaan::create([
+                        'id_survey' => $survey_id,
+                        'pertanyaan' => $questionData['question'],
+                        'deskripsi_pertanyaan' => $questionData['description'] ?? null,
+                        'blok' => $questionData['blok'] ?? null,
+                        'tipe_jawaban' => $questionData['type'],
+                        'urutan' => $questionData['order'],
+                        'visualisasi' => $questionData['visualisasi'],
+                    ]);
+
+                    if (
+                        in_array($questionData['type'], ['radio', 'checkbox', 'select'])
+                        && !empty($questionData['options'])
+                    ) {
+                        foreach ($questionData['options'] as $option) {
+                            TemplateJawaban::create([
+                                'id_template_pertanyaan' => $question->id,
+                                'pilihan_jawaban' => $option['text'],
+                                'urutan' => $option['order'],
+                            ]);
+                        }
                     }
                 }
             }
@@ -217,6 +362,8 @@ class SurveyController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollback();
+            Log::error('Error creating questions: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()

@@ -50,9 +50,29 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::resource('atasan', AtasanController::class);
     Route::post('survey/import', [SurveyController::class, 'import'])->name('survey.import');
     Route::get('survey/add_question/{id}', [SurveyController::class, 'add_question'])->name('survey.add_question');
+    Route::get('survey/form-builder/{id}', [SurveyController::class, 'form_builder'])->name('survey.form_builder');
     Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
     Route::post('survey/create_question', [SurveyController::class, 'create_question'])->name('survey.create_question');
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');
+
+    // Survey Block Management
+    Route::prefix('surveys/{survey}')->name('survey.')->group(function () {
+        Route::get('blocks', [App\Http\Controllers\SurveyBlockController::class, 'index'])->name('blocks.index');
+        Route::post('blocks', [App\Http\Controllers\SurveyBlockController::class, 'store'])->name('blocks.store');
+        Route::get('blocks/{block}', [App\Http\Controllers\SurveyBlockController::class, 'show'])->name('blocks.show');
+        Route::put('blocks/{block}', [App\Http\Controllers\SurveyBlockController::class, 'update'])->name('blocks.update');
+        Route::delete('blocks/{block}', [App\Http\Controllers\SurveyBlockController::class, 'destroy'])->name('blocks.destroy');
+        Route::post('blocks/reorder', [App\Http\Controllers\SurveyBlockController::class, 'reorder'])->name('blocks.reorder');
+        
+        // Branch Rules for Questions
+        Route::prefix('questions/{question}')->name('questions.')->group(function () {
+            Route::get('branch-rules', [App\Http\Controllers\BranchRuleController::class, 'index'])->name('branch-rules.index');
+            Route::post('branch-rules', [App\Http\Controllers\BranchRuleController::class, 'store'])->name('branch-rules.store');
+            Route::get('branch-rules/{rule}', [App\Http\Controllers\BranchRuleController::class, 'show'])->name('branch-rules.show');
+            Route::put('branch-rules/{rule}', [App\Http\Controllers\BranchRuleController::class, 'update'])->name('branch-rules.update');
+            Route::delete('branch-rules/{rule}', [App\Http\Controllers\BranchRuleController::class, 'destroy'])->name('branch-rules.destroy');
+        });
+    });
 
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
@@ -90,6 +110,12 @@ Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function
     Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 });
 
-
+// Survey Filling Routes (for respondents)
+Route::prefix('surveys/{survey}')->name('surveys.')->group(function () {
+    Route::get('/', [App\Http\Controllers\SurveyFillController::class, 'start'])->name('start');
+    Route::get('/q/{question}', [App\Http\Controllers\SurveyFillController::class, 'showQuestion'])->name('show-question');
+    Route::post('/q/{question}', [App\Http\Controllers\SurveyFillController::class, 'submitAnswer'])->name('submit-answer');
+    Route::get('/done', [App\Http\Controllers\SurveyFillController::class, 'done'])->name('done');
+});
 
 require __DIR__ . '/auth.php';

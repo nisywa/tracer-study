@@ -51,6 +51,14 @@
                                 <span class="sm:hidden">Template</span>
                             </button>
                         </a>
+
+                        <a href="{{ route('admin.survey.blocks.index', $survey->id) }}">
+                            <button type="button" class="inline-block px-6 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-purple-600 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-layer-group mr-2"></i> 
+                                <span class="hidden sm:inline">Kelola Blok</span>
+                                <span class="sm:hidden">Blok</span>
+                            </button>
+                        </a>
                     </div>
                   @endif
                 </div>
@@ -119,6 +127,20 @@
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                 <h6 class="dark:text-white">Daftar Pertanyaan</h6>
+                @if(!auth()->user()->hasRole('supervisor'))
+                  <div class="flex gap-2">
+                    <a href="{{ route('admin.survey.form_builder', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-blue-600">
+                      <i class="fas fa-magic mr-2"></i>
+                      <span class="hidden sm:inline">Form Builder</span>
+                      <span class="sm:hidden">Builder</span>
+                    </a>
+                    <a href="{{ route('admin.survey.add_question', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-gray-300">
+                      <i class="fas fa-list mr-2"></i>
+                      <span class="hidden sm:inline">Classic Editor</span>
+                      <span class="sm:hidden">Classic</span>
+                    </a>
+                  </div>
+                @endif
               </div>
 
               <div class="flex-auto px-0 pt-0 pb-2">
@@ -352,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </svg>
                             </div>
                             <div>
-                                <p class="font-bold">User added successfully!</p>
+                                <p class="font-bold">${response.message || 'User added successfully!'}</p>
                             </div>
                         </div>
                     </div>
@@ -364,6 +386,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 location.reload();
             },
             error: function(xhr) {
+                console.error('Add user error:', xhr);
+                const message = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Terjadi kesalahan saat menambahkan user.';
                 const alertDiv = $(`
                     <div class="fixed top-4 right-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md" role="alert">
                         <div class="flex">
@@ -373,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </svg>
                             </div>
                             <div>
-                                <p class="font-bold">Error: ${xhr.responseJSON.message}</p>
+                                <p class="font-bold">${message}</p>
                             </div>
                         </div>
                     </div>
