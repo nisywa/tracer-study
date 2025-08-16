@@ -92,7 +92,9 @@ class DummyDataSeeder extends Seeder
                     'satuan_kerja' => 'Satker ' . ceil($i / 5),
                     'unit_kerja' => 'Unit ' . ceil($i / 3),
                     'no_hp' => '08' . rand(1000000000, 9999999999),
-                    'kepala_bps' => rand(0, 1) ? 'Ya' : 'Tidak',
+                    'nip_kepala_bps' => '1980' . str_pad(rand(1, 20), 6, '0', STR_PAD_LEFT),
+                    'tanggal_lahir' => Carbon::now()->subYears(rand(22, 35))->format('Y-m-d'),
+                    'tahun_lulus' => (string) rand(2020, 2023),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ]
