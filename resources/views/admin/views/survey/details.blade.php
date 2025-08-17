@@ -134,11 +134,11 @@
                       <span class="hidden sm:inline">Form Builder</span>
                       <span class="sm:hidden">Builder</span>
                     </a>
-                    <a href="{{ route('admin.survey.add_question', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-gray-300">
+                    <!-- <a href="{{ route('admin.survey.add_question', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-gray-300">
                       <i class="fas fa-list mr-2"></i>
                       <span class="hidden sm:inline">Classic Editor</span>
                       <span class="sm:hidden">Classic</span>
-                    </a>
+                    </a> -->
                   </div>
                 @endif
               </div>

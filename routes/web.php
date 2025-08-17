@@ -49,8 +49,13 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
     Route::resource('alumni', AlumniController::class);
     Route::resource('atasan', AtasanController::class);
     Route::post('survey/import', [SurveyController::class, 'import'])->name('survey.import');
-    Route::get('survey/add_question/{id}', [SurveyController::class, 'add_question'])->name('survey.add_question');
-    Route::get('survey/form-builder/{id}', [SurveyController::class, 'form_builder'])->name('survey.form_builder');
+    // Form Builder Routes
+    Route::get('survey/form-builder/create', [App\Http\Controllers\Admin\FormBuilderController::class, 'create'])->name('survey.form_builder.create');
+    Route::get('survey/form-builder/{id}', [App\Http\Controllers\Admin\FormBuilderController::class, 'edit'])->name('survey.form_builder');
+    Route::post('survey/form-builder/save', [App\Http\Controllers\Admin\FormBuilderController::class, 'save'])->name('survey.form_builder.save');
+    Route::get('survey/form-builder/data/{id}', [App\Http\Controllers\Admin\FormBuilderController::class, 'getData'])->name('survey.form_builder.data');
+    Route::post('survey/form-builder/duplicate/{id}', [App\Http\Controllers\Admin\FormBuilderController::class, 'duplicate'])->name('survey.form_builder.duplicate');
+    Route::get('survey/form-builder/preview/{id}', [App\Http\Controllers\Admin\FormBuilderController::class, 'preview'])->name('survey.form_builder.preview');
     Route::get('survey/details/{id}', [SurveyController::class, 'details'])->name('survey.details');
     Route::post('survey/create_question', [SurveyController::class, 'create_question'])->name('survey.create_question');
     Route::post('survey/duplicate/{id}', [SurveyController::class, 'duplicate'])->name('survey.duplicate');

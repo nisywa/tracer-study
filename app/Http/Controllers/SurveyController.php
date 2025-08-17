@@ -135,24 +135,6 @@ class SurveyController extends Controller
         return redirect()->route('admin.survey.index')->with('success', 'Survey updated successfully');
     }
 
-    public function add_question($id)
-    {
-        $survey = Survey::findOrFail($id);
-
-        // Get template questions with their options ordered by urutan
-        $template_questions = TemplatePertanyaan::with(['template_jawaban' => function ($query) {
-            $query->orderBy('urutan', 'asc');
-        }])
-            ->where('id_survey', $id)
-            ->orderBy('urutan')
-            ->get();
-
-        return view('admin.views.survey.add_question', [
-            'survey' => $survey,
-            'template_questions' => $template_questions
-        ]);
-    }
-
     public function form_builder($id)
     {
         $survey = Survey::findOrFail($id);

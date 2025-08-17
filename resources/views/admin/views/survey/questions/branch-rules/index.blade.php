@@ -23,9 +23,9 @@
                 <i class="fas fa-plus mr-2"></i>
                 Tambah Aturan
             </button>
-            <a href="{{ route('admin.survey.add_question', $survey->id) }}" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>
-                Kembali ke Pertanyaan
+            <a href="{{ route('admin.survey.form_builder', $survey->id) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                <i class="fas fa-magic mr-2"></i>
+                Form Builder
             </a>
         </div>
     </div>

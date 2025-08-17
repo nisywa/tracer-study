@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class TemplatePertanyaan extends Model
 {
     protected $table = 'template_pertanyaan';
-    protected $fillable = ['id_survey', 'pertanyaan', 'tipe', 'urutan', 'blok', 'deskripsi_pertanyaan', 'visualisasi', 'block_id'];
+    protected $fillable = ['id_survey', 'block_id', 'pertanyaan', 'deskripsi_pertanyaan', 'tipe', 'urutan', 'visualisasi', 'is_required', 'blok'];
+
+    protected $casts = [
+        'is_required' => 'boolean',
+    ];
 
     static function getTemplatePertanyaan($id_survey){
         $query=self::select('template_pertanyaan.*')
@@ -23,7 +27,13 @@ class TemplatePertanyaan extends Model
     {
         return $this->belongsTo(Survey::class, 'id_survey');
     }
-    public function template_jawaban()
+
+    public function surveyBlock()
+    {
+        return $this->belongsTo(SurveyBlock::class, 'block_id');
+    }
+    
+    public function templateJawaban()
     {
         return $this->hasMany(TemplateJawaban::class, 'id_template_pertanyaan');
     }

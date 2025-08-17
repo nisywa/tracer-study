@@ -30,12 +30,16 @@ class SurveyBlock extends Model
         'nama',
         'deskripsi',
         'urutan',
-        'is_terminal'
+        'is_terminal',
+        'navigation_type',
+        'target_section_id',
+        'metadata'
     ];
 
     protected $casts = [
         'is_terminal' => 'boolean',
-        'urutan' => 'integer'
+        'urutan' => 'integer',
+        'metadata' => 'array'
     ];
 
     /**
@@ -44,6 +48,22 @@ class SurveyBlock extends Model
     public function survey(): BelongsTo
     {
         return $this->belongsTo(Survey::class, 'survey_id');
+    }
+
+    /**
+     * Get the target section for navigation
+     */
+    public function targetSection(): BelongsTo
+    {
+        return $this->belongsTo(SurveyBlock::class, 'target_section_id');
+    }
+
+    /**
+     * Get navigation rules where this block is source
+     */
+    public function navigationRules(): HasMany
+    {
+        return $this->hasMany(SectionNavigationRule::class, 'source_section_id');
     }
 
     /**

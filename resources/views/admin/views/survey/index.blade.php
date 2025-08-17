@@ -45,6 +45,12 @@
        
                   <!-- button tambah survei -->
                   @if(!auth()->user()->hasRole('supervisor')) 
+                  <a href="{{route('admin.survey.form_builder.create')}}">
+                  <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                    <i class="fas fa-magic mr-2"></i> Form Builder
+                  </button>
+                  </a>
+                  
                   <a href="{{route('admin.survey.create')}}">
                   <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                     <i class="fas fa-plus mr-2"></i> Tambah Survei
@@ -114,7 +120,7 @@
                           <div class="icon-container">
                             @if(!auth()->user()->hasRole('supervisor'))
                             <!-- Add question -->
-                            <a href="{{ route('admin.survey.add_question', $srvy) }}" class="icon-link" data-tooltip="Tambah Pertanyaan">
+                            <a href="{{ route('admin.survey.form_builder', $srvy) }}" class="icon-link" data-tooltip="Tambah Pertanyaan">
                                 <i class="fas fa-file-alt"></i>
                             </a>
 
@@ -158,8 +164,23 @@
                           </div>
                           </form> -->
 
+                            <!-- Form Builder -->
+                            <a href="{{ route('admin.survey.form_builder', $srvy->id) }}" class="icon-link" data-tooltip="Form Builder - Edit dengan visual builder">
+                                <i class="fas fa-magic text-green-600"></i>
+                            </a>
+                            
+                            <!-- Duplicate Form Builder -->
+                            <button onclick="duplicateSurvey({{ $srvy->id }})" class="icon-link" data-tooltip="Duplicate Survey">
+                                <i class="fas fa-copy text-purple-600"></i>
+                            </button>
+                            
+                            <!-- Preview -->
+                            <button onclick="previewSurvey({{ $srvy->id }})" class="icon-link" data-tooltip="Preview Survey Structure">
+                                <i class="fas fa-eye text-blue-600"></i>
+                            </button>
+                            
                             <!-- Edit -->
-                            <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit">
+                            <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit (Traditional)">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <!-- Delete -->
@@ -232,6 +253,112 @@
             setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
         });
     }, 3000);
+
+    // Form Builder Functions
+    function duplicateSurvey(surveyId) {
+        if (confirm('Apakah Anda yakin ingin menduplikasi survey ini?')) {
+            fetch(`/admin/survey/form-builder/duplicate/${surveyId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    if (data.data.edit_url) {
+                        if (confirm('Ingin langsung edit survey yang baru dibuat?')) {
+                            window.location.href = data.data.edit_url;
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                } else {
+                    alert(data.message || 'Gagal menduplikasi survey');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menduplikasi survey');
+            });
+        }
+    }
+
+    function previewSurvey(surveyId) {
+        fetch(`/admin/survey/form-builder/preview/${surveyId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const survey = data.data.survey;
+                const stats = data.data.stats;
+                
+                let previewContent = `
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-2">${survey.nama}</h3>
+                        <p class="text-gray-600 mb-4">${survey.deskripsi || 'Tidak ada deskripsi'}</p>
+                        
+                        <div class="bg-blue-50 p-3 rounded-lg mb-4">
+                            <h4 class="font-semibold text-blue-800">Statistik Survey:</h4>
+                            <ul class="text-blue-700 text-sm mt-2">
+                                <li>• Total Sections: ${stats.total_sections}</li>
+                                <li>• Total Pertanyaan: ${stats.total_questions}</li>
+                                <li>• Estimasi Waktu: ${stats.estimated_time.formatted}</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="space-y-3">
+                `;
+                
+                survey.survey_blocks.forEach((block, index) => {
+                    previewContent += `
+                        <div class="border border-gray-200 rounded-lg p-3">
+                            <h5 class="font-medium text-gray-800">Section ${index + 1}: ${block.nama}</h5>
+                            <p class="text-sm text-gray-600">${block.deskripsi || 'Tidak ada deskripsi'}</p>
+                            <div class="text-xs text-gray-500 mt-2">
+                                ${block.questions.length} pertanyaan • Navigasi: ${block.navigation_type || 'next'}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                previewContent += `
+                        </div>
+                    </div>
+                `;
+                
+                // Show modal (you can create a modal or use alert)
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                        <div class="flex justify-between items-center p-4 border-b">
+                            <h3 class="text-lg font-semibold">Preview Survey</h3>
+                            <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        ${previewContent}
+                        <div class="p-4 border-t">
+                            <button onclick="this.closest('.fixed').remove()" 
+                                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            } else {
+                alert(data.message || 'Gagal memuat preview survey');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memuat preview');
+        });
+    }
     </script>
     
     

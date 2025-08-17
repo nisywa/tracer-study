@@ -1,46 +1,47 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <!-- table 1 -->
-    <form id="surveyForm" action="{{ route('admin.survey.create_question') }}" method="POST">
-        @csrf
-        <div class="flex flex-wrap -mx-3">
-            <div class="flex-none w-full max-w-full px-3">
-                <div
-                    class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-                    <div
-                        class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                        <div class="flex items-center justify-between mb-4">
-                            <h6 class="dark:text-white">Daftar Pertanyaan - {{ $survey->nama }}</h6>
-                            <div class="flex space-x-2">
-                                <a href="{{ route('admin.survey.blocks.index', $survey->id) }}"
-                                   class="inline-block px-4 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                    <i class="fas fa-layer-group mr-2"></i> Kelola Blok
-                                </a>
-                                <button type="button"
-                                    class="add-row inline-block px-4 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                    <i class="fas fa-plus mr-2"></i> Tambah Pertanyaan
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Info Panel for Block Management -->
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-info-circle text-blue-400"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-blue-800">Manajemen Blok & Percabangan</h3>
-                                    <div class="mt-2 text-sm text-blue-700">
-                                        <p>• Gunakan <strong>Kelola Blok</strong> untuk membuat dan mengatur blok (seksi) dalam survei</p>
-                                        <p>• Setelah membuat pertanyaan, klik ikon percabangan untuk mengatur alur berdasarkan jawaban</p>
-                                        <p>• Blok memungkinkan responden melompat ke bagian lain survei sesuai jawaban mereka</p>
-                                    </div>
-                                </div>
-                            </div>
+    <!-- Survey Form Header -->
+    <div class="flex flex-wrap -mx-3">
+        <div class="flex-none w-full max-w-full px-3">
+            <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+                    <div class="flex items-center justify-between mb-4">
+                        <h6 class="dark:text-white">
+                            @if(isset($survey))
+                                Edit Survey - {{ $survey->nama }}
+                            @else
+                                Form Builder - Buat Survey Baru
+                            @endif
+                        </h6>
+                        <div class="flex space-x-2">
+                            <a href="{{ route('admin.survey.index') }}"
+                               class="inline-block px-4 py-2 font-bold leading-normal text-center text-gray-600 align-middle transition-all ease-in bg-gray-100 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-arrow-left mr-2"></i> Kembali
+                            </a>
+                            <button type="button" id="saveSurvey"
+                                class="inline-block px-4 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
+                                <i class="fas fa-save mr-2"></i> Simpan Survey
+                            </button>
                         </div>
                     </div>
+                    
+                    <!-- Survey Basic Info -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Survey</label>
+                            <input type="text" id="surveyName" name="survey_name" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   value="{{ $survey->nama ?? '' }}" placeholder="Masukkan nama survey" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Survey</label>
+                            <textarea id="surveyDescription" name="survey_description" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                      rows="3" placeholder="Deskripsi atau tujuan survey">{{ $survey->deskripsi ?? '' }}</textarea>
+                        </div>
+                    </div>
+                </div>
                     
 
                 </div>
@@ -1970,5 +1971,279 @@
                 }
             }
         });
+        
+        // Save Survey functionality
+        document.getElementById('saveSurvey').addEventListener('click', function() {
+            saveSurveyData();
+        });
+        
+        function saveSurveyData() {
+            const surveyName = document.getElementById('surveyName').value;
+            const surveyDescription = document.getElementById('surveyDescription').value;
+            
+            if (!surveyName.trim()) {
+                alert('Nama survey wajib diisi!');
+                return;
+            }
+            
+            // Collect all sections data
+            const sections = [];
+            const sectionBlocks = document.querySelectorAll('.section-block');
+            
+            sectionBlocks.forEach((block, blockIndex) => {
+                const sectionName = block.querySelector('input[name="nama_blok"]').value || `Section ${blockIndex + 1}`;
+                const sectionDescription = block.querySelector('textarea[name="deskripsi_blok"]').value || '';
+                
+                // Get navigation settings
+                const navigationSelect = block.querySelector('select[name^="navigation_"]');
+                const navigation = {
+                    type: navigationSelect ? navigationSelect.value : 'next',
+                    target_section: null
+                };
+                
+                if (navigation.type === 'jump') {
+                    const targetSelect = block.querySelector('select[name^="target_section_"]');
+                    navigation.target_section = targetSelect ? parseInt(targetSelect.value) : null;
+                }
+                
+                // Collect questions in this section
+                const questions = [];
+                const questionContainers = block.querySelectorAll('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+                
+                questionContainers.forEach((container, questionIndex) => {
+                    const questionText = container.querySelector('textarea[name="pertanyaan"]').value;
+                    if (!questionText.trim()) return; // Skip empty questions
+                    
+                    const questionData = {
+                        question: questionText.trim(),
+                        description: container.querySelector('textarea[name="deskripsi_pertanyaan"]').value || '',
+                        type: container.querySelector('select[name="tipe"]').value || 'text',
+                        required: container.querySelector('.question-required').value === '1',
+                        visualization: container.querySelector('select[name="visualisasi"]').value || '',
+                        options: []
+                    };
+                    
+                    // Collect options for radio, checkbox, select
+                    if (['radio', 'checkbox', 'select'].includes(questionData.type)) {
+                        const optionInputs = container.querySelectorAll('.option-input');
+                        optionInputs.forEach(input => {
+                            if (input.value.trim()) {
+                                questionData.options.push(input.value.trim());
+                            }
+                        });
+                    }
+                    
+                    questions.push(questionData);
+                });
+                
+                if (questions.length > 0) {
+                    sections.push({
+                        section_name: sectionName,
+                        section_description: sectionDescription,
+                        questions: questions,
+                        navigation: navigation
+                    });
+                }
+            });
+            
+            if (sections.length === 0) {
+                alert('Minimal harus ada 1 section dengan 1 pertanyaan!');
+                return;
+            }
+            
+            // Prepare data for submission
+            const formData = {
+                survey_id: @if(isset($survey)) {{ $survey->id }} @else null @endif,
+                survey_name: surveyName,
+                survey_description: surveyDescription,
+                sections: sections
+            };
+            
+            // Show loading
+            const saveBtn = document.getElementById('saveSurvey');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            saveBtn.disabled = true;
+            
+            // Submit data
+            fetch('{{ route("admin.survey.form_builder.save") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || 'Survey berhasil disimpan!');
+                    if (data.data && data.data.redirect_url) {
+                        window.location.href = data.data.redirect_url;
+                    } else {
+                        window.location.href = '{{ route("admin.survey.index") }}';
+                    }
+                } else {
+                    alert(data.message || 'Terjadi kesalahan saat menyimpan survey');
+                    console.error('Save error:', data.errors || data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Network error:', error);
+                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            })
+            .finally(() => {
+                // Reset button
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            });
+        }
+        
+        // Load existing data if in edit mode
+        @if(isset($survey))
+        function loadExistingData() {
+            fetch('{{ route("admin.survey.form_builder.data", $survey->id) }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    populateFormBuilder(data.data);
+                } else {
+                    console.error('Failed to load survey data:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading survey data:', error);
+            });
+        }
+        
+        function populateFormBuilder(surveyData) {
+            // Clear existing sections except first one
+            const existingSections = document.querySelectorAll('.section-block');
+            for (let i = 1; i < existingSections.length; i++) {
+                existingSections[i].remove();
+            }
+            
+            // Populate survey basic info is already filled from server-side
+            
+            // Populate sections
+            surveyData.sections.forEach((section, sectionIndex) => {
+                let sectionBlock;
+                
+                if (sectionIndex === 0) {
+                    // Use first existing section
+                    sectionBlock = document.querySelector('.section-block');
+                } else {
+                    // Add new section
+                    addBlock();
+                    sectionBlock = document.querySelectorAll('.section-block')[sectionIndex];
+                }
+                
+                // Fill section info
+                const sectionNameInput = sectionBlock.querySelector('input[name="nama_blok"]');
+                const sectionDescInput = sectionBlock.querySelector('textarea[name="deskripsi_blok"]');
+                
+                if (sectionNameInput) sectionNameInput.value = section.name || '';
+                if (sectionDescInput) sectionDescInput.value = section.description || '';
+                
+                // Clear existing questions except first one
+                const existingQuestions = sectionBlock.querySelectorAll('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+                for (let i = 1; i < existingQuestions.length; i++) {
+                    existingQuestions[i].remove();
+                }
+                
+                // Populate questions
+                section.questions.forEach((question, questionIndex) => {
+                    let questionContainer;
+                    
+                    if (questionIndex === 0) {
+                        // Use first existing question
+                        questionContainer = sectionBlock.querySelector('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+                    } else {
+                        // Add new question
+                        const addQuestionBtn = sectionBlock.querySelector('.add-question-btn');
+                        if (addQuestionBtn) {
+                            addQuestionBtn.click();
+                            const questions = sectionBlock.querySelectorAll('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+                            questionContainer = questions[questionIndex];
+                        }
+                    }
+                    
+                    if (questionContainer) {
+                        // Fill question data
+                        const questionTextarea = questionContainer.querySelector('textarea[name="pertanyaan"]');
+                        const descriptionTextarea = questionContainer.querySelector('textarea[name="deskripsi_pertanyaan"]');
+                        const typeSelect = questionContainer.querySelector('select[name="tipe"]');
+                        const visualizationSelect = questionContainer.querySelector('select[name="visualisasi"]');
+                        const requiredInput = questionContainer.querySelector('.question-required');
+                        
+                        if (questionTextarea) questionTextarea.value = question.question || '';
+                        if (descriptionTextarea) descriptionTextarea.value = question.description || '';
+                        if (typeSelect) {
+                            typeSelect.value = question.type || 'text';
+                            // Trigger change event to show options if needed
+                            typeSelect.dispatchEvent(new Event('change'));
+                        }
+                        if (visualizationSelect) visualizationSelect.value = question.visualization || '';
+                        if (requiredInput) requiredInput.value = question.required ? '1' : '0';
+                        
+                        // Update required toggle UI
+                        const requiredToggle = questionContainer.querySelector('.required-toggle');
+                        if (requiredToggle && question.required) {
+                            requiredToggle.click();
+                        }
+                        
+                        // Add options for radio, checkbox, select
+                        setTimeout(() => {
+                            if (['radio', 'checkbox', 'select'].includes(question.type) && question.options) {
+                                const optionContainer = questionContainer.querySelector('#optionContainer');
+                                if (optionContainer) {
+                                    // Clear existing options
+                                    optionContainer.innerHTML = '';
+                                    
+                                    // Add saved options
+                                    question.options.forEach((optionText, optionIndex) => {
+                                        const optionDiv = document.createElement('div');
+                                        optionDiv.className = 'flex items-center space-x-2';
+                                        optionDiv.innerHTML = `
+                                            <input type="text" class="option-input flex-1 px-2 py-1 border border-gray-300 rounded text-sm" 
+                                                   placeholder="Pilihan ${optionIndex + 1}" value="${optionText}">
+                                            <button type="button" onclick="removeOption(this)" 
+                                                    class="text-red-500 hover:text-red-700 text-sm">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        `;
+                                        optionContainer.appendChild(optionDiv);
+                                    });
+                                }
+                            }
+                        }, 100);
+                    }
+                });
+                
+                // Set navigation
+                setTimeout(() => {
+                    const navigationSelect = sectionBlock.querySelector('select[name^="navigation_"]');
+                    if (navigationSelect && section.navigation) {
+                        navigationSelect.value = section.navigation.type || 'next';
+                        navigationSelect.dispatchEvent(new Event('change'));
+                        
+                        if (section.navigation.type === 'jump' && section.navigation.target_section_id) {
+                            setTimeout(() => {
+                                const targetSelect = sectionBlock.querySelector('select[name^="target_section_"]');
+                                if (targetSelect) {
+                                    targetSelect.value = section.navigation.target_section_id;
+                                }
+                            }, 100);
+                        }
+                    }
+                }, 200);
+            });
+        }
+        
+        // Load data if in edit mode
+        setTimeout(() => {
+            loadExistingData();
+        }, 500);
+        @endif
     </script>
 @endsection
