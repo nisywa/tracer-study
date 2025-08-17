@@ -1,6 +1,9 @@
 @extends('admin.layouts.app')
 
 @section('content')
+    <!-- CSRF Token for JavaScript -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
     <!-- Survey Form Header -->
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
@@ -9,9 +12,9 @@
                     <div class="flex items-center justify-between mb-4">
                         <h6 class="dark:text-white">
                             @if(isset($survey))
-                                Edit Survey - {{ $survey->nama }}
+                                Tambah Pertanyaan - {{ $survey->nama }}
                             @else
-                                Form Builder - Buat Survey Baru
+                                Form Builder - Tambah Pertanyaan
                             @endif
                         </h6>
                         <div class="flex space-x-2">
@@ -21,18 +24,28 @@
                             </a>
                             <button type="button" id="saveSurvey"
                                 class="inline-block px-4 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                <i class="fas fa-save mr-2"></i> Simpan Survey
+                                <i class="fas fa-save mr-2"></i> Simpan Pertanyaan
                             </button>
                         </div>
                     </div>
                     
-                    <!-- Survey Basic Info -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Information Message -->
+                    <div class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                            <p class="text-sm text-blue-800">
+                                Gunakan form ini untuk menambahkan pertanyaan baru ke dalam survey. Pertanyaan yang dibuat akan ditambahkan ke survey yang sudah ada.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Survey Basic Info - Hidden for questions-only mode -->
+                    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6" style="display: none;">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nama Survey</label>
                             <input type="text" id="surveyName" name="survey_name" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                   value="{{ $survey->nama ?? '' }}" placeholder="Masukkan nama survey" required>
+                                   value="{{ $survey->nama ?? '' }}" placeholder="Masukkan nama survey">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Survey</label>
@@ -40,7 +53,7 @@
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                       rows="3" placeholder="Deskripsi atau tujuan survey">{{ $survey->deskripsi ?? '' }}</textarea>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                     
 
@@ -155,7 +168,7 @@
                                             <option value="">Pilih Visualisasi</option>
                                             <option value="bar">Bar Chart</option>
                                             <option value="pie">Pie Chart</option>
-                                            <option value="lineChart">Tidak ada</option>
+                                            <option value="">Tidak ada</option>
                                         </select>
                                     </div>
                                 </div>
@@ -205,7 +218,7 @@
                         <div class="flex items-center gap-4">
                             <label class="text-sm text-purple-700">Setelah Section 1 selesai, lanjut ke:</label>
                             <select class="section-navigation-select text-sm border border-purple-300 rounded px-3 py-2 bg-white" data-current-section="Section 1">
-                                <option value="">Lanjut ke section berikutnya</option>
+                                <option value="end">Lanjut ke section berikutnya (akhiri survey)</option>
                                 <option value="end">Akhiri survey</option>
                             </select>
                         </div>
@@ -293,7 +306,7 @@
                         <option value="">Pilih Visualisasi</option>
                         <option value="bar">Bar Chart</option>
                         <option value="pie">Pie Chart</option>
-                        <option value="lineChart">Tidak ada</option>
+                        <option value="">Tidak ada</option>
                     </select>
                 </td>
 
@@ -393,17 +406,24 @@
             const availableSections = getAvailableSections();
             const navigationSelects = document.querySelectorAll('.section-navigation-select');
             
-            navigationSelects.forEach(select => {
+            navigationSelects.forEach((select, selectIndex) => {
                 const currentSection = select.getAttribute('data-current-section');
                 const currentValue = select.value;
+                const currentSectionNumber = selectIndex + 1;
+                const nextSectionNumber = currentSectionNumber + 1;
                 
                 // Clear existing options and rebuild
                 select.innerHTML = '';
                 
-                // Add default options
+                // Add default "next section" option with next section number as value
                 const defaultNextOption = document.createElement('option');
-                defaultNextOption.value = '';
-                defaultNextOption.textContent = 'Lanjut ke section berikutnya';
+                if (nextSectionNumber <= availableSections.length) {
+                    defaultNextOption.value = nextSectionNumber; // Value points to next section
+                    defaultNextOption.textContent = 'Lanjut ke section berikutnya';
+                } else {
+                    defaultNextOption.value = 'end'; // If no next section, end survey
+                    defaultNextOption.textContent = 'Lanjut ke section berikutnya (akhiri survey)';
+                }
                 select.appendChild(defaultNextOption);
                 
                 const endOption = document.createElement('option');
@@ -412,10 +432,11 @@
                 select.appendChild(endOption);
                 
                 // Add all available sections as jump options (excluding current section)
-                availableSections.forEach(section => {
+                availableSections.forEach((section, index) => {
+                    const sectionNumber = index + 1;
                     if (section !== currentSection) {
                         const option = document.createElement('option');
-                        option.value = section.toLowerCase().replace(' ', '_'); // e.g., "section_2"
+                        option.value = sectionNumber; // Store section number directly
                         option.textContent = `Loncat ke ${section}`;
                         select.appendChild(option);
                     }
@@ -426,24 +447,176 @@
                 if (currentValue && validOptions.includes(currentValue)) {
                     select.value = currentValue;
                 } else {
-                    // Reset to default if previous value is no longer valid
-                    select.value = '';
+                    // Reset to default (next section or end)
+                    select.value = defaultNextOption.value;
                 }
             });
         };
 
+        // Function to add event listeners to a section
+        window.addEventListenersToSection = function(sectionElement) {
+            // Add listeners for duplicate and delete block buttons
+            const duplicateBtn = sectionElement.querySelector('.duplicate-block-btn');
+            const deleteBtn = sectionElement.querySelector('.delete-block-btn');
+            const addBlockBtn = sectionElement.querySelector('.add-block-btn');
+            
+            if (duplicateBtn) {
+                duplicateBtn.addEventListener('click', function() {
+                    duplicateBlock(this);
+                });
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function() {
+                    deleteBlock(this);
+                });
+            }
+            
+            if (addBlockBtn) {
+                addAddBlockListener(addBlockBtn);
+            }
+            
+            // Add listeners for all question containers in this section
+            const questionContainers = sectionElement.querySelectorAll('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+            questionContainers.forEach(container => {
+                addEventListenersToQuestionContainer(container);
+            });
+            
+            // Add listener for add question button
+            const addQuestionBtn = sectionElement.querySelector('.add-question-btn');
+            if (addQuestionBtn) {
+                addQuestionBtn.addEventListener('click', function() {
+                    // Implementation for adding new question will be handled by global event delegation
+                });
+            }
+        };
+
+        // Function to add event listeners to question container
+        window.addEventListenersToQuestionContainer = function(questionContainer) {
+            // Most events are handled via global event delegation now
+            // This function is kept for any specific initialization if needed
+            
+            // Initialize any specific functionality for the question container
+            // All click events are handled by global event delegation in DOMContentLoaded
+        };
+
+        // Function to add event listener to add-block button
+        window.addAddBlockListener = function(addBlockBtn) {
+            addBlockBtn.addEventListener('click', function() {
+                // Implementation will create a new section/block
+                // This will be handled by the existing form builder logic
+                console.log('Add new block clicked');
+            });
+        };
+
+        // Function to clear form values in cloned block
+        window.clearFormValues = function(clonedBlock) {
+            // Clear block name and description
+            const blockNameTextarea = clonedBlock.querySelector('textarea[placeholder="Tulis nama blok disini..."]');
+            const blockDescTextarea = clonedBlock.querySelector('textarea[placeholder="Tulis deskripsi blok disini..."]');
+            
+            if (blockNameTextarea) blockNameTextarea.value = '';
+            if (blockDescTextarea) blockDescTextarea.value = '';
+            
+            // Clear all question textareas and reset form controls
+            const questionContainers = clonedBlock.querySelectorAll('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+            questionContainers.forEach(container => {
+                // Clear question and description textareas
+                const questionTextarea = container.querySelector('textarea[placeholder="Tulis pertanyaan disini..."]');
+                const descriptionTextarea = container.querySelector('textarea[placeholder="Tulis deskripsi disini..."]');
+                
+                if (questionTextarea) questionTextarea.value = '';
+                if (descriptionTextarea) descriptionTextarea.value = '';
+                
+                // Reset question type select to default
+                const typeSelect = container.querySelector('select.input-type');
+                if (typeSelect) {
+                    typeSelect.value = '';
+                    // Trigger change to reset personal column
+                    changeInputTypeFormBuilder(typeSelect);
+                }
+                
+                // Reset visualization select
+                const visualSelect = container.querySelector('select[name="visualisasi"]');
+                if (visualSelect) {
+                    visualSelect.value = '';
+                }
+                
+                // Reset required state to default (off)
+                const hiddenInput = container.querySelector('.question-required');
+                const requiredToggle = container.querySelector('.required-toggle');
+                const toggleSwitch = container.querySelector('.required-switch');
+                const toggleDot = container.querySelector('.required-dot');
+                
+                if (hiddenInput) hiddenInput.value = '0';
+                if (requiredToggle && toggleSwitch && toggleDot) {
+                    toggleSwitch.classList.remove('bg-orange-500');
+                    toggleSwitch.classList.add('bg-gray-200');
+                    toggleDot.classList.remove('translate-x-5');
+                    toggleDot.classList.add('translate-x-0');
+                    requiredToggle.classList.remove('text-orange-600', 'border-orange-300');
+                    requiredToggle.classList.add('text-gray-600', 'border-gray-300');
+                    requiredToggle.title = 'Toggle Required';
+                }
+            });
+            
+            // Reset navigation to default (end survey)
+            const navigationSelect = clonedBlock.querySelector('.section-navigation-select');
+            if (navigationSelect) {
+                navigationSelect.value = 'end';
+            }
+        };
+
         // Function to handle duplicate block
         window.duplicateBlock = function(button) {
+            console.log('Duplicate block clicked');
             const blockContainer = button.closest('.flex.flex-wrap.-mx-3');
-            if (!blockContainer) return;
+            if (!blockContainer) {
+                console.log('Block container not found');
+                return;
+            }
+            
+            // Get all existing sections to determine next section number
+            const allBlocks = document.querySelectorAll('.flex.flex-wrap.-mx-3');
+            const formBlocks = Array.from(allBlocks).filter(block => 
+                block.querySelector('.inline-flex.items-center.px-3.py-1.rounded-full')
+            );
+            const nextSectionNumber = formBlocks.length + 1;
+            
+            console.log(`Current sections: ${formBlocks.length}, Next section will be: ${nextSectionNumber}`);
             
             // Clone the entire block
             const clonedBlock = blockContainer.cloneNode(true);
             
+            // Clear form values in cloned block to avoid duplicate data
+            clearFormValues(clonedBlock);
+            
+            // Update the section number in cloned block immediately
+            const sectionSpan = clonedBlock.querySelector('.inline-flex.items-center.px-3.py-1.rounded-full span');
+            if (sectionSpan) {
+                sectionSpan.textContent = `Section ${nextSectionNumber}`;
+                console.log(`Updated cloned section span to: Section ${nextSectionNumber}`);
+            }
+            
+            // Update navigation label in cloned block
+            const navigationLabel = clonedBlock.querySelector('.text-sm.text-purple-700');
+            if (navigationLabel) {
+                navigationLabel.textContent = `Setelah Section ${nextSectionNumber} selesai, lanjut ke:`;
+                console.log(`Updated navigation label for Section ${nextSectionNumber}`);
+            }
+            
+            // Update navigation select data attribute
+            const navigationSelect = clonedBlock.querySelector('.section-navigation-select');
+            if (navigationSelect) {
+                navigationSelect.setAttribute('data-current-section', `Section ${nextSectionNumber}`);
+                console.log(`Updated navigation select data attribute for Section ${nextSectionNumber}`);
+            }
+            
             // Insert the cloned block after the current block
             blockContainer.parentNode.insertBefore(clonedBlock, blockContainer.nextSibling);
+            console.log('Cloned block inserted into DOM');
             
-            // Update section numbering for all sections
+            // Update section numbering for all sections (to ensure consistency)
             updateSectionNumbering();
             
             // Add event listeners to the cloned block
@@ -457,6 +630,7 @@
             
             // Scroll to the cloned block
             clonedBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            console.log('Duplicate block process completed');
         };
 
         // Function to handle delete block
@@ -601,8 +775,9 @@
             const availableSections = getAvailableSections();
             
             let sectionOptions = '<option value="">Lanjut ke pertanyaan berikutnya</option>';
-            availableSections.forEach(section => {
-                sectionOptions += `<option value="${section}">${section}</option>`;
+            availableSections.forEach((section, index) => {
+                const sectionNumber = index + 1;
+                sectionOptions += `<option value="${sectionNumber}">${section}</option>`;
             });
 
             let branchingHTML = '';
@@ -722,8 +897,9 @@
             const branchingOptions = document.getElementById('branchingOptions');
             const options = optionContainer.children;
             let sectionSelectOptions = '<option value="">Lanjut ke pertanyaan berikutnya</option>';
-            availableSections.forEach(section => {
-                sectionSelectOptions += `<option value="${section}">Loncat ke ${section}</option>`;
+            availableSections.forEach((section, index) => {
+                const sectionNumber = index + 1;
+                sectionSelectOptions += `<option value="${sectionNumber}">Loncat ke ${section}</option>`;
             });
             
             for (let i = 0; i < options.length; i++) {
@@ -818,10 +994,10 @@
             // Example: Show confirmation for important changes
             if (selectedValue === 'end') {
                 console.log(`${currentSection} will end the survey`);
-            } else if (selectedValue === '') {
-                console.log(`${currentSection} will continue to next section`);
+            } else if (!isNaN(selectedValue)) {
+                console.log(`${currentSection} will jump to section ${selectedValue}`);
             } else {
-                console.log(`${currentSection} will jump to ${selectedValue}`);
+                console.log(`${currentSection} navigation value: ${selectedValue}`);
             }
         };
 
@@ -1347,7 +1523,7 @@
                                         <div class="flex items-center gap-4">
                                             <label class="text-sm text-purple-700">Setelah Section ${sectionCount} selesai, lanjut ke:</label>
                                             <select class="section-navigation-select text-sm border border-purple-300 rounded px-3 py-2 bg-white" data-current-section="Section ${sectionCount}">
-                                                <option value="">Lanjut ke section berikutnya</option>
+                                                <option value="end">Akhiri survey (section terakhir)</option>
                                                 <option value="end">Akhiri survey</option>
                                             </select>
                                         </div>
@@ -1666,7 +1842,7 @@
                                         <div class="flex items-center gap-4">
                                             <label class="text-sm text-purple-700">Setelah Section \${sectionCount} selesai, lanjut ke:</label>
                                             <select class="section-navigation-select text-sm border border-purple-300 rounded px-3 py-2 bg-white" data-current-section="Section \${sectionCount}">
-                                                <option value="">Lanjut ke section berikutnya</option>
+                                                <option value="end">Akhiri survey (section terakhir)</option>
                                                 <option value="end">Akhiri survey</option>
                                             </select>
                                         </div>
@@ -1970,65 +2146,109 @@
                     });
                 }
             }
-        });
-        
-        // Save Survey functionality
-        document.getElementById('saveSurvey').addEventListener('click', function() {
-            saveSurveyData();
+            
+            // Save Questions functionality - only save questions to existing survey
+            const saveSurveyBtn = document.getElementById('saveSurvey');
+            if (saveSurveyBtn) {
+                saveSurveyBtn.addEventListener('click', function() {
+                    console.log('Save Questions button clicked');
+                    saveSurveyData();
+                });
+            } else {
+                console.error('Save button not found!');
+            }
         });
         
         function saveSurveyData() {
-            const surveyName = document.getElementById('surveyName').value;
-            const surveyDescription = document.getElementById('surveyDescription').value;
+            console.log('saveSurveyData function started');
             
-            if (!surveyName.trim()) {
-                alert('Nama survey wajib diisi!');
+            // Collect all questions data only (no survey info needed)
+            const sections = [];
+            const allBlocks = document.querySelectorAll('.flex.flex-wrap.-mx-3');
+            console.log('Found blocks:', allBlocks.length);
+            
+            const sectionBlocks = Array.from(allBlocks).filter(block => 
+                block.querySelector('.inline-flex.items-center.px-3.py-1.rounded-full')
+            );
+            console.log('Found section blocks:', sectionBlocks.length);
+            
+            if (sectionBlocks.length === 0) {
+                alert('Tidak ada section yang ditemukan!');
                 return;
             }
             
-            // Collect all sections data
-            const sections = [];
-            const sectionBlocks = document.querySelectorAll('.section-block');
-            
             sectionBlocks.forEach((block, blockIndex) => {
-                const sectionName = block.querySelector('input[name="nama_blok"]').value || `Section ${blockIndex + 1}`;
-                const sectionDescription = block.querySelector('textarea[name="deskripsi_blok"]').value || '';
+                console.log(`Processing block ${blockIndex + 1}`);
+                
+                // Get section name and description from the current HTML structure
+                const nameTextareas = block.querySelectorAll('textarea');
+                console.log('Found textareas in block:', nameTextareas.length);
+                
+                const sectionName = nameTextareas[0] ? nameTextareas[0].value.trim() : `Section ${blockIndex + 1}`;
+                const sectionDescription = nameTextareas[1] ? nameTextareas[1].value.trim() : '';
+                
+                console.log(`Section name: "${sectionName}", description: "${sectionDescription}"`);
                 
                 // Get navigation settings
-                const navigationSelect = block.querySelector('select[name^="navigation_"]');
+                const navigationSelect = block.querySelector('.section-navigation-select');
                 const navigation = {
-                    type: navigationSelect ? navigationSelect.value : 'next',
+                    type: 'next',
                     target_section: null
                 };
                 
-                if (navigation.type === 'jump') {
-                    const targetSelect = block.querySelector('select[name^="target_section_"]');
-                    navigation.target_section = targetSelect ? parseInt(targetSelect.value) : null;
+                if (navigationSelect && navigationSelect.value) {
+                    if (navigationSelect.value === 'end') {
+                        navigation.type = 'end';
+                    } else if (navigationSelect.value !== '' && !isNaN(navigationSelect.value)) {
+                        navigation.type = 'jump';
+                        // Value is already a section number
+                        navigation.target_section = parseInt(navigationSelect.value);
+                    }
                 }
                 
                 // Collect questions in this section
                 const questions = [];
                 const questionContainers = block.querySelectorAll('.border-2.border-gray-300.rounded-lg.p-4.mb-4.bg-white.shadow-sm');
+                console.log(`Found question containers in block ${blockIndex + 1}:`, questionContainers.length);
                 
                 questionContainers.forEach((container, questionIndex) => {
-                    const questionText = container.querySelector('textarea[name="pertanyaan"]').value;
-                    if (!questionText.trim()) return; // Skip empty questions
+                    const questionTextareas = container.querySelectorAll('textarea');
+                    console.log(`Question ${questionIndex + 1} textareas:`, questionTextareas.length);
+                    
+                    const questionText = questionTextareas[0] ? questionTextareas[0].value.trim() : '';
+                    console.log(`Question ${questionIndex + 1} text: "${questionText}"`);
+                    
+                    if (!questionText) {
+                        console.log(`Skipping empty question ${questionIndex + 1}`);
+                        return; // Skip empty questions
+                    }
                     
                     const questionData = {
-                        question: questionText.trim(),
-                        description: container.querySelector('textarea[name="deskripsi_pertanyaan"]').value || '',
-                        type: container.querySelector('select[name="tipe"]').value || 'text',
-                        required: container.querySelector('.question-required').value === '1',
-                        visualization: container.querySelector('select[name="visualisasi"]').value || '',
-                        options: []
+                        question: questionText,
+                        description: questionTextareas[1] ? questionTextareas[1].value.trim() : '',
+                        type: container.querySelector('select[name="tipe"]')?.value || 'text',
+                        required: container.querySelector('.question-required')?.value === '1',
+                        visualization: container.querySelector('select[name="visualisasi"]')?.value || '',
+                        options: [],
+                        branching_rules: {}
                     };
+                    
+                    console.log(`Question ${questionIndex + 1} data:`, questionData);
                     
                     // Collect options for radio, checkbox, select
                     if (['radio', 'checkbox', 'select'].includes(questionData.type)) {
-                        const optionInputs = container.querySelectorAll('.option-input');
-                        optionInputs.forEach(input => {
+                        const optionInputs = container.querySelectorAll('.option-item input[type="text"]');
+                        console.log(`Found option inputs for question ${questionIndex + 1}:`, optionInputs.length);
+                        
+                        optionInputs.forEach((input, index) => {
                             if (input.value.trim()) {
                                 questionData.options.push(input.value.trim());
+                                
+                                // Check for branching rules
+                                const branchingTarget = input.closest('.option-item').querySelector('.branching-target');
+                                if (branchingTarget && branchingTarget.value) {
+                                    questionData.branching_rules[index] = branchingTarget.value;
+                                }
                             }
                         });
                     }
@@ -2043,54 +2263,102 @@
                         questions: questions,
                         navigation: navigation
                     });
+                    console.log(`Added section ${blockIndex + 1} with ${questions.length} questions`);
                 }
             });
             
+            console.log('Final sections data:', sections);
+            
             if (sections.length === 0) {
-                alert('Minimal harus ada 1 section dengan 1 pertanyaan!');
+                alert('Minimal harus ada 1 pertanyaan untuk disimpan!');
                 return;
             }
             
-            // Prepare data for submission
+            // Prepare data for submission (questions only)
             const formData = {
                 survey_id: @if(isset($survey)) {{ $survey->id }} @else null @endif,
-                survey_name: surveyName,
-                survey_description: surveyDescription,
-                sections: sections
+                sections: sections,
+                action: 'save_questions_only' // Flag to indicate we're only saving questions
             };
+            
+            console.log('Data to be sent:', formData);
+            console.log('Survey ID:', formData.survey_id);
+            console.log('Sections count:', formData.sections.length);
+            
+            // Check if survey_id is valid
+            if (!formData.survey_id) {
+                alert('Error: Survey ID tidak ditemukan. Pastikan Anda mengakses form-builder melalui URL yang benar (/survey/form-builder/{survey_id})');
+                return;
+            }
             
             // Show loading
             const saveBtn = document.getElementById('saveSurvey');
             const originalText = saveBtn.innerHTML;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan Pertanyaan...';
             saveBtn.disabled = true;
+            
+            console.log('Sending request to:', '{{ route("admin.survey.form_builder.save") }}');
+            
+            // Check if CSRF token exists
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfToken) {
+                console.error('CSRF token not found!');
+                alert('Error: CSRF token tidak ditemukan. Silakan refresh halaman.');
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+                return;
+            }
+            
+            console.log('CSRF Token:', csrfToken.getAttribute('content'));
             
             // Submit data
             fetch('{{ route("admin.survey.form_builder.save") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(formData)
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.success) {
-                    alert(data.message || 'Survey berhasil disimpan!');
-                    if (data.data && data.data.redirect_url) {
-                        window.location.href = data.data.redirect_url;
-                    } else {
-                        window.location.href = '{{ route("admin.survey.index") }}';
-                    }
+                    alert(data.message || 'Pertanyaan berhasil disimpan!');
+                    // Don't redirect, stay on the same page for further editing
+                    console.log('Questions saved successfully');
                 } else {
-                    alert(data.message || 'Terjadi kesalahan saat menyimpan survey');
-                    console.error('Save error:', data.errors || data.error);
+                    // Handle various error formats
+                    let errorMessage = 'Terjadi kesalahan saat menyimpan pertanyaan';
+                    if (data.message) {
+                        errorMessage = data.message;
+                    } else if (data.error) {
+                        errorMessage = data.error;
+                    } else if (data.errors) {
+                        // Handle validation errors
+                        if (typeof data.errors === 'object') {
+                            errorMessage = Object.values(data.errors).flat().join('\n');
+                        } else {
+                            errorMessage = data.errors;
+                        }
+                    }
+                    alert(errorMessage);
+                    console.error('Save error details:', data);
                 }
             })
             .catch(error => {
-                console.error('Network error:', error);
-                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+                console.error('Network/Parse error:', error);
+                alert('Terjadi kesalahan jaringan atau parsing data. Silakan coba lagi.');
             })
             .finally(() => {
                 // Reset button

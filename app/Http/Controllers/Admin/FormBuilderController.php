@@ -48,6 +48,24 @@ class FormBuilderController extends Controller
      */
     public function save(Request $request)
     {
+        // Log incoming request for debugging
+        Log::info('FormBuilder save request', [
+            'user_id' => auth()->id(),
+            'action' => $request->input('action'),
+            'survey_id' => $request->input('survey_id'),
+            'has_sections' => !empty($request->input('sections')),
+            'sections_count' => count($request->input('sections', [])),
+            'request_size' => strlen(json_encode($request->all()))
+        ]);
+
+        // Check if this is questions-only save mode
+        $isQuestionsOnly = $request->input('action') === 'save_questions_only';
+        
+        if ($isQuestionsOnly) {
+            return $this->saveQuestionsOnly($request);
+        }
+
+        // Original full survey save logic
         // Validasi input
         $validator = $this->validateFormBuilderData($request);
         if ($validator->fails()) {
@@ -136,6 +154,133 @@ class FormBuilderController extends Controller
     }
 
     /**
+     * Save questions only - untuk mode editing questions tanpa mengubah survey metadata
+     */
+    private function saveQuestionsOnly(Request $request)
+    {
+        // Validasi khusus untuk questions only mode
+        $validator = $this->validateQuestionsOnlyData($request);
+        if ($validator->fails()) {
+            Log::warning('Questions validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'user_id' => auth()->id(),
+                'survey_id' => $request->input('survey_id')
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Data pertanyaan tidak valid',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $surveyId = $request->input('survey_id');
+        if (!$surveyId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Survey ID diperlukan untuk menyimpan pertanyaan'
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Check survey exists and permission
+            $survey = Survey::findOrFail($surveyId);
+            if (!$this->canEditSurvey($survey)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki izin untuk mengedit survey ini'
+                ], 403);
+            }
+
+            Log::info('Starting questions-only save', [
+                'survey_id' => $surveyId,
+                'user_id' => auth()->id(),
+                'sections_count' => count($request->input('sections', []))
+            ]);
+
+            // Process only the questions/blocks - don't update survey metadata
+            $this->processSurveyBlocks($request, $survey);
+            $this->processSectionNavigation($request, $survey);
+
+            // Update survey timestamp to reflect changes
+            $survey->touch();
+
+            DB::commit();
+            
+            Log::info('Questions saved successfully', [
+                'survey_id' => $surveyId,
+                'user_id' => auth()->id(),
+                'sections_processed' => count($request->input('sections', []))
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Pertanyaan berhasil disimpan',
+                'data' => [
+                    'survey_id' => $survey->id,
+                    'sections_saved' => count($request->input('sections', [])),
+                    'updated_at' => $survey->updated_at->format('Y-m-d H:i:s')
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Error saving questions only', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id(),
+                'survey_id' => $surveyId,
+                'request_data' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan pertanyaan. Silakan coba lagi.',
+                'error' => app()->environment('local') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Validasi khusus untuk mode questions only
+     */
+    private function validateQuestionsOnlyData(Request $request)
+    {
+        $rules = [
+            'survey_id' => 'required|integer|exists:survey,id', // Fixed table name: survey (not surveys)
+            'sections' => 'required|array|min:1|max:20',
+            'sections.*.section_name' => 'required|string|max:255',
+            'sections.*.section_description' => 'nullable|string|max:500',
+            'sections.*.questions' => 'required|array|min:1|max:50',
+            'sections.*.questions.*.question' => 'required|string|max:500',
+            'sections.*.questions.*.description' => 'nullable|string|max:500',
+            'sections.*.questions.*.type' => 'required|in:text,textarea,radio,checkbox,select,file,date',
+            'sections.*.questions.*.required' => 'boolean',
+            'sections.*.questions.*.visualization' => 'nullable|in:bar,pie',
+            'sections.*.questions.*.options' => 'nullable|array|max:20',
+            'sections.*.questions.*.options.*' => 'string|max:255',
+            'sections.*.navigation' => 'nullable|array',
+            'sections.*.navigation.type' => 'nullable|in:next,jump,end',
+            'sections.*.navigation.target_section' => 'nullable|integer|min:1',
+        ];
+
+        $messages = [
+            'survey_id.required' => 'Survey ID diperlukan',
+            'survey_id.exists' => 'Survey tidak ditemukan',
+            'sections.required' => 'Minimal harus ada 1 section',
+            'sections.max' => 'Maksimal 20 sections dalam satu survey',
+            'sections.*.section_name.required' => 'Nama section wajib diisi',
+            'sections.*.questions.required' => 'Setiap section harus memiliki minimal 1 pertanyaan',
+            'sections.*.questions.*.question.required' => 'Teks pertanyaan wajib diisi',
+            'sections.*.questions.*.type.required' => 'Tipe pertanyaan wajib dipilih',
+            'sections.*.questions.*.type.in' => 'Tipe pertanyaan tidak valid',
+        ];
+
+        return Validator::make($request->all(), $rules, $messages);
+    }
+
+    /**
      * Validasi business logic tambahan
      */
     private function validateBusinessLogic(Request $request)
@@ -217,7 +362,7 @@ class FormBuilderController extends Controller
             'sections.*.questions.*.description' => 'nullable|string|max:500',
             'sections.*.questions.*.type' => 'required|in:text,textarea,radio,checkbox,select,file,date',
             'sections.*.questions.*.required' => 'boolean',
-            'sections.*.questions.*.visualization' => 'nullable|in:bar,pie,line',
+            'sections.*.questions.*.visualization' => 'nullable|in:bar,pie',
             'sections.*.questions.*.options' => 'nullable|array|max:20',
             'sections.*.questions.*.options.*' => 'string|max:255',
             'sections.*.navigation' => 'nullable|array',
@@ -295,7 +440,7 @@ class FormBuilderController extends Controller
     }
 
     /**
-     * Process survey blocks/sections dengan batch operations
+     * Process survey blocks/sections dengan batch operations dan foreign key handling
      */
     private function processSurveyBlocks(Request $request, Survey $survey)
     {
@@ -306,42 +451,91 @@ class FormBuilderController extends Controller
             $this->deleteExistingBlocksOptimized($survey->id);
         }
 
-        // Prepare batch data for blocks
-        $blockData = [];
-        $questionData = [];
-        $answerData = [];
-        
+        // STEP 1: Create all blocks first WITHOUT target_section_id to avoid foreign key constraint
+        $insertedBlocks = [];
         foreach ($sections as $sectionIndex => $sectionData) {
-            $blockId = 'temp_' . ($sectionIndex + 1); // Temporary ID for batch processing
+            // Create unique kode using letters (A, B, C, etc.) to match migration design
+            $kodeOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
+            $uniqueKode = $kodeOptions[$sectionIndex] ?? 'S' . ($sectionIndex + 1);
             
-            $blockData[] = [
+            Log::info("Creating survey block", [
                 'survey_id' => $survey->id,
-                'kode' => "Section " . ($sectionIndex + 1),
+                'section_index' => $sectionIndex,
+                'unique_kode' => $uniqueKode,
+                'section_name' => $sectionData['section_name'] ?? "Section " . ($sectionIndex + 1)
+            ]);
+            
+            // Create block without target_section_id first
+            $block = SurveyBlock::create([
+                'survey_id' => $survey->id,
+                'kode' => $uniqueKode,
                 'nama' => $sectionData['section_name'] ?? "Section " . ($sectionIndex + 1),
                 'deskripsi' => $sectionData['section_description'] ?? '',
                 'urutan' => $sectionIndex + 1,
                 'is_terminal' => ($sectionData['navigation']['type'] ?? 'next') === 'end',
                 'navigation_type' => $sectionData['navigation']['type'] ?? 'next',
-                'target_section_id' => $sectionData['navigation']['target_section'] ?? null,
+                'target_section_id' => null, // Set to null initially to avoid foreign key constraint
                 'metadata' => json_encode([
                     'form_builder_version' => '1.0',
                     'created_at' => now()->toISOString(),
-                    'section_index' => $sectionIndex
+                    'section_index' => $sectionIndex,
+                    'original_code_format' => "Section " . ($sectionIndex + 1),
+                    'original_target_section' => $sectionData['navigation']['target_section'] ?? null // Store original target for later update
                 ]),
                 'created_at' => now(),
                 'updated_at' => now()
-            ];
+            ]);
+            
+            $insertedBlocks[$sectionIndex] = $block;
+            
+            Log::info("Block created with ID", [
+                'block_id' => $block->id,
+                'section_index' => $sectionIndex,
+                'kode' => $uniqueKode
+            ]);
         }
 
-        // Insert blocks in batch
-        $insertedBlocks = [];
-        foreach ($blockData as $index => $data) {
-            $block = SurveyBlock::create($data);
-            $insertedBlocks[$index] = $block;
+        // STEP 2: Update target_section_id now that all blocks exist
+        foreach ($sections as $sectionIndex => $sectionData) {
+            $block = $insertedBlocks[$sectionIndex];
+            $navigation = $sectionData['navigation'] ?? [];
             
-            // Process questions for this block
+            if (!empty($navigation['type']) && $navigation['type'] === 'jump' && !empty($navigation['target_section'])) {
+                $targetSectionNumber = $navigation['target_section'];
+                $targetIndex = $targetSectionNumber - 1; // Convert to 0-based index
+                
+                if (isset($insertedBlocks[$targetIndex])) {
+                    $targetBlock = $insertedBlocks[$targetIndex];
+                    
+                    Log::info("Updating target_section_id", [
+                        'source_block_id' => $block->id,
+                        'target_block_id' => $targetBlock->id,
+                        'target_section_number' => $targetSectionNumber
+                    ]);
+                    
+                    // Update the target_section_id
+                    $block->update([
+                        'target_section_id' => $targetBlock->id
+                    ]);
+                } else {
+                    Log::warning("Target section not found", [
+                        'source_block_id' => $block->id,
+                        'target_section_number' => $targetSectionNumber,
+                        'available_sections' => count($insertedBlocks)
+                    ]);
+                }
+            }
+        }
+
+        // STEP 3: Process questions for each block
+        foreach ($insertedBlocks as $index => $block) {
             $this->processQuestionsForBlock($block, $sections[$index]['questions'] ?? []);
         }
+
+        Log::info("All survey blocks processed successfully", [
+            'survey_id' => $survey->id,
+            'total_blocks' => count($insertedBlocks)
+        ]);
     }
 
     /**
@@ -349,24 +543,47 @@ class FormBuilderController extends Controller
      */
     private function deleteExistingBlocksOptimized($surveyId)
     {
-        // Get block IDs first
-        $blockIds = SurveyBlock::where('survey_id', $surveyId)->pluck('id')->toArray();
-        
-        if (empty($blockIds)) {
-            return;
-        }
+        try {
+            // Get block IDs first
+            $blockIds = SurveyBlock::where('survey_id', $surveyId)->pluck('id')->toArray();
+            
+            if (empty($blockIds)) {
+                Log::info("No existing blocks found for survey {$surveyId}");
+                return;
+            }
 
-        // Get question IDs
-        $questionIds = TemplatePertanyaan::whereIn('block_id', $blockIds)->pluck('id')->toArray();
-        
-        // Delete in proper order to maintain referential integrity
-        if (!empty($questionIds)) {
-            TemplateJawaban::whereIn('id_template_pertanyaan', $questionIds)->delete();
+            Log::info("Deleting existing blocks", [
+                'survey_id' => $surveyId,
+                'block_count' => count($blockIds)
+            ]);
+
+            // Get question IDs
+            $questionIds = TemplatePertanyaan::whereIn('block_id', $blockIds)->pluck('id')->toArray();
+            
+            // Delete in proper order to maintain referential integrity
+            if (!empty($questionIds)) {
+                $deletedAnswers = TemplateJawaban::whereIn('id_template_pertanyaan', $questionIds)->delete();
+                Log::info("Deleted {$deletedAnswers} answer options");
+            }
+            
+            $deletedQuestions = TemplatePertanyaan::whereIn('block_id', $blockIds)->delete();
+            $deletedNavRules = SectionNavigationRule::where('survey_id', $surveyId)->delete();
+            $deletedBlocks = SurveyBlock::whereIn('id', $blockIds)->delete();
+
+            Log::info("Cleanup completed", [
+                'survey_id' => $surveyId,
+                'deleted_blocks' => $deletedBlocks,
+                'deleted_questions' => $deletedQuestions,
+                'deleted_nav_rules' => $deletedNavRules
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting existing blocks', [
+                'survey_id' => $surveyId,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
         }
-        
-        TemplatePertanyaan::whereIn('block_id', $blockIds)->delete();
-        SectionNavigationRule::where('survey_id', $surveyId)->delete();
-        SurveyBlock::whereIn('id', $blockIds)->delete();
     }
 
     /**
@@ -429,7 +646,7 @@ class FormBuilderController extends Controller
     }
 
     /**
-     * Process section navigation rules dengan optimized logic
+     * Process section navigation rules dengan optimized logic dan proper block reference
      */
     private function processSectionNavigation(Request $request, Survey $survey)
     {
@@ -451,9 +668,25 @@ class FormBuilderController extends Controller
                     $targetSectionId = null;
                     
                     if ($navigation['type'] === 'jump' && !empty($navigation['target_section'])) {
-                        $targetIndex = $navigation['target_section'] - 1;
+                        $targetSectionNumber = $navigation['target_section'];
+                        $targetIndex = $targetSectionNumber - 1; // Convert to 0-based index
                         $targetBlock = $blocks[$targetIndex] ?? null;
-                        $targetSectionId = $targetBlock->id ?? null;
+                        
+                        if ($targetBlock) {
+                            $targetSectionId = $targetBlock->id;
+                            
+                            Log::info("Creating navigation rule", [
+                                'source_block_id' => $sourceBlock->id,
+                                'target_block_id' => $targetBlock->id,
+                                'target_section_number' => $targetSectionNumber
+                            ]);
+                        } else {
+                            Log::warning("Target block not found for navigation rule", [
+                                'source_block_id' => $sourceBlock->id,
+                                'target_section_number' => $targetSectionNumber,
+                                'available_blocks' => $blocks->count()
+                            ]);
+                        }
                     }
 
                     $navigationRules[] = [
@@ -472,6 +705,10 @@ class FormBuilderController extends Controller
         // Batch insert navigation rules
         if (!empty($navigationRules)) {
             SectionNavigationRule::insert($navigationRules);
+            Log::info("Navigation rules created", [
+                'survey_id' => $survey->id,
+                'rules_count' => count($navigationRules)
+            ]);
         }
     }
 
