@@ -49,223 +49,56 @@
         color: #3b82f6;
     }
 
-    /* Navigation block animation */
-    .navigation-block {
-        transition: all 0.3s ease;
-    }
-
-    .navigation-block.hidden {
-        opacity: 0;
-        max-height: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-    }
-
-    .navigation-block.block {
-        opacity: 1;
-        max-height: 200px;
-    }
-
-    /* Enhanced Question Item Styling with Better Separation */
-    .question-item {
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        background: white;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
-        padding: 20px;
-        position: relative;
-        transition: all 0.3s ease;
-    }
-
-    /* Section Block Spacing */
-    .section-block {
-        margin-bottom: 30px;
-    }
-    .question-item:hover {
-        border-color: #3b82f6;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        transform: translateY(-2px);
-    }
-
-    /* Question Number Badge */
-    .question-item::before {
-        content: attr(data-question-number);
-        position: absolute;
-        top: -10px;
-        left: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        z-index: 10;
-    }
-
-    /* Question Separator Line */
-    .question-item:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-    }
-
-    /* Questions Container Spacing */
-    .questions-container {
-        padding: 20px 0;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border-radius: 12px;
-        margin-top: 16px;
-    }
-
-    /* Add Block Button Styling */
-    .add-block-section {
+    /* Block colors */
+    .block-color-odd {
         background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        border-radius: 12px;
-        padding: 20px;
-        margin-top: 16px;
-        border: 1px dashed #64748b;
-        transition: all 0.3s ease;
-    }
-    .add-block-section:hover {
-        border-color: #10b981;
-        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-        transform: translateY(-1px);
-    }
-
-    /* Option Controls Styling */
-    .option-controls {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        margin-left: 8px;
-    }
-    .option-btn {
-        padding: 4px 6px;
-        border-radius: 4px;
-        border: 1px solid #e5e7eb;
-        background: white;
-        color: #6b7280;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-size: 10px;
-        line-height: 1;
-        min-width: 24px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .option-btn:hover {
-        background: #f3f4f6;
-        color: #374151;
-        border-color: #d1d5db;
-        transform: translateY(-1px);
-    }
-    .option-btn:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-        transform: none;
-    }
-    .option-btn.up:hover:not(:disabled) {
-        background: #dbeafe;
-        color: #1d4ed8;
-        border-color: #3b82f6;
-    }
-    .option-btn.down:hover:not(:disabled) {
-        background: #fef3c7;
-        color: #d97706;
-        border-color: #f59e0b;
-    }
-
-    /* Option Item Styling */
-    .option-item {
-        background: #f9fafb;
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid #f3f4f6;
-        transition: all 0.2s ease;
-    }
-    .option-item:hover {
-        background: #f3f4f6;
-        border-color: #e5e7eb;
-    }
-
-    .icon-container {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-    }
-    .icon-link {
-        padding: 8px;
-        border-radius: 6px;
-        color: #6b7280;
-        transition: all 0.2s;
-        cursor: pointer;
-        background: white;
-        border: 1px solid #e5e7eb;
-    }
-    .icon-link:hover {
-        background-color: #f3f4f6;
-        color: #374151;
-        border-color: #d1d5db;
-        transform: translateY(-1px);
-    }
-    .block-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 12px 16px;
-        border-radius: 8px 8px 0 0;
-        margin: -24px -24px 16px -24px;
-    }
-    .question-header {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 12px 16px;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        margin-bottom: 16px;
-        position: relative;
-    }
-    .form-section {
-        background: white;
-        border-radius: 0 0 8px 8px;
-        padding: 16px;
-    }
-    .required-asterisk {
-        color: #ef4444;
-        font-weight: bold;
-    }
-    .error-field {
-        border-color: #ef4444 !important;
-        background-color: #fef2f2 !important;
-    }
-    .valid-field {
-        border-color: #10b981 !important;
-        background-color: #f0fdf4 !important;
-    }
-
-    /* Block color variations - Even/Odd only */
-    .block-color-even .block-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: white !important;
-    }
-    .block-color-odd .block-header {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
-        color: white !important;
+        border-color: #0ea5e9;
     }
 
     .block-color-even {
-        border-left: 4px solid #667eea !important;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border-color: #22c55e;
     }
-    .block-color-odd {
-        border-left: 4px solid #4facfe !important;
+
+    /* Icon styling */
+    .icon-container {
+        display: flex;
+        gap: 8px;
+    }
+
+    .icon-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: #6b7280;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-link:hover {
+        background-color: #ffffff;
+        color: #3b82f6;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Question item styling */
+    .question-item {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        transition: all 0.2s ease;
+    }
+
+    .question-item:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
     }
 </style>
 @endpush
@@ -471,10 +304,10 @@ function loadExistingSections() {
         const colorClass = (sectionCounter % 2 === 0) ? 'block-color-even' : 'block-color-odd';
 
         const sectionHtml = `
-            <div class="section-block p-6 ${colorClass}" data-section-id="${sectionCounter}">
+            <div class="section-block p-6 bg-white rounded-lg ${colorClass}" data-section-id="${sectionCounter}">
                 <div class="block-header">
                     <div class="flex justify-between items-center">
-                        <h4 class="block-title">Block ${sectionCounter}</h4>
+                        <h4 class="text-lg font-semibold">Block ${sectionCounter}</h4>
                         <div class="icon-container">
                             <button type="button" onclick="cloneSection(${sectionCounter})" class="icon-link" title="Clone Block">
                                 <i class="fas fa-copy"></i>
@@ -502,7 +335,7 @@ function loadExistingSections() {
 
                     <div class="bg-gray-50 p-4 rounded-lg mb-4">
                         <h5 class="text-sm font-medium text-gray-700 mb-3">Navigasi Block</h5>
-                        <select name="sections[${sectionCounter}][navigation_type]" data-original-value="${sectionData.navigation_type}" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                        <select name="sections[${sectionCounter}][navigation_type]" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                             <option value="next" ${sectionData.navigation_type === 'next' ? 'selected' : ''}>Lanjut ke block berikutnya</option>
                             <option value="end" ${sectionData.navigation_type === 'end' ? 'selected' : ''}>Akhiri survey</option>
                         </select>
@@ -516,17 +349,8 @@ function loadExistingSections() {
                                 <i class="fas fa-plus mr-1"></i>Tambah Pertanyaan
                             </button>
                         </div>
-                        <div class="questions-list space-y-3" id="questions-${sectionCounter}">
+                        <div class="questions-list" id="questions-${sectionCounter}">
                             <!-- Questions will be loaded here -->
-                        </div>
-                    </div>
-
-                    <!-- Add Block Button -->
-                    <div class="add-block-section mt-6 pt-4">
-                        <div class="flex justify-center">
-                            <button type="button" onclick="addSectionAfter(${sectionCounter})" class="inline-block px-6 py-3 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-gradient-to-r from-green-500 to-green-600 border-0 rounded-lg shadow-lg cursor-pointer text-sm tracking-tight-rem hover:shadow-xl hover:-translate-y-1 active:opacity-85 hover:from-green-600 hover:to-green-700">
-                                <i class="fas fa-plus-circle mr-2"></i> Tambah Block Baru
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -552,7 +376,7 @@ function loadExistingQuestion(sectionId, questionData) {
     questionCounter++;
 
     const questionHtml = `
-        <div class="question-item" data-question-id="${questionCounter}" data-question-number="Q${questionCounter}">
+        <div class="question-item" data-question-id="${questionCounter}">
             <div class="flex justify-between items-center mb-3">
                 <h6 class="text-sm font-semibold">Pertanyaan ${questionCounter}</h6>
                 <div class="flex space-x-2">
@@ -635,51 +459,37 @@ function loadExistingQuestion(sectionId, questionData) {
 // Load existing option
 function loadExistingOption(sectionId, questionId, optionText, navigationValue) {
     const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
-    const optionCount = optionsList.children.length + 1;
+    const optionIndex = optionsList.children.length;
 
     // Check if this question type supports navigation
     const questionTypeSelect = document.querySelector(`select[name="sections[${sectionId}][questions][${questionId}][type]"]`);
     const questionType = questionTypeSelect ? questionTypeSelect.value : 'text';
-    const showNavigationToggle = ['radio', 'select'].includes(questionType);
-
-    // Determine if custom navigation is being used
-    // Custom navigation is active if navigationValue is not null, undefined, empty, or 'next' (default)
-    const isCustomNavigation = navigationValue && navigationValue !== '' && navigationValue !== 'next';
+    const supportsNavigation = ['radio', 'select'].includes(questionType);
 
     const optionHtml = `
-        <div class="option-item mb-3" data-option-index="${optionCount}">
-            <div class="flex items-start gap-2">
-                <div class="option-controls">
-                    <button type="button" onclick="moveOptionUp(this)" class="option-btn up" title="Move Up">
-                        <i class="fas fa-chevron-up"></i>
-                    </button>
-                    <button type="button" onclick="moveOptionDown(this)" class="option-btn down" title="Move Down">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-                <div class="flex-1">
+        <div class="option-item">
+            <div class="flex items-center space-x-3 bg-blue-50 p-3 rounded-lg">
+                <div class="flex-grow">
                     <input type="text" name="sections[${sectionId}][questions][${questionId}][options][]"
-                           value="${optionText}" placeholder="Pilihan ${optionCount}" required
+                           value="${optionText}" placeholder="Pilihan ${optionIndex + 1}" required
                            class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                    ${showNavigationToggle ? `
-                    <div class="mt-2 flex items-center gap-2">
-                        <label class="flex items-center cursor-pointer navigation-toggle-label">
-                            <input type="checkbox" onchange="toggleOptionNavigation(this)" class="mr-2 text-blue-600 rounded focus:ring-blue-500" ${isCustomNavigation ? 'checked' : ''}>
-                            <span class="text-xs text-gray-600">🔀 Custom navigation untuk pilihan ini</span>
-                        </label>
-                    </div>
-                    <div class="navigation-block ${isCustomNavigation ? 'block' : 'hidden'} mt-2 ml-4 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                        <label class="text-xs font-medium text-blue-700 mb-1 block">Jika pilihan ini dipilih, lanjut ke:</label>
-                        <select name="sections[${sectionId}][questions][${questionId}][option_navigation][]" ${!isCustomNavigation ? 'disabled' : ''} class="text-xs w-full border border-blue-300 rounded px-2 py-1 bg-white option-navigation-select" data-original-value="${navigationValue || ''}">
-                            <option value="">Gunakan navigasi default</option>
-                            <option value="next">Block Berikutnya</option>
-                            <option value="end">Selesai Survey</option>
-                        </select>
-                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="hidden-navigation-input" ${isCustomNavigation ? 'disabled' : ''}>
-                    </div>
-                    ` : ''}
                 </div>
-                <button type="button" onclick="removeOption(this)" class="text-red-500 hover:text-red-700 p-2">
+                ${supportsNavigation ? `
+                <div class="flex items-center space-x-2">
+                    <label class="navigation-toggle-label">
+                        <input type="checkbox" class="navigation-toggle mr-1" onchange="toggleOptionNavigation(this, ${sectionId}, ${questionId}, ${optionIndex})" ${navigationValue !== 'next' ? 'checked' : ''}>
+                        <span class="text-xs text-gray-600">Custom Navigation</span>
+                    </label>
+                    <select name="sections[${sectionId}][questions][${questionId}][option_navigation][]"
+                            class="option-navigation-select text-xs px-2 py-1 border border-gray-300 rounded bg-white"
+                            style="display: ${navigationValue !== 'next' ? 'block' : 'none'};">
+                        <option value="next" ${navigationValue === 'next' ? 'selected' : ''}>Lanjut</option>
+                        <option value="end" ${navigationValue === 'end' ? 'selected' : ''}>Selesai</option>
+                    </select>
+                    <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="${navigationValue}" class="default-navigation-input">
+                </div>
+                ` : ''}
+                <button type="button" onclick="this.parentElement.parentElement.remove(); updateNavigationOptions();" class="text-red-500 hover:text-red-700">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -687,27 +497,6 @@ function loadExistingOption(sectionId, questionId, optionText, navigationValue) 
     `;
 
     optionsList.insertAdjacentHTML('beforeend', optionHtml);
-    updateOptionButtons(optionsList);
-
-    // Update navigation options after adding the option to populate block options
-    setTimeout(() => {
-        updateNavigationOptions();
-        // Set the correct navigation value after options are populated
-        if (isCustomNavigation) {
-            const addedOption = optionsList.lastElementChild;
-            const select = addedOption.querySelector('.option-navigation-select');
-            if (select && navigationValue) {
-                // Try to find and select the correct option
-                const option = select.querySelector(`option[value="${navigationValue}"]`);
-                if (option) {
-                    select.value = navigationValue;
-                } else {
-                    // If the exact option doesn't exist, set to 'end' as fallback
-                    select.value = 'end';
-                }
-            }
-        }
-    }, 100);
 }
 
 // Rest of the JavaScript functions (same as create.blade.php)
@@ -716,10 +505,10 @@ function addSection() {
     const colorClass = (sectionCounter % 2 === 0) ? 'block-color-even' : 'block-color-odd';
 
     const sectionHtml = `
-        <div class="section-block p-6 ${colorClass}" data-section-id="${sectionCounter}">
+        <div class="section-block p-6 bg-white rounded-lg ${colorClass}" data-section-id="${sectionCounter}">
             <div class="block-header">
                 <div class="flex justify-between items-center">
-                    <h4 class="block-title">Block ${sectionCounter}</h4>
+                    <h4 class="text-lg font-semibold">Block ${sectionCounter}</h4>
                     <div class="icon-container">
                         <button type="button" onclick="cloneSection(${sectionCounter})" class="icon-link" title="Clone Block">
                             <i class="fas fa-copy"></i>
@@ -747,7 +536,7 @@ function addSection() {
 
                 <div class="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 class="text-sm font-medium text-gray-700 mb-3">Navigasi Block</h5>
-                    <select name="sections[${sectionCounter}][navigation_type]" data-original-value="next" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                    <select name="sections[${sectionCounter}][navigation_type]" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="next">Lanjut ke block berikutnya</option>
                         <option value="end">Akhiri survey</option>
                     </select>
@@ -761,17 +550,8 @@ function addSection() {
                             <i class="fas fa-plus mr-1"></i>Tambah Pertanyaan
                         </button>
                     </div>
-                    <div class="questions-list space-y-3" id="questions-${sectionCounter}">
+                    <div class="questions-list" id="questions-${sectionCounter}">
                         <!-- Questions will be added here -->
-                    </div>
-                </div>
-
-                <!-- Add Block Button -->
-                <div class="add-block-section mt-6 pt-4">
-                    <div class="flex justify-center">
-                        <button type="button" onclick="addSectionAfter(${sectionCounter})" class="inline-block px-6 py-3 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-gradient-to-r from-green-500 to-green-600 border-0 rounded-lg shadow-lg cursor-pointer text-sm tracking-tight-rem hover:shadow-xl hover:-translate-y-1 active:opacity-85 hover:from-green-600 hover:to-green-700">
-                            <i class="fas fa-plus-circle mr-2"></i> Tambah Block Baru
-                        </button>
                     </div>
                 </div>
             </div>
@@ -786,7 +566,7 @@ function addQuestion(sectionId) {
     questionCounter++;
 
     const questionHtml = `
-        <div class="question-item" data-question-id="${questionCounter}" data-question-number="Q${questionCounter}">
+        <div class="question-item" data-question-id="${questionCounter}">
             <div class="flex justify-between items-center mb-3">
                 <h6 class="text-sm font-semibold">Pertanyaan ${questionCounter}</h6>
                 <div class="flex space-x-2">
@@ -882,47 +662,37 @@ function toggleOptions(sectionId, questionId) {
 
 function addOption(sectionId, questionId) {
     const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
-    const optionCount = optionsList.children.length + 1;
+    const optionIndex = optionsList.children.length;
 
     // Check if this question type supports navigation
     const questionTypeSelect = document.querySelector(`select[name="sections[${sectionId}][questions][${questionId}][type]"]`);
     const questionType = questionTypeSelect ? questionTypeSelect.value : 'text';
-    const showNavigationToggle = ['radio', 'select'].includes(questionType);
+    const supportsNavigation = ['radio', 'select'].includes(questionType);
 
     const optionHtml = `
-        <div class="option-item mb-3" data-option-index="${optionCount}">
-            <div class="flex items-start gap-2">
-                <div class="option-controls">
-                    <button type="button" onclick="moveOptionUp(this)" class="option-btn up" title="Move Up">
-                        <i class="fas fa-chevron-up"></i>
-                    </button>
-                    <button type="button" onclick="moveOptionDown(this)" class="option-btn down" title="Move Down">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-                <div class="flex-1">
+        <div class="option-item">
+            <div class="flex items-center space-x-3 bg-blue-50 p-3 rounded-lg">
+                <div class="flex-grow">
                     <input type="text" name="sections[${sectionId}][questions][${questionId}][options][]"
-                           placeholder="Pilihan ${optionCount}" required
+                           placeholder="Pilihan ${optionIndex + 1}" required
                            class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                    ${showNavigationToggle ? `
-                    <div class="mt-2 flex items-center gap-2">
-                        <label class="flex items-center cursor-pointer navigation-toggle-label">
-                            <input type="checkbox" onchange="toggleOptionNavigation(this)" class="mr-2 text-blue-600 rounded focus:ring-blue-500">
-                            <span class="text-xs text-gray-600">🔀 Custom navigation untuk pilihan ini</span>
-                        </label>
-                    </div>
-                    <div class="navigation-block hidden mt-2 ml-4 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                        <label class="text-xs font-medium text-blue-700 mb-1 block">Jika pilihan ini dipilih, lanjut ke:</label>
-                        <select name="sections[${sectionId}][questions][${questionId}][option_navigation][]" disabled class="text-xs w-full border border-blue-300 rounded px-2 py-1 bg-white option-navigation-select" data-original-value="">
-                            <option value="">Gunakan navigasi default</option>
-                            <option value="next">Block Berikutnya</option>
-                            <option value="end">Selesai Survey</option>
-                        </select>
-                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="hidden-navigation-input">
-                    </div>
-                    ` : ''}
                 </div>
-                <button type="button" onclick="removeOption(this)" class="text-red-500 hover:text-red-700 p-2">
+                ${supportsNavigation ? `
+                <div class="flex items-center space-x-2">
+                    <label class="navigation-toggle-label">
+                        <input type="checkbox" class="navigation-toggle mr-1" onchange="toggleOptionNavigation(this, ${sectionId}, ${questionId}, ${optionIndex})">
+                        <span class="text-xs text-gray-600">Custom Navigation</span>
+                    </label>
+                    <select name="sections[${sectionId}][questions][${questionId}][option_navigation][]"
+                            class="option-navigation-select text-xs px-2 py-1 border border-gray-300 rounded bg-white"
+                            style="display: none;">
+                        <option value="next">Lanjut</option>
+                        <option value="end">Selesai</option>
+                    </select>
+                    <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="default-navigation-input">
+                </div>
+                ` : ''}
+                <button type="button" onclick="this.parentElement.parentElement.remove(); updateNavigationOptions();" class="text-red-500 hover:text-red-700">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -930,102 +700,62 @@ function addOption(sectionId, questionId) {
     `;
 
     optionsList.insertAdjacentHTML('beforeend', optionHtml);
-    updateOptionButtons(optionsList);
-    updateOptionPlaceholders(optionsList);
-
-    // Update navigation options for the new option
-    if (showNavigationToggle) {
-        updateNavigationOptions();
-    }
+    updateNavigationOptions();
 }
 
 // Toggle option navigation
-function toggleOptionNavigation(checkbox) {
+function toggleOptionNavigation(checkbox, sectionId, questionId, optionIndex) {
     const optionItem = checkbox.closest('.option-item');
-    const navigationBlock = optionItem.querySelector('.navigation-block');
-    const navigationSelect = navigationBlock.querySelector('select');
-    const hiddenInput = navigationBlock.querySelector('.hidden-navigation-input');
+    const navigationSelect = optionItem.querySelector('.option-navigation-select');
+    const hiddenInput = optionItem.querySelector('.default-navigation-input');
 
     if (checkbox.checked) {
-        navigationBlock.classList.remove('hidden');
-        navigationBlock.classList.add('block');
-        // Enable the select element and disable hidden input
-        navigationSelect.disabled = false;
-        if (hiddenInput) hiddenInput.disabled = true;
+        // Show custom navigation dropdown
+        navigationSelect.style.display = 'block';
+        hiddenInput.disabled = true; // Disable hidden input when using custom navigation
     } else {
-        navigationBlock.classList.remove('block');
-        navigationBlock.classList.add('hidden');
-        // Reset and disable select, enable hidden input with default value
-        navigationSelect.value = '';
-        navigationSelect.disabled = true;
-        navigationSelect.setAttribute('data-original-value', '');
-        if (hiddenInput) {
-            hiddenInput.disabled = false;
-            hiddenInput.value = 'next';
-        }
+        // Hide custom navigation dropdown and use default
+        navigationSelect.style.display = 'none';
+        hiddenInput.disabled = false; // Enable hidden input for default navigation
+        navigationSelect.value = 'next'; // Reset to default
     }
 }
 
-// Add event listener for navigation select changes
-document.addEventListener('change', function(e) {
-    if (e.target.matches('.option-navigation-select')) {
-        // Update data-original-value when user changes the selection
-        e.target.setAttribute('data-original-value', e.target.value);
-    }
-
-    // Also handle block navigation selects
-    if (e.target.matches('select[name*="[navigation_type]"]')) {
-        // Update data-original-value when user changes the block navigation
-        e.target.setAttribute('data-original-value', e.target.value);
-    }
-});
-
 // Update existing options when question type changes
 function updateExistingOptionsNavigation(sectionId, questionId, questionType) {
-    const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
-    const options = optionsList.querySelectorAll('.option-item');
-    const showNavigationToggle = ['radio', 'select'].includes(questionType);
+    const optionItems = document.querySelectorAll(`#options-list-${sectionId}-${questionId} .option-item`);
+    const supportsNavigation = ['radio', 'select'].includes(questionType);
 
-    options.forEach((option, index) => {
-        // Remove existing navigation toggle and block if any
-        const existingToggle = option.querySelector('input[type="checkbox"]');
-        const existingNav = option.querySelector('.navigation-block');
+    optionItems.forEach((optionItem, index) => {
+        const existingNavigationControls = optionItem.querySelector('.navigation-toggle-label');
 
-        if (existingToggle && existingToggle.closest('.flex.items-center')) {
-            existingToggle.closest('.flex.items-center').remove();
-        }
-        if (existingNav) {
-            existingNav.remove();
-        }
+        if (supportsNavigation && !existingNavigationControls) {
+            // Add navigation controls if they don't exist
+            const optionContent = optionItem.querySelector('.bg-blue-50');
+            const deleteButton = optionContent.querySelector('button[onclick*="remove"]');
 
-        // Add navigation toggle and block if needed
-        if (showNavigationToggle) {
-            const inputElement = option.querySelector('input[type="text"]');
             const navigationHtml = `
-                <div class="mt-2 flex items-center gap-2">
-                    <label class="flex items-center cursor-pointer navigation-toggle-label">
-                        <input type="checkbox" onchange="toggleOptionNavigation(this)" class="mr-2 text-blue-600 rounded focus:ring-blue-500">
-                        <span class="text-xs text-gray-600">🔀 Custom navigation untuk pilihan ini</span>
+                <div class="flex items-center space-x-2">
+                    <label class="navigation-toggle-label">
+                        <input type="checkbox" class="navigation-toggle mr-1" onchange="toggleOptionNavigation(this, ${sectionId}, ${questionId}, ${index})">
+                        <span class="text-xs text-gray-600">Custom Navigation</span>
                     </label>
-                </div>
-                <div class="navigation-block hidden mt-2 ml-4 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                    <label class="text-xs font-medium text-blue-700 mb-1 block">Jika pilihan ini dipilih, lanjut ke:</label>
-                    <select name="sections[${sectionId}][questions][${questionId}][option_navigation][]" disabled class="text-xs w-full border border-blue-300 rounded px-2 py-1 bg-white option-navigation-select">
-                        <option value="">Gunakan navigasi default</option>
-                        <option value="next">Block Berikutnya</option>
-                        <option value="end">Selesai Survey</option>
+                    <select name="sections[${sectionId}][questions][${questionId}][option_navigation][]"
+                            class="option-navigation-select text-xs px-2 py-1 border border-gray-300 rounded bg-white"
+                            style="display: none;">
+                        <option value="next">Lanjut</option>
+                        <option value="end">Selesai</option>
                     </select>
+                    <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="default-navigation-input">
                 </div>
             `;
 
-            inputElement.insertAdjacentHTML('afterend', navigationHtml);
+            deleteButton.insertAdjacentHTML('beforebegin', navigationHtml);
+        } else if (!supportsNavigation && existingNavigationControls) {
+            // Remove navigation controls if question type doesn't support them
+            existingNavigationControls.parentElement.remove();
         }
     });
-
-    // Update navigation options
-    if (showNavigationToggle) {
-        updateNavigationOptions();
-    }
 }
 
 function deleteSection(sectionId) {
@@ -1052,230 +782,8 @@ function cloneQuestion(sectionId, questionId) {
 }
 
 function updateNavigationOptions() {
-    const sections = document.querySelectorAll('.section-block');
-    const sectionCount = sections.length;
-
-    sections.forEach((section, index) => {
-        // Update the main navigation select to show direct block options
-        const navSelect = section.querySelector('select[name*="[navigation_type]"]');
-        if (navSelect) {
-            // Get original value from data attribute or current value
-            const originalValue = navSelect.getAttribute('data-original-value');
-            const currentValue = navSelect.value;
-            const valueToRestore = originalValue || currentValue || 'next';
-
-            let optionsHtml = '<option value="next">Block Berikutnya</option>';
-
-            // Add specific block options
-            for (let i = 1; i <= sectionCount; i++) {
-                if (i !== index + 1) { // Don't allow navigating to self
-                    optionsHtml += `<option value="block_${i}">Ke Block ${i}</option>`;
-                }
-            }
-
-            // Add "Selesaikan Survey" option
-            optionsHtml += `<option value="end">Selesaikan Survey</option>`;
-
-            navSelect.innerHTML = optionsHtml;
-
-            // Restore previous value if it still exists
-            if (valueToRestore && navSelect.querySelector(`option[value="${valueToRestore}"]`)) {
-                navSelect.value = valueToRestore;
-                navSelect.setAttribute('data-original-value', valueToRestore);
-            } else {
-                navSelect.value = 'next';
-                navSelect.setAttribute('data-original-value', 'next');
-            }
-        }
-
-        // Update option navigation selects within this section
-        const optionNavSelects = section.querySelectorAll('.option-navigation-select');
-        optionNavSelects.forEach(optionNavSelect => {
-            // Get the original value from data attribute, current value, or hidden input
-            const originalValue = optionNavSelect.getAttribute('data-original-value');
-            const currentValue = optionNavSelect.value;
-            const optionItem = optionNavSelect.closest('.option-item');
-            const hiddenInput = optionItem ? optionItem.querySelector('.hidden-navigation-input') : null;
-            const hiddenValue = hiddenInput ? hiddenInput.value : '';
-
-            // Prioritize: originalValue > currentValue > hiddenValue
-            const valueToRestore = originalValue || currentValue || hiddenValue || '';
-
-            // Build option navigation options
-            let optionsHtml = '<option value="">Gunakan navigasi default</option>';
-            optionsHtml += '<option value="next">Block Berikutnya</option>';
-
-            // Add specific block options
-            for (let i = 1; i <= sectionCount; i++) {
-                optionsHtml += `<option value="block_${i}">Ke Block ${i}</option>`;
-            }
-
-            optionsHtml += '<option value="end">Selesai Survey</option>';
-
-            optionNavSelect.innerHTML = optionsHtml;
-
-            // Restore the value
-            if (valueToRestore && optionNavSelect.querySelector(`option[value="${valueToRestore}"]`)) {
-                optionNavSelect.value = valueToRestore;
-                // Update the data attribute to keep track
-                optionNavSelect.setAttribute('data-original-value', valueToRestore);
-            } else {
-                optionNavSelect.value = '';
-                optionNavSelect.setAttribute('data-original-value', '');
-            }
-
-            // Update hidden input to match if it exists
-            if (hiddenInput) {
-                hiddenInput.value = optionNavSelect.value || 'next';
-            }
-        });
-    });
-}
-
-// Function to add a section after a specific section (for the "Tambah Block Baru" button)
-function addSectionAfter(afterSectionId) {
-    sectionCounter++;
-    const colorClass = (sectionCounter % 2 === 0) ? 'block-color-even' : 'block-color-odd';
-
-    const sectionHtml = `
-        <div class="section-block p-6 ${colorClass}" data-section-id="${sectionCounter}">
-            <div class="block-header">
-                <div class="flex justify-between items-center">
-                    <h4 class="block-title">Block ${sectionCounter}</h4>
-                    <div class="icon-container">
-                        <button type="button" onclick="cloneSection(${sectionCounter})" class="icon-link" title="Clone Block">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                        <button type="button" onclick="deleteSection(${sectionCounter})" class="icon-link" title="Delete Block">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <!-- Block Info -->
-                <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                    <h5 class="text-sm font-medium text-gray-700 mb-3">Nama Block <span class="text-red-500">*</span></h5>
-                    <input type="text" name="sections[${sectionCounter}][section_name]" placeholder="Tulis nama blok disini..." required
-                           class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                    <h5 class="text-sm font-medium text-gray-700 mb-3">Deskripsi Block</h5>
-                    <textarea name="sections[${sectionCounter}][section_description]" rows="2" placeholder="Tulis deskripsi blok disini..."
-                              class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"></textarea>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                    <h5 class="text-sm font-medium text-gray-700 mb-3">Navigasi Block</h5>
-                    <select name="sections[${sectionCounter}][navigation_type]" data-original-value="next" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
-                        <option value="next">Lanjut ke block berikutnya</option>
-                        <option value="end">Akhiri survey</option>
-                    </select>
-                </div>
-
-                <!-- Questions Container -->
-                <div class="questions-container" data-section-id="${sectionCounter}">
-                    <div class="flex justify-between items-center mb-4">
-                        <h5 class="text-sm font-medium text-gray-700">Pertanyaan</h5>
-                        <button type="button" onclick="addQuestion(${sectionCounter})" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
-                            <i class="fas fa-plus mr-1"></i>Tambah Pertanyaan
-                        </button>
-                    </div>
-                    <div class="questions-list space-y-3" id="questions-${sectionCounter}">
-                        <!-- Questions will be added here -->
-                    </div>
-                </div>
-
-                <!-- Add Block Button -->
-                <div class="add-block-section mt-6 pt-4">
-                    <div class="flex justify-center">
-                        <button type="button" onclick="addSectionAfter(${sectionCounter})" class="inline-block px-6 py-3 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-gradient-to-r from-green-500 to-green-600 border-0 rounded-lg shadow-lg cursor-pointer text-sm tracking-tight-rem hover:shadow-xl hover:-translate-y-1 active:opacity-85 hover:from-green-600 hover:to-green-700">
-                            <i class="fas fa-plus-circle mr-2"></i> Tambah Block Baru
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Find the current section and insert the new section after it
-    const currentSection = document.querySelector(`[data-section-id="${afterSectionId}"]`);
-    currentSection.insertAdjacentHTML('afterend', sectionHtml);
-
-    // Add first question to new section
-    setTimeout(() => {
-        addQuestion(sectionCounter);
-        updateNavigationOptions();
-    }, 100);
-}
-
-// Function to move option up
-function moveOptionUp(button) {
-    const optionItem = button.closest('.option-item');
-    const previousOption = optionItem.previousElementSibling;
-
-    if (previousOption) {
-        optionItem.parentNode.insertBefore(optionItem, previousOption);
-        const optionsList = optionItem.closest('[id*="optionsList"]') || optionItem.parentNode;
-        updateOptionButtons(optionsList);
-        updateOptionPlaceholders(optionsList);
-    }
-}
-
-// Function to move option down
-function moveOptionDown(button) {
-    const optionItem = button.closest('.option-item');
-    const nextOption = optionItem.nextElementSibling;
-
-    if (nextOption) {
-        optionItem.parentNode.insertBefore(nextOption, optionItem);
-        const optionsList = optionItem.closest('[id*="optionsList"]') || optionItem.parentNode;
-        updateOptionButtons(optionsList);
-        updateOptionPlaceholders(optionsList);
-    }
-}
-
-// Function to remove option
-function removeOption(button) {
-    const optionItem = button.closest('.option-item');
-    const optionsList = optionItem.closest('[id*="optionsList"]') || optionItem.parentNode;
-
-    optionItem.remove();
-    updateOptionButtons(optionsList);
-    updateOptionPlaceholders(optionsList);
-}
-
-// Function to update option buttons (enable/disable based on position)
-function updateOptionButtons(optionsList) {
-    const options = optionsList.querySelectorAll('.option-item');
-
-    options.forEach((option, index) => {
-        const upButton = option.querySelector('.option-btn.up');
-        const downButton = option.querySelector('.option-btn.down');
-
-        if (upButton) {
-            upButton.disabled = index === 0;
-        }
-        if (downButton) {
-            downButton.disabled = index === options.length - 1;
-        }
-
-        // Update data-option-index
-        option.setAttribute('data-option-index', index + 1);
-    });
-}
-
-function updateOptionPlaceholders(optionsList) {
-    const options = optionsList.querySelectorAll('.option-item');
-
-    options.forEach((option, index) => {
-        const input = option.querySelector('input[type="text"]');
-        if (input) {
-            input.placeholder = `Pilihan ${index + 1}`;
-        }
-    });
+    // Implementation for updating navigation options
+    console.log('Navigation options updated');
 }
 
 function validateForm() {

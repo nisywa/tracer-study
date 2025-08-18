@@ -37,20 +37,14 @@
                 </div>
             @endif
             </div>
-            
+
             <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex items-center justify-between">
                 <h6 class="dark:text-white">Daftar Survei</h6>
                 <div class="flex items-center gap-4">
-       
+
                   <!-- button tambah survei -->
-                  @if(!auth()->user()->hasRole('supervisor')) 
-                  <a href="{{route('admin.survey.form_builder.create')}}">
-                  <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                    <i class="fas fa-magic mr-2"></i> Form Builder
-                  </button>
-                  </a>
-                  
+                  @if(!auth()->user()->hasRole('supervisor'))
                   <a href="{{route('admin.survey.create')}}">
                   <button type="button" class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                     <i class="fas fa-plus mr-2"></i> Tambah Survei
@@ -75,7 +69,7 @@
                       </div>
                   </div>
 
-              </div> 
+              </div>
               </div>
               <div class="flex-auto px-0 pt-0 pb-2">
                 <div class="p-0 overflow-x-auto">
@@ -119,17 +113,12 @@
                         <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                           <div class="icon-container">
                             @if(!auth()->user()->hasRole('supervisor'))
-                            <!-- Add question -->
-                            <a href="{{ route('admin.survey.form_builder', $srvy) }}" class="icon-link" data-tooltip="Tambah Pertanyaan">
-                                <i class="fas fa-file-alt"></i>
+                            <!-- Edit -->
+                            <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit">
+                                <i class="fas fa-edit"></i>
                             </a>
 
-                            <!-- Add user -->
-                            <!-- <button type="button"
-                            onclick="openModal({{ $srvy->id }})" class="icon-link" data-tooltip="Tambah User">
-                            <i class="fas fa-user-plus"></i>
-                            </button> -->
-
+                            <!-- Duplicate -->
                             <a href="javascript:;" class="icon-link" data-tooltip="Duplicate Survei" onclick="event.preventDefault(); document.getElementById('duplicate-form-{{ $srvy->id }}').submit();">
                                 <i class="fas fa-copy"></i>
                             </a>
@@ -138,51 +127,6 @@
                               @method('POST')
                             </form>
 
-
-                            <!-- pop up modal import  -->
-                          <!-- <form action="{{ route('admin.survey.import') }}" method="POST"  enctype="multipart/form-data">
-                          @csrf
-                          <div id="uploadModal-{{ $srvy->id }}" class="fixed inset-0 z-50 items-center justify-center hidden bg-gray-800 bg-opacity-50">
-                              <div class="bg-white rounded-lg shadow-lg w-96">
-                                  <div class="flex items-center justify-between p-4 border-b">
-                                      <h3 class="text-lg font-bold">Tambah User Survei ...</h3>
-                                      <button type="button" onclick="closeModal({{ $srvy->id }})" class="text-gray-500 hover:text-gray-700">&times;</button>
-                                  </div>
-                                  <div class="p-4">
-                                      <form id="uploadForm-{{ $srvy->id }}">
-                                          <label for="fileInput" class="block text-sm font-medium text-gray-700 mb-2">Choose Excel File</label>
-                                          <input type="file" id="fileInput" name="file" accept=".xls,.xlsx" class="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer focus:ring-blue-500 focus:border-blue-500">
-                                          <input type="hidden" name="survey_id" value="{{ $srvy->id }}">
-                                          <p class="mt-2 text-sm text-gray-500">Only .xls, .xlsx, .csv files are supported.</p>
-                                          <div class="mt-4 flex justify-end">
-                                              <button type="button" id="cancelUpload" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 mr-2">Cancel</button>
-                                              <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600">Upload</button>
-                                          </div>
-                                      </form>
-                                  </div>
-                              </div>
-                          </div>
-                          </form> -->
-
-                            <!-- Form Builder -->
-                            <a href="{{ route('admin.survey.form_builder', $srvy->id) }}" class="icon-link" data-tooltip="Form Builder - Edit dengan visual builder">
-                                <i class="fas fa-magic text-green-600"></i>
-                            </a>
-                            
-                            <!-- Duplicate Form Builder -->
-                            <button onclick="duplicateSurvey({{ $srvy->id }})" class="icon-link" data-tooltip="Duplicate Survey">
-                                <i class="fas fa-copy text-purple-600"></i>
-                            </button>
-                            
-                            <!-- Preview -->
-                            <button onclick="previewSurvey({{ $srvy->id }})" class="icon-link" data-tooltip="Preview Survey Structure">
-                                <i class="fas fa-eye text-blue-600"></i>
-                            </button>
-                            
-                            <!-- Edit -->
-                            <a href="{{ route('admin.survey.edit', $srvy) }}" class="icon-link" data-tooltip="Edit (Traditional)">
-                                <i class="fas fa-edit"></i>
-                            </a>
                             <!-- Delete -->
                             <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $srvy->id }}').submit();">
                                 <i class="fas fa-trash"></i>
@@ -192,6 +136,7 @@
                               @method('DELETE')
                             </form>
                             @endif
+
                             <!-- Details -->
                             <a href="{{ route('admin.survey.details', $srvy) }}" class="icon-link" data-tooltip="Details">
                                 <i class="fas fa-info-circle"></i>
@@ -253,113 +198,7 @@
             setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
         });
     }, 3000);
-
-    // Form Builder Functions
-    function duplicateSurvey(surveyId) {
-        if (confirm('Apakah Anda yakin ingin menduplikasi survey ini?')) {
-            fetch(`/admin/survey/form-builder/duplicate/${surveyId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    if (data.data.edit_url) {
-                        if (confirm('Ingin langsung edit survey yang baru dibuat?')) {
-                            window.location.href = data.data.edit_url;
-                        } else {
-                            window.location.reload();
-                        }
-                    }
-                } else {
-                    alert(data.message || 'Gagal menduplikasi survey');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat menduplikasi survey');
-            });
-        }
-    }
-
-    function previewSurvey(surveyId) {
-        fetch(`/admin/survey/form-builder/preview/${surveyId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const survey = data.data.survey;
-                const stats = data.data.stats;
-                
-                let previewContent = `
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold mb-2">${survey.nama}</h3>
-                        <p class="text-gray-600 mb-4">${survey.deskripsi || 'Tidak ada deskripsi'}</p>
-                        
-                        <div class="bg-blue-50 p-3 rounded-lg mb-4">
-                            <h4 class="font-semibold text-blue-800">Statistik Survey:</h4>
-                            <ul class="text-blue-700 text-sm mt-2">
-                                <li>• Total Sections: ${stats.total_sections}</li>
-                                <li>• Total Pertanyaan: ${stats.total_questions}</li>
-                                <li>• Estimasi Waktu: ${stats.estimated_time.formatted}</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="space-y-3">
-                `;
-                
-                survey.survey_blocks.forEach((block, index) => {
-                    previewContent += `
-                        <div class="border border-gray-200 rounded-lg p-3">
-                            <h5 class="font-medium text-gray-800">Section ${index + 1}: ${block.nama}</h5>
-                            <p class="text-sm text-gray-600">${block.deskripsi || 'Tidak ada deskripsi'}</p>
-                            <div class="text-xs text-gray-500 mt-2">
-                                ${block.questions.length} pertanyaan • Navigasi: ${block.navigation_type || 'next'}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                previewContent += `
-                        </div>
-                    </div>
-                `;
-                
-                // Show modal (you can create a modal or use alert)
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-                        <div class="flex justify-between items-center p-4 border-b">
-                            <h3 class="text-lg font-semibold">Preview Survey</h3>
-                            <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        ${previewContent}
-                        <div class="p-4 border-t">
-                            <button onclick="this.closest('.fixed').remove()" 
-                                    class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
-                                Tutup
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(modal);
-            } else {
-                alert(data.message || 'Gagal memuat preview survey');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat memuat preview');
-        });
-    }
     </script>
-    
-    
+
+
 @endsection

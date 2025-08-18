@@ -16,7 +16,7 @@ class ManageSurveyBlocks extends Command
      *
      * @var string
      */
-    protected $signature = 'survey:blocks 
+    protected $signature = 'survey:blocks
                             {action : Action to perform (backfill|validate|demo)}
                             {--survey-id= : Survey ID for specific operations}
                             {--dry-run : Show what would be done without making changes}';
@@ -50,7 +50,7 @@ class ManageSurveyBlocks extends Command
     }
 
     /**
-     * Backfill survey blocks from existing template_pertanyaan.blok values
+     * Backfill survey blocks for surveys that don't have proper block structure
      */
     private function backfillBlocks(): int
     {
@@ -63,11 +63,11 @@ class ManageSurveyBlocks extends Command
         }
 
         $surveys = $query->whereHas('questions', function ($q) {
-            $q->whereNotNull('blok')->where('blok', '!=', '');
+            $q->whereNull('block_id'); // Questions without block assignment
         })->get();
 
         if ($surveys->isEmpty()) {
-            $this->info('No surveys found with blok values to backfill.');
+            $this->info('No surveys found with unassigned questions to backfill.');
             return 0;
         }
 
@@ -79,7 +79,7 @@ class ManageSurveyBlocks extends Command
 
         if ($dryRun) {
             $this->warn('DRY RUN MODE - No changes will be made');
-        } else if (!$this->confirm('Do you want to proceed with backfilling blocks?')) {
+        } else if (!$this->confirm('Do you want to proceed with creating default blocks for unassigned questions?')) {
             return 0;
         }
 
@@ -89,18 +89,21 @@ class ManageSurveyBlocks extends Command
         foreach ($surveys as $survey) {
             $this->info("\nProcessing: {$survey->nama}");
 
-            // Get unique block values
-            $blocks = DB::table('template_pertanyaan')
-                ->where('id_survey', $survey->id)
-                ->whereNotNull('blok')
-                ->where('blok', '!=', '')
-                ->select('blok')
-                ->distinct()
-                ->orderBy('blok')
-                ->get();
+            // Check if survey already has blocks
+            $existingBlocks = SurveyBlock::where('survey_id', $survey->id)->count();
 
-            if ($blocks->isEmpty()) {
-                $this->line('  No blocks to create');
+            if ($existingBlocks > 0) {
+                $this->line('  Survey already has blocks, skipping');
+                continue;
+            }
+
+            // Count questions without block assignment
+            $unassignedQuestions = TemplatePertanyaan::where('id_survey', $survey->id)
+                ->whereNull('block_id')
+                ->count();
+
+            if ($unassignedQuestions === 0) {
+                $this->line('  No unassigned questions found');
                 continue;
             }
 
@@ -109,67 +112,39 @@ class ManageSurveyBlocks extends Command
             }
 
             try {
-                $urutan = 1;
-                $blockMapping = [];
+                // Create default block
+                if ($dryRun) {
+                    $this->line("  Would create default block for {$unassignedQuestions} questions");
+                    $blockId = 'dry-run-id';
+                } else {
+                    $block = SurveyBlock::create([
+                        'survey_id' => $survey->id,
+                        'kode' => 'Section 1',
+                        'nama' => 'Section 1',
+                        'deskripsi' => 'Default section untuk survey: ' . $survey->nama,
+                        'urutan' => 1,
+                        'is_terminal' => false,
+                        'navigation_type' => 'next',
+                    ]);
 
-                foreach ($blocks as $block) {
-                    $existingBlock = SurveyBlock::where('survey_id', $survey->id)
-                                               ->where('kode', $block->blok)
-                                               ->first();
-
-                    if ($existingBlock) {
-                        $this->line("  Block {$block->blok} already exists, skipping");
-                        $blockMapping[$block->blok] = $existingBlock->id;
-                        continue;
-                    }
-
-                    if ($dryRun) {
-                        $this->line("  Would create block: {$block->blok} (urutan: {$urutan})");
-                        $blockId = 'dry-run-id';
-                    } else {
-                        $blockId = SurveyBlock::create([
-                            'survey_id' => $survey->id,
-                            'kode' => $block->blok,
-                            'nama' => 'Blok ' . $block->blok,
-                            'deskripsi' => 'Dibuat otomatis dari data sebelumnya',
-                            'urutan' => $urutan,
-                            'is_terminal' => false,
-                        ])->id;
-
-                        $this->line("  Created block: {$block->blok} (ID: {$blockId})");
-                    }
-
-                    $blockMapping[$block->blok] = $blockId;
-                    $totalBlocksCreated++;
-                    $urutan++;
+                    $this->line("  Created default block (ID: {$block->id})");
+                    $blockId = $block->id;
                 }
 
-                // Update questions with block_id
-                if (!$dryRun) {
-                    foreach ($blockMapping as $kode => $blockId) {
-                        if ($blockId !== 'dry-run-id') {
-                            $updated = DB::table('template_pertanyaan')
-                                ->where('id_survey', $survey->id)
-                                ->where('blok', $kode)
-                                ->update(['block_id' => $blockId]);
+                // Assign all unassigned questions to the default block
+                if (!$dryRun && $blockId !== 'dry-run-id') {
+                    $updated = TemplatePertanyaan::where('id_survey', $survey->id)
+                        ->whereNull('block_id')
+                        ->update(['block_id' => $blockId]);
 
-                            $this->line("  Updated {$updated} questions for block {$kode}");
-                        }
-                    }
-
+                    $this->line("  Assigned {$updated} questions to default block");
                     DB::commit();
                 } else {
-                    foreach ($blockMapping as $kode => $blockId) {
-                        $count = DB::table('template_pertanyaan')
-                            ->where('id_survey', $survey->id)
-                            ->where('blok', $kode)
-                            ->count();
-
-                        $this->line("  Would update {$count} questions for block {$kode}");
-                    }
+                    $this->line("  Would assign {$unassignedQuestions} questions to default block");
                 }
 
                 $totalProcessed++;
+                $totalBlocksCreated++;
 
             } catch (\Exception $e) {
                 if (!$dryRun) {
