@@ -21,7 +21,7 @@
                                 id="sendInvitationBtn"
                                 data-survey-id="{{ $survey->id }}"
                                 class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-paper-plane mr-2"></i> 
+                            <i class="fas fa-paper-plane mr-2"></i>
                             <span class="hidden sm:inline">Kirim Email</span>
                             <span class="sm:hidden">Email</span>
                         </button>
@@ -30,7 +30,7 @@
                                 id="sendReminderBtn"
                                 data-survey-id="{{ $survey->id }}"
                                 class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-orange-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-bell mr-2"></i> 
+                            <i class="fas fa-bell mr-2"></i>
                             <span class="hidden sm:inline">Reminder Pengerjaan</span>
                             <span class="sm:hidden">Reminder</span>
                         </button>
@@ -39,24 +39,16 @@
                                 id="sendThankYouBtn"
                                 data-survey-id="{{ $survey->id }}"
                                 class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-green-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                            <i class="fas fa-handshake mr-2"></i> 
+                            <i class="fas fa-handshake mr-2"></i>
                             <span class="hidden sm:inline">Ucapan Terima Kasih</span>
                             <span class="sm:hidden">Thanks</span>
                         </button>
 
                         <a href="{{route('admin.template_email.index')}}">
                             <button type="button" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                <i class="fas fa-cog mr-2"></i> 
+                                <i class="fas fa-cog mr-2"></i>
                                 <span class="hidden sm:inline">Kelola Template Email</span>
                                 <span class="sm:hidden">Template</span>
-                            </button>
-                        </a>
-
-                        <a href="{{ route('admin.survey.blocks.index', $survey->id) }}">
-                            <button type="button" class="inline-block px-6 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-purple-600 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
-                                <i class="fas fa-layer-group mr-2"></i> 
-                                <span class="hidden sm:inline">Kelola Blok</span>
-                                <span class="sm:hidden">Blok</span>
                             </button>
                         </a>
                     </div>
@@ -129,12 +121,12 @@
                 <h6 class="dark:text-white">Daftar Pertanyaan</h6>
                 @if(!auth()->user()->hasRole('supervisor'))
                   <div class="flex gap-2">
-                    <a href="{{ route('admin.survey.form_builder', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-blue-600">
+                    <a href="{{ route('admin.survey.edit', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-blue-600">
                       <i class="fas fa-magic mr-2"></i>
-                      <span class="hidden sm:inline">Form Builder</span>
+                      <span class="hidden sm:inline">Edit</span>
                       <span class="sm:hidden">Builder</span>
                     </a>
-                    <!-- <a href="{{ route('admin.survey.add_question', $survey->id) }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-gray-300">
+                    <!-- <a href="{{ route('admin.survey.create') }}" class="inline-block px-6 py-2 font-bold leading-normal text-center text-gray-700 align-middle transition-all ease-in bg-gray-200 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85 hover:bg-gray-300">
                       <i class="fas fa-list mr-2"></i>
                       <span class="hidden sm:inline">Classic Editor</span>
                       <span class="sm:hidden">Classic</span>
@@ -143,55 +135,49 @@
                 @endif
               </div>
 
-              <div class="flex-auto px-0 pt-0 pb-2">
-                <div class="p-0 overflow-x-auto">
-                  <table class="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
-                    <thead class="align-bottom">
-                      <tr>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Pertanyaan</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Blok</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tipe Jawaban</th>
-                        <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Keterangan Jawaban</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($template_pertanyaan as $tanya)
-                    <tr>
-                      <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
-                        <div class="flex flex-col px-2 py-1">
-                          <h6 class="mb-0 text-sm leading-normal dark:text-white break-words whitespace-normal">
-                            {{ $tanya->pertanyaan }}
-                          </h6>
-                        </div>
-                      </td>
-
-                      <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
-                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words whitespace-normal">
-                          {{ $tanya->blok }}
-                        </span>
-                      </td>
-
-                      <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
-                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words whitespace-normal">
-                          {{ $tanya->tipe }}
-                        </span>
-                      </td>
-
-                      <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
-                        <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400 break-words whitespace-normal">
-                          {{ $tanya->template_jawaban }}
-                        </span>
-                      </td>
-                    </tr>
-
-                    @endforeach
-                    </tbody>
-                  </table>
-                  <div class="p-4">
-                    {{ $template_pertanyaan->links() }}
-                  </div>
-                </div>
-              </div>
+                            <div class="flex-auto px-0 pt-0 pb-2">
+                                <div class="p-0 overflow-x-auto">
+                                    @foreach($surveyBlocks as $block)
+                                        <div class="mb-6 border rounded-lg shadow-sm bg-gray-50">
+                                            <div class="px-6 py-3 bg-blue-100 rounded-t-lg flex items-center justify-between">
+                                                <h5 class="font-bold text-blue-700">Block: {{ $block->nama }}</h5>
+                                                <span class="text-xs text-gray-500">{{ $block->deskripsi }}</span>
+                                            </div>
+                                            <table class="w-full text-sm">
+                                                <thead>
+                                                    <tr class="bg-gray-200">
+                                                        <th class="px-4 py-2 text-left">Pertanyaan</th>
+                                                        <th class="px-4 py-2 text-left">Tipe</th>
+                                                        <th class="px-4 py-2 text-left">Pilihan Jawaban</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($block->questions as $question)
+                                                        <tr class="border-b">
+                                                            <td class="px-4 py-2">
+                                                                <div class="font-semibold">{{ $question->pertanyaan }}</div>
+                                                                <div class="text-xs text-gray-500">{{ $question->deskripsi_pertanyaan }}</div>
+                                                            </td>
+                                                            <td class="px-4 py-2">{{ $question->tipe }}</td>
+                                                            <td class="px-4 py-2">
+                                                                @if(in_array($question->tipe, ['radio','checkbox','select']) && $question->templateJawaban->count())
+                                                                    <ul class="list-disc pl-4">
+                                                                        @foreach($question->templateJawaban as $jawaban)
+                                                                            <li>{{ $jawaban->pilihan_jawaban }} <span class="text-xs text-gray-400">{{ $jawaban->navigation_target ? '→ '.$jawaban->navigation_target : '' }}</span></li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                @else
+                                                                    <span class="italic text-gray-400">-</span>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
             </div>
           </div>
         </div>
@@ -353,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#userSelect').on('select2:select', function(e) {
         const selectedUser = e.params.data.user;
-        
+
         $.ajax({
             url: '{{ route("admin.survey.add_user") }}',
             method: 'POST',
@@ -428,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle graduation year selection
     $('#graduationYearSelect').on('change', function() {
         const selectedYear = $(this).val();
-        
+
         if (selectedYear) {
             if (confirm(`Apakah Anda yakin ingin menambahkan semua alumni yang lulus pada tahun ${selectedYear} ke dalam survey ini?`)) {
                 $.ajax({
@@ -459,10 +445,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             `);
                             $('body').append(alertDiv);
                             setTimeout(() => alertDiv.remove(), 5000);
-                            
+
                             // Reset the select
                             $('#graduationYearSelect').val('');
-                            
+
                             // Reload the page to show updated user list
                             setTimeout(() => location.reload(), 1000);
                         } else {

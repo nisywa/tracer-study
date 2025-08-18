@@ -714,7 +714,20 @@ class SurveyController extends Controller
 
         $survey = Survey::findOrFail($id);
         $survey_user = SurveyUser::getSurveyUser($id);
-        $template_pertanyaan = TemplatePertanyaan::getTemplatePertanyaan($id);
+
+        // Ambil blok beserta pertanyaan dan jawaban
+        $surveyBlocks = \App\Models\SurveyBlock::with([
+            'questions' => function ($query) {
+                $query->orderBy('urutan');
+            },
+            'questions.templateJawaban' => function ($query) {
+                $query->orderBy('urutan');
+            }
+        ])
+        ->where('survey_id', $id)
+        ->orderBy('urutan')
+        ->get();
+
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
         if (Carbon::parse($survey->tanggal_selesai) >= now()) {
@@ -722,7 +735,12 @@ class SurveyController extends Controller
         } else {
             $survey->status = "Selesai";
         }
-        return view('admin.views.survey.details', ['survey' => $survey, 'survey_user' => $survey_user, 'template_pertanyaan' => $template_pertanyaan]);
+
+        return view('admin.views.survey.details', [
+            'survey' => $survey,
+            'survey_user' => $survey_user,
+            'surveyBlocks' => $surveyBlocks
+        ]);
     }
 
     public function create_question(Request $request)
@@ -881,8 +899,8 @@ class SurveyController extends Controller
     try {
         DB::beginTransaction();
 
-            // 1. Find the original survey
-            $originalSurvey = Survey::findOrFail($id);
+        // 1. Find the original survey
+        $originalSurvey = Survey::findOrFail($id);
 
         // 2. Clone the survey
         $newSurvey = $originalSurvey->replicate();
@@ -891,39 +909,43 @@ class SurveyController extends Controller
         $newSurvey->updated_at = now();
         $newSurvey->save();
 
-            // 3. Get all template questions of the original survey
-            $originalTemplateQuestions = TemplatePertanyaan::where('id_survey', $originalSurvey->id)
-            ->orderBy('urutan')
-            ->get();
+        // 3. Get all blocks of the original survey
+        $originalBlocks = \App\Models\SurveyBlock::where('survey_id', $originalSurvey->id)->orderBy('urutan')->get();
+        $blockIdMap = [];
 
-            // 4. Clone each template question and its options
-            foreach ($originalTemplateQuestions as $originalQuestion) {
-            $newQuestion = $originalQuestion->replicate();
-            $newQuestion->id_survey = $newSurvey->id;
-            $newQuestion->created_at = now();
-            $newQuestion->updated_at = now();
-            $newQuestion->save();
+        foreach ($originalBlocks as $originalBlock) {
+            $newBlock = $originalBlock->replicate();
+            $newBlock->survey_id = $newSurvey->id;
+            $newBlock->created_at = now();
+            $newBlock->updated_at = now();
+            $newBlock->save();
+            $blockIdMap[$originalBlock->id] = $newBlock->id;
+
+            // 4. Get all questions for this block
+            $originalQuestions = \App\Models\TemplatePertanyaan::where('block_id', $originalBlock->id)->orderBy('urutan')->get();
+            foreach ($originalQuestions as $originalQuestion) {
+                $newQuestion = $originalQuestion->replicate();
+                $newQuestion->id_survey = $newSurvey->id;
+                $newQuestion->block_id = $newBlock->id;
+                $newQuestion->created_at = now();
+                $newQuestion->updated_at = now();
+                $newQuestion->save();
 
                 // 5. Get all template answers for this question
-                $originalAnswers = TemplateJawaban::where('id_template_pertanyaan', $originalQuestion->id)
-                ->orderBy('urutan')
-                ->get();
-
-                // 6. Clone each template answer
+                $originalAnswers = \App\Models\TemplateJawaban::where('id_template_pertanyaan', $originalQuestion->id)->orderBy('urutan')->get();
                 foreach ($originalAnswers as $originalAnswer) {
-                $newAnswer = $originalAnswer->replicate();
-                $newAnswer->id_template_pertanyaan = $newQuestion->id;
-                $newAnswer->created_at = now();
-                $newAnswer->updated_at = now();
-                $newAnswer->save();
+                    $newAnswer = $originalAnswer->replicate();
+                    $newAnswer->id_template_pertanyaan = $newQuestion->id;
+                    $newAnswer->created_at = now();
+                    $newAnswer->updated_at = now();
+                    $newAnswer->save();
+                }
             }
         }
 
-            // 7. Get all survey users of the original survey
-            $originalSurveyUsers = SurveyUser::where('survey_id', $originalSurvey->id)->whereNull('deleted_at')->get();
-
-            // 8. Clone each survey user
-            foreach ($originalSurveyUsers as $originalSurveyUser) {
+        // 6. Get all survey users of the original survey
+        $originalSurveyUsers = SurveyUser::where('survey_id', $originalSurvey->id)->whereNull('deleted_at')->get();
+        foreach ($originalSurveyUsers as $originalSurveyUser) {
             $newSurveyUser = $originalSurveyUser->replicate();
             $newSurveyUser->survey_id = $newSurvey->id;
             $newSurveyUser->status = '0'; // Reset status for the new survey
@@ -931,15 +953,13 @@ class SurveyController extends Controller
             $newSurveyUser->created_at = now();
             $newSurveyUser->updated_at = now();
             $newSurveyUser->save();
+            // Note: We don't copy user answers because the new survey hasn't been filled out yet
+        }
 
-                // Note: We don't copy user answers because the new survey hasn't been filled out yet
-            }
-
-            DB::commit();
-
-            return redirect()->route('admin.survey.index')
-                ->with('success', 'Survey has been successfully copied');
-        } catch (\Exception $e) {
+        DB::commit();
+        return redirect()->route('admin.survey.index')
+            ->with('success', 'Survey has been successfully copied');
+    } catch (\Exception $e) {
         Log::error($e->getMessage());
         DB::rollback();
         return redirect()->back()
