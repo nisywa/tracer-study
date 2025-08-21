@@ -57,10 +57,17 @@ class AtasanController extends Controller
             'no_hp' => 'nullable|string|max:15',
         ]);
 
+        // Generate password: 2 angka terakhir NIP + 2 huruf terakhir nama + 2 angka terakhir tanggal lahir
+        $nipLast2 = substr($request->nip, -2);
+        $namaLast2 = strtolower(substr(preg_replace('/[^A-Za-z]/', '', $request->nama), -2));
+        $tanggalLahir = str_replace('-', '', $request->tanggal_lahir ?? '01');
+        $tanggalLast2 = substr($tanggalLahir, -2);
+        $password = $nipLast2 . $namaLast2 . $tanggalLast2;
+
         $user = User::create([
             'name' => $request->nama,
             'email' => $request->email,
-            'password' => bcrypt(substr($request->nip, 0, 5)),
+            'password' => bcrypt($password),
             'role' => 'atasan',
         ]);
         $user->assignRole('atasan');

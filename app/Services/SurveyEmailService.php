@@ -25,10 +25,20 @@ class SurveyEmailService
                 throw new \Exception('Survey invitation template not found');
             }
 
-            // Get password from NIP (first 5 characters) if not provided
+            // Generate password: 2 angka terakhir NIP + 2 huruf terakhir nama + 2 angka terakhir tanggal lahir
             if (!$password) {
                 $nip = $user->alumni->nip ?? $user->atasan->nip ?? '';
-                $password = substr($nip, 0, 5) ?: 'password123';
+                $nama = $user->name ?? '';
+                $tanggalLahir = $user->alumni->tanggal_lahir ?? $user->atasan->tanggal_lahir ?? '01';
+                
+                if ($nip && $nama) {
+                    $nipLast2 = substr($nip, -2);
+                    $namaLast2 = strtolower(substr(preg_replace('/[^A-Za-z]/', '', $nama), -2));
+                    $tanggalLast2 = substr(str_replace('-', '', $tanggalLahir), -2);
+                    $password = $nipLast2 . $namaLast2 . $tanggalLast2;
+                } else {
+                    $password = 'password123';
+                }
             }
 
             $subject = $this->replacePlaceholders($template->subject, $user, $survey, $password);
@@ -70,10 +80,20 @@ class SurveyEmailService
                 throw new \Exception('Survey reminder template not found');
             }
 
-            // Get password from NIP (first 5 characters) if not provided
+            // Generate password: 2 angka terakhir NIP + 2 huruf terakhir nama + 2 angka terakhir tanggal lahir
             if (!$password) {
                 $nip = $user->alumni->nip ?? $user->atasan->nip ?? '';
-                $password = substr($nip, 0, 5) ?: 'password123';
+                $nama = $user->name ?? '';
+                $tanggalLahir = $user->alumni->tanggal_lahir ?? $user->atasan->tanggal_lahir ?? '01';
+                
+                if ($nip && $nama) {
+                    $nipLast2 = substr($nip, -2);
+                    $namaLast2 = strtolower(substr(preg_replace('/[^A-Za-z]/', '', $nama), -2));
+                    $tanggalLast2 = substr(str_replace('-', '', $tanggalLahir), -2);
+                    $password = $nipLast2 . $namaLast2 . $tanggalLast2;
+                } else {
+                    $password = 'password123';
+                }
             }
 
             $subject = $this->replacePlaceholders($template->subject, $user, $survey, $password);
