@@ -857,6 +857,26 @@ function addQuestion(sectionId) {
     `;
 
     document.getElementById(`questions-${sectionId}`).insertAdjacentHTML('beforeend', questionHtml);
+    
+    // Update question numbers for visual consistency
+    updateQuestionNumbers(sectionId);
+}
+
+function updateQuestionNumbers(sectionId) {
+    const questionsContainer = document.getElementById(`questions-${sectionId}`);
+    if (questionsContainer) {
+        const questions = questionsContainer.querySelectorAll('.question-item');
+
+        questions.forEach((question, index) => {
+            question.setAttribute('data-question-number', `Q${index + 1}`);
+
+            // Update header text
+            const header = question.querySelector('h6');
+            if (header) {
+                header.textContent = `Pertanyaan ${index + 1}`;
+            }
+        });
+    }
 }
 
 function toggleOptions(sectionId, questionId) {
@@ -1036,21 +1056,338 @@ function deleteSection(sectionId) {
 }
 
 function deleteQuestion(sectionId, questionId) {
-    if (confirm('Apakah Anda yakin ingin menghapus pertanyaan ini?')) {
-        document.querySelector(`[data-question-id="${questionId}"]`).remove();
+    const questionsContainer = document.getElementById(`questions-${sectionId}`);
+    if (questionsContainer) {
+        const questions = questionsContainer.querySelectorAll('.question-item');
+
+        if (questions.length <= 1) {
+            alert('Setiap block minimal harus memiliki 1 pertanyaan!');
+            return;
+        }
+
+        if (confirm('Apakah Anda yakin ingin menghapus pertanyaan ini?')) {
+            const question = questionsContainer.querySelector(`[data-question-id="${questionId}"]`);
+            if (question) {
+                question.remove();
+                updateQuestionNumbers(sectionId);
+            }
+        }
     }
 }
 
 function cloneSection(sectionId) {
-    // Implementation for cloning sections
-    console.log('Clone section:', sectionId);
+    const originalSection = document.querySelector(`[data-section-id="${sectionId}"]`);
+    if (originalSection) {
+        sectionCounter++;
+        const colorClass = (sectionCounter % 2 === 0) ? 'block-color-even' : 'block-color-odd';
+
+        // Get all form data from the original section
+        const originalData = getFormDataFromSection(originalSection, sectionId);
+
+        const clonedHtml = originalSection.outerHTML
+            .replace(new RegExp(`sections\\[${sectionId}\\]`, 'g'), `sections[${sectionCounter}]`)
+            .replace(new RegExp(`data-section-id="${sectionId}"`, 'g'), `data-section-id="${sectionCounter}"`)
+            .replace(new RegExp(`Block ${sectionId}`, 'g'), `Block ${sectionCounter}`)
+            .replace(new RegExp(`questions-${sectionId}`, 'g'), `questions-${sectionCounter}`)
+            .replace(new RegExp(`deleteSection\\(${sectionId}\\)`, 'g'), `deleteSection(${sectionCounter})`)
+            .replace(new RegExp(`cloneSection\\(${sectionId}\\)`, 'g'), `cloneSection(${sectionCounter})`)
+            .replace(new RegExp(`addQuestion\\(${sectionId}\\)`, 'g'), `addQuestion(${sectionCounter})`)
+            .replace(new RegExp(`addSectionAfter\\(${sectionId}\\)`, 'g'), `addSectionAfter(${sectionCounter})`)
+            .replace(/block-color-\w+/, colorClass); // Replace color class
+
+        originalSection.insertAdjacentHTML('afterend', clonedHtml);
+
+        // Restore form data to cloned section
+        setTimeout(() => {
+            restoreFormDataToSection(sectionCounter, originalData);
+            updateSectionNumbers();
+            updateNavigationOptions();
+        }, 100);
+    }
 }
 
 function cloneQuestion(sectionId, questionId) {
-    // Implementation for cloning questions
-    console.log('Clone question:', sectionId, questionId);
+    const originalQuestion = document.querySelector(`#questions-${sectionId} [data-question-id="${questionId}"]`);
+    if (originalQuestion) {
+        console.log('Cloning question:', questionId);
+
+        // Get original question data
+        const originalData = {
+            question: originalQuestion.querySelector(`textarea[name*="[question]"]`)?.value || '',
+            description: originalQuestion.querySelector(`textarea[name*="[description]"]`)?.value || '',
+            type: originalQuestion.querySelector(`select[name*="[type]"]`)?.value || 'text',
+            required: originalQuestion.querySelector(`input[name*="[required]"]`)?.checked || false,
+            visualization: originalQuestion.querySelector(`select[name*="[visualization]"]`)?.value || '',
+            options: [],
+            optionNavigation: []
+        };
+
+        // Get options and their navigation values
+        const optionInputs = originalQuestion.querySelectorAll('input[name*="[options]"]');
+        optionInputs.forEach((input, index) => {
+            if (input.value.trim()) {
+                originalData.options.push(input.value.trim());
+                
+                // Get navigation value for this option
+                const optionItem = input.closest('.option-item');
+                const navSelect = optionItem ? optionItem.querySelector('.option-navigation-select') : null;
+                const hiddenNav = optionItem ? optionItem.querySelector('.hidden-navigation-input') : null;
+                
+                if (navSelect && navSelect.value) {
+                    originalData.optionNavigation.push(navSelect.value);
+                } else if (hiddenNav && hiddenNav.value) {
+                    originalData.optionNavigation.push(hiddenNav.value);
+                } else {
+                    originalData.optionNavigation.push('next');
+                }
+            }
+        });
+
+        console.log('Original question data:', originalData);
+
+        // Add new question
+        addQuestion(sectionId);
+
+        // Restore data to new question
+        setTimeout(() => {
+            const questionsContainer = document.querySelector(`#questions-${sectionId}`);
+            const allQuestions = questionsContainer.querySelectorAll('.question-item');
+            const newQuestion = allQuestions[allQuestions.length - 1]; // Get the last added question
+
+            if (newQuestion) {
+                console.log('Restoring to new question');
+
+                const questionInput = newQuestion.querySelector(`textarea[name*="[question]"]`);
+                if (questionInput) {
+                    questionInput.value = originalData.question;
+                    console.log('Set question text:', originalData.question);
+                }
+
+                const descInput = newQuestion.querySelector(`textarea[name*="[description]"]`);
+                if (descInput) {
+                    descInput.value = originalData.description;
+                    console.log('Set description:', originalData.description);
+                }
+
+                const typeSelect = newQuestion.querySelector(`select[name*="[type]"]`);
+                if (typeSelect) {
+                    typeSelect.value = originalData.type;
+                    // Trigger change event
+                    typeSelect.dispatchEvent(new Event('change'));
+                    console.log('Set type:', originalData.type);
+                }
+
+                const requiredInput = newQuestion.querySelector(`input[name*="[required]"]`);
+                if (requiredInput) {
+                    requiredInput.checked = originalData.required;
+                    console.log('Set required:', originalData.required);
+                }
+
+                const vizSelect = newQuestion.querySelector(`select[name*="[visualization]"]`);
+                if (vizSelect) {
+                    vizSelect.value = originalData.visualization;
+                    console.log('Set visualization:', originalData.visualization);
+                }
+
+                // Add options if needed
+                if (['radio', 'checkbox', 'select'].includes(originalData.type) && originalData.options.length > 0) {
+                    setTimeout(() => {
+                        const optionsList = newQuestion.querySelector(`div[id*="options-list"]`);
+                        if (optionsList) {
+                            console.log('Adding options:', originalData.options);
+                            optionsList.innerHTML = '';
+
+                            // Extract section and question numbers from the new question's name attributes
+                            const questionTextarea = newQuestion.querySelector('textarea[name*="[question]"]');
+                            if (questionTextarea) {
+                                const nameAttr = questionTextarea.name;
+                                const matches = nameAttr.match(/sections\[(\d+)\]\[questions\]\[(\d+)\]/);
+                                if (matches) {
+                                    const newSectionId = matches[1];
+                                    const newQuestionId = matches[2];
+
+                                    originalData.options.forEach((optionText, optIndex) => {
+                                        addOption(newSectionId, newQuestionId);
+                                        // Set option value and navigation after a short delay
+                                        setTimeout(() => {
+                                            const optionInputs = optionsList.querySelectorAll('input[type="text"]');
+                                            if (optionInputs[optIndex]) {
+                                                optionInputs[optIndex].value = optionText;
+                                                console.log('Set option:', optionText);
+                                                
+                                                // Set navigation value
+                                                const newOptionItem = optionInputs[optIndex].closest('.option-item');
+                                                if (newOptionItem && originalData.optionNavigation[optIndex]) {
+                                                    const navSelect = newOptionItem.querySelector('.option-navigation-select');
+                                                    const hiddenNav = newOptionItem.querySelector('.hidden-navigation-input');
+                                                    
+                                                    if (navSelect) {
+                                                        navSelect.value = originalData.optionNavigation[optIndex];
+                                                        navSelect.setAttribute('data-original-value', originalData.optionNavigation[optIndex]);
+                                                    }
+                                                    if (hiddenNav) {
+                                                        hiddenNav.value = originalData.optionNavigation[optIndex];
+                                                    }
+                                                    
+                                                    // If custom navigation, enable the toggle
+                                                    if (originalData.optionNavigation[optIndex] !== 'next') {
+                                                        const checkbox = newOptionItem.querySelector('input[type="checkbox"]');
+                                                        if (checkbox) {
+                                                            checkbox.checked = true;
+                                                            toggleOptionNavigation(checkbox);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }, 100 * (optIndex + 1));
+                                    });
+                                }
+                            }
+                        }
+                    }, 300);
+                }
+            }
+        }, 200);
+    }
+}
+function getFormDataFromSection(sectionElement, sectionId) {
+    const data = {
+        sectionName: sectionElement.querySelector(`input[name="sections[${sectionId}][section_name]"]`)?.value || '',
+        sectionDescription: sectionElement.querySelector(`textarea[name="sections[${sectionId}][section_description]"]`)?.value || '',
+        navigationType: sectionElement.querySelector(`select[name="sections[${sectionId}][navigation_type]"]`)?.value || 'next',
+        questions: []
+    };
+
+    // Get questions data
+    const questions = sectionElement.querySelectorAll('.question-item');
+    questions.forEach((questionEl, index) => {
+        const questionData = {
+            question: questionEl.querySelector(`textarea[name*="[question]"]`)?.value || '',
+            description: questionEl.querySelector(`textarea[name*="[description]"]`)?.value || '',
+            type: questionEl.querySelector(`select[name*="[type]"]`)?.value || 'text',
+            required: questionEl.querySelector(`input[name*="[required]"]`)?.checked || false,
+            visualization: questionEl.querySelector(`select[name*="[visualization]"]`)?.value || '',
+            options: []
+        };
+
+        // Get options
+        const optionInputs = questionEl.querySelectorAll('input[name*="[options]"]');
+        optionInputs.forEach(input => {
+            if (input.value.trim()) {
+                questionData.options.push(input.value.trim());
+            }
+        });
+
+        data.questions.push(questionData);
+    });
+
+    return data;
 }
 
+function restoreFormDataToSection(sectionId, data) {
+    const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+    if (!section) return;
+
+    // Restore section data
+    const nameInput = section.querySelector(`input[name="sections[${sectionId}][section_name]"]`);
+    if (nameInput) nameInput.value = data.sectionName;
+
+    const descInput = section.querySelector(`textarea[name="sections[${sectionId}][section_description]"]`);
+    if (descInput) descInput.value = data.sectionDescription;
+
+    const navSelect = section.querySelector(`select[name="sections[${sectionId}][navigation_type]"]`);
+    if (navSelect) {
+        navSelect.value = data.navigationType;
+        // Trigger change event
+        navSelect.dispatchEvent(new Event('change'));
+    }    // Clear existing questions and add cloned questions
+    const questionsContainer = section.querySelector(`#questions-${sectionId}`);
+    if (questionsContainer) {
+        questionsContainer.innerHTML = '';
+
+        data.questions.forEach((questionData, index) => {
+            // Add question first
+            addQuestion(sectionId);
+
+            // Restore question data with proper timing
+            setTimeout(() => {
+                const questionCount = index + 1;
+                const questionElements = questionsContainer.querySelectorAll('.question-item');
+                const questionEl = questionElements[index]; // Use index instead of data-question-id
+
+                if (questionEl) {
+                    console.log('Restoring question data:', questionData);
+
+                    const questionInput = questionEl.querySelector(`textarea[name="sections[${sectionId}][questions][${questionCount}][question]"]`);
+                    if (questionInput) {
+                        questionInput.value = questionData.question;
+                        console.log('Set question text:', questionData.question);
+                    }
+
+                    const descInput = questionEl.querySelector(`textarea[name="sections[${sectionId}][questions][${questionCount}][description]"]`);
+                    if (descInput) {
+                        descInput.value = questionData.description;
+                        console.log('Set description:', questionData.description);
+                    }
+
+                    const typeSelect = questionEl.querySelector(`select[name="sections[${sectionId}][questions][${questionCount}][type]"]`);
+                    if (typeSelect) {
+                        typeSelect.value = questionData.type;
+                        // Trigger change event for options container
+                        typeSelect.dispatchEvent(new Event('change'));
+                        console.log('Set type:', questionData.type);
+                    }
+
+                    const requiredInput = questionEl.querySelector(`input[name="sections[${sectionId}][questions][${questionCount}][required]"]`);
+                    if (requiredInput) {
+                        requiredInput.checked = questionData.required;
+                        console.log('Set required:', questionData.required);
+                    }
+
+                    const vizSelect = questionEl.querySelector(`select[name="sections[${sectionId}][questions][${questionCount}][visualization]"]`);
+                    if (vizSelect) {
+                        vizSelect.value = questionData.visualization;
+                        console.log('Set visualization:', questionData.visualization);
+                    }
+
+                    // Add options if needed
+                    if (['radio', 'checkbox', 'select'].includes(questionData.type) && questionData.options.length > 0) {
+                        setTimeout(() => {
+                            const optionsList = questionEl.querySelector(`#optionsList-${sectionId}-${questionCount}`);
+                            if (optionsList) {
+                                optionsList.innerHTML = '';
+                                questionData.options.forEach((optionText, optIndex) => {
+                                    addOption(sectionId, questionCount);
+                                    // Set option value after a short delay
+                                    setTimeout(() => {
+                                        const optionInputs = optionsList.querySelectorAll('input[type="text"]');
+                                        if (optionInputs[optIndex]) {
+                                            optionInputs[optIndex].value = optionText;
+                                            console.log('Set option:', optionText);
+                                        }
+                                    }, 50);
+                                });
+                            }
+                        }, 300);
+                    }
+                }
+            }, 200 * (index + 1)); // Stagger the restoration
+        });
+    }
+}
+function updateSectionNumbers() {
+    const sections = document.querySelectorAll('.section-block');
+    sections.forEach((section, index) => {
+        const header = section.querySelector('.block-header h4');
+        if (header) {
+            header.textContent = `Block ${index + 1}`;
+        }
+
+        // Update color class
+        const colorClass = ((index + 1) % 2 === 0) ? 'block-color-even' : 'block-color-odd';
+        section.className = section.className.replace(/block-color-\w+/, colorClass);
+    });
+}
 function updateNavigationOptions() {
     const sections = document.querySelectorAll('.section-block');
     const sectionCount = sections.length;
