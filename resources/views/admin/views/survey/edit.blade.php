@@ -596,6 +596,7 @@ function loadExistingQuestion(sectionId, questionData) {
                     <label class="block text-xs font-medium text-gray-700 mb-1">Visualisasi</label>
                     <select name="sections[${sectionId}][questions][${questionCounter}][visualization]"
                             class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                        <option value="" ${questionData.visualization === '' ? 'selected' : ''}>Tidak ada visualisasi</option>
                         <option value="bar" ${questionData.visualization === 'bar' ? 'selected' : ''}>Bar Chart</option>
                         <option value="pie" ${questionData.visualization === 'pie' ? 'selected' : ''}>Pie Chart</option>
                     </select>
@@ -830,6 +831,7 @@ function addQuestion(sectionId) {
                     <label class="block text-xs font-medium text-gray-700 mb-1">Visualisasi</label>
                     <select name="sections[${sectionId}][questions][${questionCounter}][visualization]"
                             class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                        <option value="">Tidak ada visualisasi</option>
                         <option value="bar">Bar Chart</option>
                         <option value="pie">Pie Chart</option>
                     </select>

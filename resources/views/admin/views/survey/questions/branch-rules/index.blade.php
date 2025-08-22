@@ -213,7 +213,7 @@
                                                 x-model="formData.answer_option_id"
                                                 class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                             <option value="">-- Pilih Jawaban --</option>
-                                            @foreach($question->template_jawaban as $option)
+                                            @foreach($question->templateJawaban as $option)
                                                 <option value="{{ $option->id }}">{{ $option->pilihan_jawaban }}</option>
                                             @endforeach
                                         </select>

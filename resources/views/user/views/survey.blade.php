@@ -143,7 +143,7 @@
                                                 class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-primary dark:focus:ring-primary/20"></textarea>
                                         @elseif($pertanyaan->tipe == 'radio')
                                             <div class="flex flex-col gap-y-3 mb-2 text-blue-700 dark:text-dark-6">
-                                                @foreach ($pertanyaan->template_jawaban as $option)
+                                                @foreach ($pertanyaan->templateJawaban as $option)
                                                     <label class="flex items-center gap-x-3 p-2 hover:bg-blue-100 dark:hover:bg-dark-2 rounded cursor-pointer transition-colors">
                                                         <input type="radio" name="{{ $pertanyaan->id }}"
                                                             value="{{ $option->pilihan_jawaban }}"
@@ -159,7 +159,7 @@
                                             <select name="{{ $pertanyaan->id }}"
                                                 class="w-full p-3 text-blue-800 dark:text-dark-6 bg-white dark:bg-dark-2 border border-blue-200 dark:border-dark-3 rounded-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:border-primary dark:focus:ring-primary/20">
                                                 <option value="" disabled selected hidden>Choose</option>
-                                                @foreach ($pertanyaan->template_jawaban as $option)
+                                                @foreach ($pertanyaan->templateJawaban as $option)
                                                     <option value="{{ $option->pilihan_jawaban }}">
                                                         {{ $option->pilihan_jawaban }}</option>
                                                 @endforeach
@@ -182,7 +182,7 @@
                                             </script>
                                         @elseif($pertanyaan->tipe == 'checkbox')
                                             <div class="space-y-2">
-                                                @foreach ($pertanyaan->template_jawaban as $option)
+                                                @foreach ($pertanyaan->templateJawaban as $option)
                                                     <label for="option_{{ $pertanyaan->id }}_{{ $loop->index }}"
                                                         class="flex items-center text-sm text-blue-700 dark:text-dark-6 p-2 hover:bg-blue-100 dark:hover:bg-dark-2 rounded cursor-pointer transition-colors">
                                                         <input type="checkbox" id="option_{{ $pertanyaan->id }}_{{ $loop->index }}"

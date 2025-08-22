@@ -99,13 +99,18 @@ class SurveyUserController extends Controller
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
 
-        $surveyUserPertanyaan = TemplatePertanyaan::with(['template_jawaban' => function ($query) {
-            $query->orderBy('urutan', 'asc');
-        }])
+        $surveyUserPertanyaan = TemplatePertanyaan::with([
+                'templateJawaban' => function ($query) {
+                    $query->orderBy('urutan', 'asc');
+                },
+                'block' // Load the block relationship
+            ])
             ->where('id_survey', $surveyUser->survey_id)
             ->orderBy('urutan')
             ->get()
-            ->groupBy('blok')
+            ->groupBy(function ($question) {
+                return $question->block ? $question->block->nama : 'Tidak ada blok';
+            })
             ->map(function ($questions) {
                 return $questions->values(); // Reset array keys for each group
             });
