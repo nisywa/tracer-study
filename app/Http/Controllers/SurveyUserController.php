@@ -99,26 +99,92 @@ class SurveyUserController extends Controller
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
 
-        $surveyUserPertanyaan = TemplatePertanyaan::with([
-                'templateJawaban' => function ($query) {
-                    $query->orderBy('urutan', 'asc');
-                },
-                'block' // Load the block relationship
-            ])
-            ->where('id_survey', $surveyUser->survey_id)
-            ->orderBy('urutan')
-            ->get()
-            ->groupBy(function ($question) {
-                return $question->block ? $question->block->nama : 'Tidak ada blok';
-            })
-            ->map(function ($questions) {
-                return $questions->values(); // Reset array keys for each group
+        // Get survey data organized by blocks for the new flow
+        $surveyBlocks = \App\Models\SurveyBlock::with([
+            'questions' => function ($query) {
+                $query->with(['templateJawaban' => function ($q) {
+                    $q->select('id', 'id_template_pertanyaan', 'pilihan_jawaban', 'urutan', 'navigation_target')
+                      ->orderBy('urutan');
+                }])->orderBy('urutan');
+            }
+        ])
+        ->where('survey_id', $surveyUser->survey_id)
+        ->orderBy('urutan')
+        ->get();
+
+        // If no blocks exist, fall back to the old grouping method for backward compatibility
+        if ($surveyBlocks->isEmpty()) {
+            $surveyUserPertanyaan = TemplatePertanyaan::with([
+                    'templateJawaban' => function ($query) {
+                        $query->select('id', 'id_template_pertanyaan', 'pilihan_jawaban', 'urutan', 'navigation_target')
+                              ->orderBy('urutan', 'asc');
+                    },
+                    'block' // Load the block relationship
+                ])
+                ->where('id_survey', $surveyUser->survey_id)
+                ->orderBy('urutan')
+                ->get()
+                ->groupBy(function ($question) {
+                    return $question->block ? $question->block->nama : 'Tidak ada blok';
+                })
+                ->map(function ($questions) {
+                    return $questions->values(); // Reset array keys for each group
+                });
+        } else {
+            // New block-based structure with full block information
+            $surveyUserPertanyaan = $surveyBlocks->mapWithKeys(function ($block) {
+                return [$block->nama => $block->questions->map(function ($question) {
+                    // Ensure templateJawaban is included with navigation targets
+                    $questionArray = $question->toArray();
+                    
+                    // Log navigation targets for debugging
+                    if ($question->tipe === 'radio' && $question->templateJawaban) {
+                        \Log::info('Radio question navigation data', [
+                            'question_id' => $question->id,
+                            'question_text' => $question->pertanyaan,
+                            'options' => $question->templateJawaban->map(function ($option) {
+                                return [
+                                    'id' => $option->id,
+                                    'text' => $option->pilihan_jawaban,
+                                    'navigation_target' => $option->navigation_target
+                                ];
+                            })->toArray()
+                        ]);
+                    }
+                    
+                    return $questionArray;
+                })];
             });
-        // dd($surveyUserPertanyaan);
+            
+            // Also pass the full block structure for navigation
+            $blockStructure = $surveyBlocks->map(function ($block) {
+                return [
+                    'id' => $block->id,
+                    'nama' => $block->nama,
+                    'urutan' => $block->urutan,
+                    'deskripsi' => $block->deskripsi,
+                    'navigation_type' => $block->navigation_type
+                ];
+            });
+            
+            \Log::info('Block structure created', [
+                'survey_id' => $surveyUser->survey_id,
+                'block_count' => $blockStructure->count(),
+                'blocks' => $blockStructure->toArray()
+            ]);
+        }
+
+        // Get existing answers for this user
+        $existingAnswers = SurveyUserJawaban::where('survey_user_id', $surveyUser->id)
+            ->pluck('jawaban', 'template_pertanyaan_id')
+            ->toArray();
 
         return view('user.views.survey', [
             'survey' => $survey,
-            'surveyPertanyaan' => $surveyUserPertanyaan
+            'surveyPertanyaan' => $surveyUserPertanyaan,
+            'existingAnswers' => $existingAnswers,
+            'surveyBlocks' => $surveyBlocks,
+            'blockStructure' => $blockStructure ?? null
         ]);
     }
 
@@ -126,15 +192,21 @@ class SurveyUserController extends Controller
     {
         try {
             // Get current user's survey assignment
-
             $surveyUser = SurveyUser::where('user_id', Auth::id())->where('survey_id', $id)->first();
             if (!$surveyUser) {
-                return redirect()->back()->with('error', 'Survey tidak ditemukan');
+                return response()->json(['success' => false, 'message' => 'Survey tidak ditemukan'], 404);
             }
-            
 
             // Process each question response
             foreach ($request->except('_token') as $questionId => $answer) {
+                // Skip non-answer fields
+                if (strpos($questionId, 'answer_') !== 0) {
+                    continue;
+                }
+                
+                // Extract actual question ID
+                $actualQuestionId = str_replace('answer_', '', $questionId);
+                
                 // Check if the answer is a file upload
                 if ($request->hasFile($questionId)) {
                     $file = $request->file($questionId);
@@ -151,7 +223,7 @@ class SurveyUserController extends Controller
                 SurveyUserJawaban::updateOrCreate(
                     [
                         'survey_user_id' => $surveyUser->id,
-                        'template_pertanyaan_id' => $questionId
+                        'template_pertanyaan_id' => $actualQuestionId
                     ],
                     [
                         'jawaban' => $answer
@@ -159,8 +231,9 @@ class SurveyUserController extends Controller
                 );
             }
 
-            // update status survey user
+            // Update status survey user
             $surveyUser->status = 1;
+            $surveyUser->tanggal_mengisi = now();
             $surveyUser->save();
 
             // Automatically send thank you email
@@ -174,8 +247,30 @@ class SurveyUserController extends Controller
                 \Illuminate\Support\Facades\Log::error("Failed to send thank you email: " . $e->getMessage());
             }
 
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Survey berhasil diselesaikan',
+                    'redirect' => route('user.profile.index')
+                ]);
+            }
+
             return redirect()->route('user.profile.index')->with('success', 'Jawaban survey berhasil disimpan');
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error saving survey: ' . $e->getMessage(), [
+                'survey_id' => $id,
+                'user_id' => Auth::id(),
+                'request_data' => $request->all()
+            ]);
+
+            if ($request->ajax() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ], 500);
+            }
+
             return redirect()->route('user.profile.index')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -562,4 +657,275 @@ class SurveyUserController extends Controller
             ]);
         }
     }
+
+    /**
+     * Get next question based on survey flow and branching rules
+     */
+    public function getNextQuestion(Request $request, $surveyId, $currentQuestionId)
+    {
+        try {
+            $surveyUser = SurveyUser::where('user_id', Auth::id())
+                ->where('survey_id', $surveyId)
+                ->first();
+                
+            if (!$surveyUser) {
+                return response()->json(['error' => 'Survey user not found'], 404);
+            }
+
+            $currentQuestion = TemplatePertanyaan::with(['templateJawaban', 'block'])
+                ->find($currentQuestionId);
+                
+            if (!$currentQuestion) {
+                return response()->json(['error' => 'Question not found'], 404);
+            }
+
+            // Get the answer from the request
+            $answer = $request->input('answer');
+            
+            \Log::info('Processing next question', [
+                'survey_id' => $surveyId,
+                'current_question_id' => $currentQuestionId,
+                'answer' => $answer,
+                'question_type' => $currentQuestion->tipe
+            ]);
+            
+            // Save the current answer first
+            if ($answer !== null) {
+                SurveyUserJawaban::updateOrCreate(
+                    [
+                        'survey_user_id' => $surveyUser->id,
+                        'template_pertanyaan_id' => $currentQuestionId
+                    ],
+                    [
+                        'jawaban' => is_array($answer) ? implode(',', $answer) : $answer
+                    ]
+                );
+                
+                \Log::info('Answer saved', [
+                    'survey_user_id' => $surveyUser->id,
+                    'template_pertanyaan_id' => $currentQuestionId,
+                    'answer' => $answer
+                ]);
+            }
+
+            // Find the next question based on flow and branching rules
+            $nextQuestion = $this->determineNextQuestion($currentQuestion, $answer, $surveyId);
+
+            if (!$nextQuestion) {
+                // Survey completed
+                \Log::info('Survey completed', [
+                    'survey_id' => $surveyId,
+                    'user_id' => Auth::id()
+                ]);
+                
+                return response()->json([
+                    'completed' => true,
+                    'message' => 'Survey selesai'
+                ]);
+            }
+
+            \Log::info('Next question determined', [
+                'next_question_id' => $nextQuestion->id,
+                'next_block' => $nextQuestion->block ? $nextQuestion->block->nama : null
+            ]);
+
+            return response()->json([
+                'question' => $nextQuestion,
+                'block' => $nextQuestion->block,
+                'completed' => false
+            ]);
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error getting next question: ' . $e->getMessage(), [
+                'survey_id' => $surveyId,
+                'current_question_id' => $currentQuestionId,
+                'answer' => $request->input('answer'),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'Internal server error'], 500);
+        }
+    }
+
+    /**
+     * Determine the next question based on branching rules and flow
+     */
+    private function determineNextQuestion($currentQuestion, $answer, $surveyId)
+    {
+        \Log::info('Determining next question', [
+            'current_question_id' => $currentQuestion->id,
+            'answer' => $answer,
+            'question_type' => $currentQuestion->tipe
+        ]);
+        
+        // First check for branching rules based on the answer
+        $targetBlockResult = $this->checkBranchingRules($currentQuestion, $answer);
+        
+        \Log::info('Branching rules result', [
+            'target_block_result' => $targetBlockResult
+        ]);
+        
+        if ($targetBlockResult === 'end') {
+            // User should end the survey
+            \Log::info('Survey should end based on branching rule');
+            return null;
+        }
+        
+        if ($targetBlockResult && is_numeric($targetBlockResult)) {
+            // Jump to the target block's first question
+            \Log::info('Jumping to target block', ['target_block_id' => $targetBlockResult]);
+            
+            $nextQuestion = TemplatePertanyaan::with(['templateJawaban', 'block'])
+                ->where('block_id', $targetBlockResult)
+                ->orderBy('urutan')
+                ->first();
+                
+            if ($nextQuestion) {
+                \Log::info('Found question in target block', ['next_question_id' => $nextQuestion->id]);
+            }
+            
+            return $nextQuestion;
+        }
+
+        // No branching rule matched, follow normal flow
+        // Try to get next question in the same block
+        $nextQuestionInBlock = TemplatePertanyaan::with(['templateJawaban', 'block'])
+            ->where('id_survey', $surveyId)
+            ->where('block_id', $currentQuestion->block_id)
+            ->where('urutan', '>', $currentQuestion->urutan)
+            ->orderBy('urutan')
+            ->first();
+
+        if ($nextQuestionInBlock) {
+            \Log::info('Found next question in same block', ['next_question_id' => $nextQuestionInBlock->id]);
+            return $nextQuestionInBlock;
+        }
+
+        // No more questions in current block, move to next block
+        $currentBlock = $currentQuestion->block;
+        if (!$currentBlock) {
+            \Log::info('No current block found');
+            return null;
+        }
+
+        $nextBlock = \App\Models\SurveyBlock::where('survey_id', $surveyId)
+            ->where('urutan', '>', $currentBlock->urutan)
+            ->orderBy('urutan')
+            ->first();
+
+        if (!$nextBlock) {
+            \Log::info('No more blocks found');
+            return null; // No more blocks
+        }
+
+        if ($nextBlock->is_terminal) {
+            \Log::info('Next block is terminal');
+            return null; // Terminal block reached
+        }
+
+        // Get first question of next block
+        $firstQuestionOfNextBlock = TemplatePertanyaan::with(['templateJawaban', 'block'])
+            ->where('block_id', $nextBlock->id)
+            ->orderBy('urutan')
+            ->first();
+
+        if ($firstQuestionOfNextBlock) {
+            \Log::info('Found first question of next block', [
+                'next_block_id' => $nextBlock->id,
+                'next_question_id' => $firstQuestionOfNextBlock->id
+            ]);
+        }
+
+        return $firstQuestionOfNextBlock;
+    }
+
+    /**
+     * Check branching rules for the current question and answer
+     */
+    private function checkBranchingRules($question, $answer)
+    {
+        \Log::info('Checking branching rules', [
+            'question_id' => $question->id,
+            'question_type' => $question->tipe,
+            'answer' => $answer
+        ]);
+        
+        // Only radio and select questions can have navigation rules
+        if (!in_array($question->tipe, ['radio', 'select']) || !$answer) {
+            \Log::info('No branching rules: not radio/select or no answer');
+            return null;
+        }
+
+        // Find the selected option
+        $selectedOption = $question->templateJawaban->where('id', $answer)->first();
+        if (!$selectedOption) {
+            \Log::info('No selected option found', ['option_id' => $answer]);
+            return null;
+        }
+
+        \Log::info('Selected option found', [
+            'option_id' => $selectedOption->id,
+            'option_text' => $selectedOption->pilihan_jawaban,
+            'navigation_target' => $selectedOption->navigation_target
+        ]);
+
+        if (!$selectedOption->navigation_target) {
+            \Log::info('No navigation target set for this option');
+            return null;
+        }
+
+        $navigationTarget = $selectedOption->navigation_target;
+
+        // Handle different navigation target formats
+        if ($navigationTarget === 'end') {
+            // Signal to end the survey
+            \Log::info('Navigation target is end survey');
+            return 'end';
+        } elseif ($navigationTarget === 'next') {
+            // Continue normal flow
+            \Log::info('Navigation target is next (normal flow)');
+            return null;
+        } elseif (is_numeric($navigationTarget)) {
+            // Navigation target is already a block ID
+            \Log::info('Navigation target is block ID', ['block_id' => $navigationTarget]);
+            
+            // Verify the block exists
+            $targetBlock = \App\Models\SurveyBlock::where('id', $navigationTarget)
+                ->where('survey_id', $question->id_survey)
+                ->first();
+            
+            if ($targetBlock) {
+                \Log::info('Target block found by ID', [
+                    'block_id' => $targetBlock->id,
+                    'block_name' => $targetBlock->nama
+                ]);
+                return (int) $targetBlock->id;
+            } else {
+                \Log::warning('Target block not found by ID', ['block_id' => $navigationTarget]);
+            }
+        } elseif (strpos($navigationTarget, 'block_') === 0) {
+            // Extract block number from 'block_X' format (legacy support)
+            $blockNumber = (int) substr($navigationTarget, 6);
+            \Log::info('Navigation target is specific block (legacy format)', ['block_number' => $blockNumber]);
+            
+            // Find the block by its order (urutan) 
+            $targetBlock = \App\Models\SurveyBlock::where('survey_id', $question->id_survey)
+                ->where('urutan', $blockNumber)
+                ->first();
+            
+            if ($targetBlock) {
+                \Log::info('Target block found by order', [
+                    'block_id' => $targetBlock->id,
+                    'block_name' => $targetBlock->nama
+                ]);
+                return $targetBlock->id;
+            } else {
+                \Log::warning('Target block not found by order', ['block_number' => $blockNumber]);
+            }
+        }
+
+        \Log::info('No matching navigation rule found');
+        return null;
+    }
+
+    // ...existing methods...
 }

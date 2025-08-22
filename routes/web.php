@@ -112,6 +112,7 @@ Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('survey/{id}', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
     Route::post('survey/{id}', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
+    Route::post('survey/{surveyId}/next-question/{questionId}', [SurveyUserController::class, 'getNextQuestion'])->name('survey.next_question');
     Route::get('monitoring', [SurveyUserController::class, 'index'])->name('monitoring.index');
 });
 

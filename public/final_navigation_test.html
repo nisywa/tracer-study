@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final Navigation Test</title>
+</head>
+<body>
+    <h1>Final Navigation Test</h1>
+    <div id="results"></div>
+
+    <script>
+        // Updated block structure based on the database fix
+        const allBlocks = [
+            {
+                id: 53,
+                nama: "Identitas Lulusan",
+                urutan: 2,
+                questions: []
+            },
+            {
+                id: 54,
+                nama: "Kebekerjaan Lulusan", 
+                urutan: 3,
+                questions: [{
+                    id: 31,
+                    tipe: "radio",
+                    pertanyaan: "Jelaskan status Anda Saat Ini...",
+                    template_jawaban: [
+                        { id: 39, pilihan_jawaban: "Bekerja", navigation_target: "block_4" },
+                        { id: 40, pilihan_jawaban: "Wiraswasta", navigation_target: "block_5" },
+                        { id: 41, pilihan_jawaban: "Melanjutkan pendidikan", navigation_target: "block_6" },
+                        { id: 42, pilihan_jawaban: "tidak bekerja", navigation_target: "block_7" }
+                    ]
+                }]
+            },
+            {
+                id: 55,
+                nama: "Pertanyaan khusus Bekerja/ Wiraswasta",
+                urutan: 4,
+                questions: []
+            },
+            {
+                id: 56,
+                nama: "Pertanyaan khusus wiraswasta",
+                urutan: 5, 
+                questions: []
+            },
+            {
+                id: 57,
+                nama: "Pertanyaan khusus melanjutkan pendidikan",
+                urutan: 6,
+                questions: []
+            },
+            {
+                id: 58,
+                nama: "pertanyaan khusus tidak bekerja",
+                urutan: 7,
+                questions: []
+            }
+        ];
+
+        // Simulate the checkBranchingRules function from the frontend
+        function checkBranchingRules(question, selectedAnswerId) {
+            console.log('=== CHECKING BRANCHING RULES ===');
+            console.log('Question:', {
+                id: question.id,
+                type: question.tipe,
+                text: question.pertanyaan
+            });
+
+            if (!question || !['radio', 'select'].includes(question.tipe)) {
+                console.log('❌ No branching rules: not radio/select type');
+                return null;
+            }
+
+            console.log('Selected answer ID:', selectedAnswerId);
+            
+            if (!selectedAnswerId) {
+                console.log('❌ No selected answer');
+                return null;
+            }
+
+            // Find the selected option
+            const selectedOption = question.template_jawaban.find(opt => opt.id == selectedAnswerId);
+            console.log('Available options:', question.template_jawaban);
+            
+            if (!selectedOption) {
+                console.log('❌ Selected option not found', { 
+                    selectedAnswerId,
+                    availableOptions: question.template_jawaban.map(opt => ({ id: opt.id, text: opt.pilihan_jawaban }))
+                });
+                return null;
+            }
+
+            console.log('✅ Selected option found:', {
+                option_id: selectedOption.id,
+                option_text: selectedOption.pilihan_jawaban,
+                navigation_target: selectedOption.navigation_target
+            });
+
+            if (!selectedOption.navigation_target || selectedOption.navigation_target === '' || selectedOption.navigation_target === null) {
+                console.log('❌ No navigation target set for this option');
+                return null;
+            }
+
+            const navigationTarget = selectedOption.navigation_target;
+            console.log('Processing navigation target:', navigationTarget);
+
+            // Handle different navigation target formats
+            if (navigationTarget === 'end') {
+                console.log('🏁 Navigation target is END SURVEY');
+                return 'end';
+            } else if (navigationTarget === 'next') {
+                console.log('➡️ Navigation target is NEXT (normal flow)');
+                return null;
+            } else if (navigationTarget.startsWith('block_')) {
+                // Extract block number from 'block_X' format
+                const blockNumber = parseInt(navigationTarget.substring(6));
+                console.log('🎯 Navigation target is specific block:', blockNumber);
+                
+                console.log('Available blocks for search:', allBlocks.map(b => ({ 
+                    id: b.id, 
+                    nama: b.nama, 
+                    urutan: b.urutan 
+                })));
+                
+                // Find the block by its order (urutan)
+                const targetBlock = allBlocks.find(block => block.urutan === blockNumber);
+                
+                if (targetBlock) {
+                    console.log('✅ Target block found:', {
+                        block_id: targetBlock.id,
+                        block_name: targetBlock.nama,
+                        block_order: targetBlock.urutan
+                    });
+                    return targetBlock.id;
+                } else {
+                    console.log('❌ Target block not found for order:', blockNumber);
+                    console.log('Available block orders:', allBlocks.map(b => b.urutan));
+                }
+            } else {
+                console.log('❓ Unknown navigation target format:', navigationTarget);
+            }
+
+            console.log('❌ No matching navigation rule found');
+            return null;
+        }
+
+        function testAllOptions() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Final Navigation Test Results</h2>';
+            
+            const question = allBlocks[1].questions[0]; // Radio question in "Kebekerjaan Lulusan"
+            
+            console.log('\n=== TESTING ALL OPTIONS ===');
+            
+            question.template_jawaban.forEach((option, index) => {
+                console.log(`\n--- Testing Option ${index + 1}: ${option.pilihan_jawaban} ---`);
+                
+                const branchingResult = checkBranchingRules(question, option.id);
+                
+                if (branchingResult && typeof branchingResult === 'number') {
+                    const targetBlock = allBlocks.find(b => b.id === branchingResult);
+                    const resultText = `✅ Option "${option.pilihan_jawaban}" navigates to Block "${targetBlock.nama}" (ID: ${targetBlock.id}, Order: ${targetBlock.urutan})`;
+                    console.log(resultText);
+                    results.innerHTML += `<p style="color: green">${resultText}</p>`;
+                } else if (branchingResult === 'end') {
+                    const resultText = `🏁 Option "${option.pilihan_jawaban}" ends the survey`;
+                    console.log(resultText);
+                    results.innerHTML += `<p style="color: orange">${resultText}</p>`;
+                } else {
+                    const resultText = `❌ Option "${option.pilihan_jawaban}" has no navigation or failed`;
+                    console.log(resultText);
+                    results.innerHTML += `<p style="color: red">${resultText}</p>`;
+                }
+                
+                console.log('---');
+            });
+        }
+
+        // Run test when page loads
+        window.onload = testAllOptions;
+    </script>
+</body>
+</html>
