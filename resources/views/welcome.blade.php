@@ -26,7 +26,7 @@
                 <p
                   class="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6"
                 >
-                Selamat datang di Laman Tracer Study Politeknik Statistika STIS! Laman ini diperuntukkan untuk pelaksanaan survei 
+                Selamat datang di Laman Tracer Study Politeknik Statistika STIS! Laman ini diperuntukkan untuk pelaksanaan survei
                 Tracer Study bagi alumni dan atasan di instansi tempat lulusan bekerja.
                   <!-- <br />
                   <br />
@@ -36,7 +36,7 @@
                 </p>
 
                 <a
-                  href="javascript:void(0)"
+                  href="{{ Auth::check() ? url('/user/profile') : 'javascript:void(0)' }}"
                   class="inline-flex items-center justify-center rounded-md border border-primary bg-primary px-7 py-3 text-center text-base font-medium text-white hover:border-blue-dark hover:bg-blue-dark"
                 >
                   Isi Kuesioner

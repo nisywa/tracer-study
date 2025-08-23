@@ -11,6 +11,7 @@ use App\Services\SurveyEmailService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use PhpParser\Node\Stmt\TryCatch;
@@ -139,7 +140,7 @@ class SurveyUserController extends Controller
                     
                     // Log navigation targets for debugging
                     if ($question->tipe === 'radio' && $question->templateJawaban) {
-                        \Log::info('Radio question navigation data', [
+                        Log::info('Radio question navigation data', [
                             'question_id' => $question->id,
                             'question_text' => $question->pertanyaan,
                             'options' => $question->templateJawaban->map(function ($option) {
@@ -167,7 +168,7 @@ class SurveyUserController extends Controller
                 ];
             });
             
-            \Log::info('Block structure created', [
+            Log::info('Block structure created', [
                 'survey_id' => $surveyUser->survey_id,
                 'block_count' => $blockStructure->count(),
                 'blocks' => $blockStructure->toArray()
@@ -244,7 +245,7 @@ class SurveyUserController extends Controller
                 }
             } catch (\Exception $e) {
                 // Log error but don't fail the survey submission
-                \Illuminate\Support\Facades\Log::error("Failed to send thank you email: " . $e->getMessage());
+                \Illuminate\Support\FacadesLog::error("Failed to send thank you email: " . $e->getMessage());
             }
 
             // Return JSON response for AJAX requests
@@ -258,7 +259,7 @@ class SurveyUserController extends Controller
 
             return redirect()->route('user.profile.index')->with('success', 'Jawaban survey berhasil disimpan');
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error saving survey: ' . $e->getMessage(), [
+            \Illuminate\Support\FacadesLog::error('Error saving survey: ' . $e->getMessage(), [
                 'survey_id' => $id,
                 'user_id' => Auth::id(),
                 'request_data' => $request->all()
@@ -341,17 +342,17 @@ class SurveyUserController extends Controller
 
     public function add_user (Request $request){
         // Enable detailed logging
-        \Log::info('=== ADD USER FUNCTION CALLED ===');
-        \Log::info('Request method: ' . $request->method());
-        \Log::info('Request URL: ' . $request->url());
-        \Log::info('Request all data: ', $request->all());
-        \Log::info('Request headers: ', $request->headers->all());
+        Log::info('=== ADD USER FUNCTION CALLED ===');
+        Log::info('Request method: ' . $request->method());
+        Log::info('Request URL: ' . $request->url());
+        Log::info('Request all data: ', $request->all());
+        Log::info('Request headers: ', $request->headers->all());
         
         $userId = $request->input('user_id');
         $surveyId = $request->input('survey_id');
         
         // Debug logging
-        \Log::info('Add User Debug', [
+        Log::info('Add User Debug', [
             'user_id' => $userId,
             'survey_id' => $surveyId,
             'request_data' => $request->all()
@@ -359,7 +360,7 @@ class SurveyUserController extends Controller
         
         // Validate input
         if (!$userId || !$surveyId) {
-            \Log::error('Missing parameters', [
+            Log::error('Missing parameters', [
                 'user_id' => $userId,
                 'survey_id' => $surveyId
             ]);
@@ -373,14 +374,14 @@ class SurveyUserController extends Controller
             // Check if user exists
             $user = \App\Models\User::find($userId);
             if (!$user) {
-                \Log::error('User not found', ['user_id' => $userId]);
+                Log::error('User not found', ['user_id' => $userId]);
                 return response()->json(['success' => false, 'message' => 'User not found']);
             }
             
             // Check if survey exists
             $survey = \App\Models\Survey::find($surveyId);
             if (!$survey) {
-                \Log::error('Survey not found', ['survey_id' => $surveyId]);
+                Log::error('Survey not found', ['survey_id' => $surveyId]);
                 return response()->json(['success' => false, 'message' => 'Survey not found']);
             }
             
@@ -390,7 +391,7 @@ class SurveyUserController extends Controller
                 ->first();
                 
             if ($existingSurveyUser) {
-                \Log::info('User already in survey', ['survey_user_id' => $existingSurveyUser->id]);
+                Log::info('User already in survey', ['survey_user_id' => $existingSurveyUser->id]);
                 return response()->json(['success' => false, 'message' => 'User sudah terdaftar dalam survey ini']);
             }
             
@@ -400,7 +401,7 @@ class SurveyUserController extends Controller
                 'status' => 0
             ]);
             
-            \Log::info('SurveyUser created successfully', ['survey_user_id' => $surveyUser->id]);
+            Log::info('SurveyUser created successfully', ['survey_user_id' => $surveyUser->id]);
             
             return response()->json([
                 'success' => true, 
@@ -414,7 +415,7 @@ class SurveyUserController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            \Log::error('Add user error', [
+            Log::error('Add user error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -536,16 +537,16 @@ class SurveyUserController extends Controller
     public function add_alumni_by_graduation_year(Request $request)
     {
         // Enable detailed logging
-        \Log::info('=== ADD ALUMNI BY GRADUATION YEAR FUNCTION CALLED ===');
-        \Log::info('Request method: ' . $request->method());
-        \Log::info('Request URL: ' . $request->url());
-        \Log::info('Request all data: ', $request->all());
+        Log::info('=== ADD ALUMNI BY GRADUATION YEAR FUNCTION CALLED ===');
+        Log::info('Request method: ' . $request->method());
+        Log::info('Request URL: ' . $request->url());
+        Log::info('Request all data: ', $request->all());
         
         $graduationYear = $request->input('tahun_lulus');
         $surveyId = $request->input('survey_id');
         
         // Debug logging
-        \Log::info('Add Alumni by Graduation Year Debug', [
+        Log::info('Add Alumni by Graduation Year Debug', [
             'tahun_lulus' => $graduationYear,
             'survey_id' => $surveyId,
             'request_data' => $request->all()
@@ -555,7 +556,7 @@ class SurveyUserController extends Controller
             // Check if survey exists
             $survey = \App\Models\Survey::find($surveyId);
             if (!$survey) {
-                \Log::error('Survey not found', ['survey_id' => $surveyId]);
+                Log::error('Survey not found', ['survey_id' => $surveyId]);
                 return response()->json([
                     'success' => false, 
                     'message' => 'Survey tidak ditemukan'
@@ -567,7 +568,7 @@ class SurveyUserController extends Controller
                 ->whereHas('user') // Make sure they have associated user accounts
                 ->get();
                 
-            \Log::info('Alumni found', ['count' => $alumni->count()]);
+            Log::info('Alumni found', ['count' => $alumni->count()]);
             
             if ($alumni->isEmpty()) {
                 return response()->json([
@@ -591,13 +592,13 @@ class SurveyUserController extends Controller
                         'survey_id' => $surveyId,
                         'status' => 0
                     ]);
-                    \Log::info('Alumni added to survey', [
+                    Log::info('Alumni added to survey', [
                         'user_id' => $alumnus->user_id, 
                         'survey_user_id' => $surveyUser->id
                     ]);
                     $addedCount++;
                 } else {
-                    \Log::info('Alumni already in survey', [
+                    Log::info('Alumni already in survey', [
                         'user_id' => $alumnus->user_id, 
                         'existing_survey_user_id' => $existingSurveyUser->id
                     ]);
@@ -610,7 +611,7 @@ class SurveyUserController extends Controller
                 $message .= ". {$skippedCount} alumni sudah terdaftar dalam survey ini.";
             }
             
-            \Log::info('Bulk add alumni result', [
+            Log::info('Bulk add alumni result', [
                 'added_count' => $addedCount,
                 'skipped_count' => $skippedCount
             ]);
@@ -623,7 +624,7 @@ class SurveyUserController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            \Log::error('Add alumni by graduation year error', [
+            Log::error('Add alumni by graduation year error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
@@ -663,86 +664,125 @@ class SurveyUserController extends Controller
      */
     public function getNextQuestion(Request $request, $surveyId, $currentQuestionId)
     {
+        Log::info('=== GET NEXT QUESTION API CALLED ===', [
+            'survey_id' => $surveyId,
+            'current_question_id' => $currentQuestionId,
+            'request_data' => $request->all(),
+            'user_id' => Auth::id()
+        ]);
+
+        // Debug: Check if this ID exists as question or block
+        $questionExists = TemplatePertanyaan::where('id', $currentQuestionId)->exists();
+        $blockExists = \App\Models\SurveyBlock::where('id', $currentQuestionId)->exists();
+        
+        Log::info('ID collision check', [
+            'id' => $currentQuestionId,
+            'exists_as_question' => $questionExists,
+            'exists_as_block' => $blockExists
+        ]);
+
         try {
             $surveyUser = SurveyUser::where('user_id', Auth::id())
                 ->where('survey_id', $surveyId)
                 ->first();
                 
             if (!$surveyUser) {
-                return response()->json(['error' => 'Survey user not found'], 404);
+                Log::error('Survey user not found', [
+                    'user_id' => Auth::id(),
+                    'survey_id' => $surveyId
+                ]);
+                return response()->json(['error' => 'Survey assignment not found'], 404);
             }
 
             $currentQuestion = TemplatePertanyaan::with(['templateJawaban', 'block'])
-                ->find($currentQuestionId);
+                ->where('id', $currentQuestionId)
+                ->first();
                 
             if (!$currentQuestion) {
-                return response()->json(['error' => 'Question not found'], 404);
+                Log::error('Current question not found', [
+                    'question_id' => $currentQuestionId
+                ]);
+                return response()->json(['error' => 'Current question not found'], 404);
             }
 
             // Get the answer from the request
             $answer = $request->input('answer');
             
-            \Log::info('Processing next question', [
-                'survey_id' => $surveyId,
-                'current_question_id' => $currentQuestionId,
-                'answer' => $answer,
-                'question_type' => $currentQuestion->tipe
+            Log::info('Processing next question', [
+                'current_question_id' => $currentQuestion->id,
+                'question_text' => substr($currentQuestion->pertanyaan, 0, 100),
+                'question_type' => $currentQuestion->tipe,
+                'block_id' => $currentQuestion->block_id,
+                'block_name' => $currentQuestion->block ? $currentQuestion->block->nama : null,
+                'answer' => $answer
             ]);
-            
-            // Save the current answer first
-            if ($answer !== null) {
-                SurveyUserJawaban::updateOrCreate(
-                    [
-                        'survey_user_id' => $surveyUser->id,
-                        'template_pertanyaan_id' => $currentQuestionId
-                    ],
-                    [
-                        'jawaban' => is_array($answer) ? implode(',', $answer) : $answer
-                    ]
-                );
+
+            // Save the current answer before proceeding
+            if ($answer !== null && $answer !== '') {
+                $this->saveUserAnswer($surveyUser, $currentQuestion, $answer);
                 
-                \Log::info('Answer saved', [
-                    'survey_user_id' => $surveyUser->id,
-                    'template_pertanyaan_id' => $currentQuestionId,
-                    'answer' => $answer
-                ]);
+                // Update current question ID for progress tracking
+                $surveyUser->current_question_id = $currentQuestion->id;
+                $surveyUser->save();
             }
 
-            // Find the next question based on flow and branching rules
-            $nextQuestion = $this->determineNextQuestion($currentQuestion, $answer, $surveyId);
-
-            if (!$nextQuestion) {
-                // Survey completed
-                \Log::info('Survey completed', [
+            // Get the next question using branching logic
+            $nextQuestionData = $this->determineNextQuestion($currentQuestion, $answer, $surveyId);
+            
+            if ($nextQuestionData === null) {
+                // Survey is completed, update status
+                $surveyUser->status = 1;
+                $surveyUser->tanggal_mengisi = now();
+                $surveyUser->save();
+                
+                Log::info('Survey completed for user', [
+                    'survey_user_id' => $surveyUser->id,
                     'survey_id' => $surveyId,
                     'user_id' => Auth::id()
                 ]);
                 
-                return response()->json([
-                    'completed' => true,
-                    'message' => 'Survey selesai'
-                ]);
+                // Send thank you email
+                try {
+                    $survey = Survey::find($surveyId);
+                    if ($survey) {
+                        $this->emailService->sendThankYou(Auth::user(), $survey);
+                        Log::info('Thank you email sent', ['user_id' => Auth::id(), 'survey_id' => $surveyId]);
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Failed to send thank you email', [
+                        'error' => $e->getMessage(),
+                        'user_id' => Auth::id(),
+                        'survey_id' => $surveyId
+                    ]);
+                }
+                
+                return response()->json(['completed' => true]);
             }
-
-            \Log::info('Next question determined', [
-                'next_question_id' => $nextQuestion->id,
-                'next_block' => $nextQuestion->block ? $nextQuestion->block->nama : null
+            
+            // Format response for frontend
+            $response = [
+                'question' => $nextQuestionData,
+                'block' => $nextQuestionData->block
+            ];
+            
+            Log::info('Returning next question response', [
+                'question_id' => $nextQuestionData->id,
+                'block_id' => $nextQuestionData->block ? $nextQuestionData->block->id : null,
+                'block_name' => $nextQuestionData->block ? $nextQuestionData->block->nama : null
             ]);
-
-            return response()->json([
-                'question' => $nextQuestion,
-                'block' => $nextQuestion->block,
-                'completed' => false
-            ]);
-
+            
+            return response()->json($response);
+            
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error getting next question: ' . $e->getMessage(), [
-                'survey_id' => $surveyId,
-                'current_question_id' => $currentQuestionId,
-                'answer' => $request->input('answer'),
+            Log::error('Error in getNextQuestion', [
+                'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return response()->json(['error' => 'Internal server error'], 500);
+            
+            return response()->json([
+                'error' => 'Internal server error',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -751,7 +791,7 @@ class SurveyUserController extends Controller
      */
     private function determineNextQuestion($currentQuestion, $answer, $surveyId)
     {
-        \Log::info('Determining next question', [
+        Log::info('Determining next question', [
             'current_question_id' => $currentQuestion->id,
             'answer' => $answer,
             'question_type' => $currentQuestion->tipe
@@ -760,19 +800,19 @@ class SurveyUserController extends Controller
         // First check for branching rules based on the answer
         $targetBlockResult = $this->checkBranchingRules($currentQuestion, $answer);
         
-        \Log::info('Branching rules result', [
+        Log::info('Branching rules result', [
             'target_block_result' => $targetBlockResult
         ]);
         
         if ($targetBlockResult === 'end') {
             // User should end the survey
-            \Log::info('Survey should end based on branching rule');
+            Log::info('Survey should end based on branching rule');
             return null;
         }
         
         if ($targetBlockResult && is_numeric($targetBlockResult)) {
             // Jump to the target block's first question
-            \Log::info('Jumping to target block', ['target_block_id' => $targetBlockResult]);
+            Log::info('Jumping to target block', ['target_block_id' => $targetBlockResult]);
             
             $nextQuestion = TemplatePertanyaan::with(['templateJawaban', 'block'])
                 ->where('block_id', $targetBlockResult)
@@ -780,7 +820,7 @@ class SurveyUserController extends Controller
                 ->first();
                 
             if ($nextQuestion) {
-                \Log::info('Found question in target block', ['next_question_id' => $nextQuestion->id]);
+                Log::info('Found question in target block', ['next_question_id' => $nextQuestion->id]);
             }
             
             return $nextQuestion;
@@ -796,14 +836,14 @@ class SurveyUserController extends Controller
             ->first();
 
         if ($nextQuestionInBlock) {
-            \Log::info('Found next question in same block', ['next_question_id' => $nextQuestionInBlock->id]);
+            Log::info('Found next question in same block', ['next_question_id' => $nextQuestionInBlock->id]);
             return $nextQuestionInBlock;
         }
 
         // No more questions in current block, move to next block
         $currentBlock = $currentQuestion->block;
         if (!$currentBlock) {
-            \Log::info('No current block found');
+            Log::info('No current block found');
             return null;
         }
 
@@ -813,12 +853,12 @@ class SurveyUserController extends Controller
             ->first();
 
         if (!$nextBlock) {
-            \Log::info('No more blocks found');
+            Log::info('No more blocks found');
             return null; // No more blocks
         }
 
         if ($nextBlock->is_terminal) {
-            \Log::info('Next block is terminal');
+            Log::info('Next block is terminal');
             return null; // Terminal block reached
         }
 
@@ -829,7 +869,7 @@ class SurveyUserController extends Controller
             ->first();
 
         if ($firstQuestionOfNextBlock) {
-            \Log::info('Found first question of next block', [
+            Log::info('Found first question of next block', [
                 'next_block_id' => $nextBlock->id,
                 'next_question_id' => $firstQuestionOfNextBlock->id
             ]);
@@ -843,7 +883,7 @@ class SurveyUserController extends Controller
      */
     private function checkBranchingRules($question, $answer)
     {
-        \Log::info('Checking branching rules', [
+        Log::info('Checking branching rules', [
             'question_id' => $question->id,
             'question_type' => $question->tipe,
             'answer' => $answer
@@ -851,25 +891,25 @@ class SurveyUserController extends Controller
         
         // Only radio and select questions can have navigation rules
         if (!in_array($question->tipe, ['radio', 'select']) || !$answer) {
-            \Log::info('No branching rules: not radio/select or no answer');
+            Log::info('No branching rules: not radio/select or no answer');
             return null;
         }
 
         // Find the selected option
         $selectedOption = $question->templateJawaban->where('id', $answer)->first();
         if (!$selectedOption) {
-            \Log::info('No selected option found', ['option_id' => $answer]);
+            Log::info('No selected option found', ['option_id' => $answer]);
             return null;
         }
 
-        \Log::info('Selected option found', [
+        Log::info('Selected option found', [
             'option_id' => $selectedOption->id,
             'option_text' => $selectedOption->pilihan_jawaban,
             'navigation_target' => $selectedOption->navigation_target
         ]);
 
         if (!$selectedOption->navigation_target) {
-            \Log::info('No navigation target set for this option');
+            Log::info('No navigation target set for this option');
             return null;
         }
 
@@ -878,15 +918,15 @@ class SurveyUserController extends Controller
         // Handle different navigation target formats
         if ($navigationTarget === 'end') {
             // Signal to end the survey
-            \Log::info('Navigation target is end survey');
+            Log::info('Navigation target is end survey');
             return 'end';
         } elseif ($navigationTarget === 'next') {
             // Continue normal flow
-            \Log::info('Navigation target is next (normal flow)');
+            Log::info('Navigation target is next (normal flow)');
             return null;
         } elseif (is_numeric($navigationTarget)) {
             // Navigation target is already a block ID
-            \Log::info('Navigation target is block ID', ['block_id' => $navigationTarget]);
+            Log::info('Navigation target is block ID', ['block_id' => $navigationTarget]);
             
             // Verify the block exists
             $targetBlock = \App\Models\SurveyBlock::where('id', $navigationTarget)
@@ -894,18 +934,18 @@ class SurveyUserController extends Controller
                 ->first();
             
             if ($targetBlock) {
-                \Log::info('Target block found by ID', [
+                Log::info('Target block found by ID', [
                     'block_id' => $targetBlock->id,
                     'block_name' => $targetBlock->nama
                 ]);
                 return (int) $targetBlock->id;
             } else {
-                \Log::warning('Target block not found by ID', ['block_id' => $navigationTarget]);
+                Log::warning('Target block not found by ID', ['block_id' => $navigationTarget]);
             }
         } elseif (strpos($navigationTarget, 'block_') === 0) {
             // Extract block number from 'block_X' format (legacy support)
             $blockNumber = (int) substr($navigationTarget, 6);
-            \Log::info('Navigation target is specific block (legacy format)', ['block_number' => $blockNumber]);
+            Log::info('Navigation target is specific block (legacy format)', ['block_number' => $blockNumber]);
             
             // Find the block by its order (urutan) 
             $targetBlock = \App\Models\SurveyBlock::where('survey_id', $question->id_survey)
@@ -913,18 +953,50 @@ class SurveyUserController extends Controller
                 ->first();
             
             if ($targetBlock) {
-                \Log::info('Target block found by order', [
+                Log::info('Target block found by order', [
                     'block_id' => $targetBlock->id,
                     'block_name' => $targetBlock->nama
                 ]);
                 return $targetBlock->id;
             } else {
-                \Log::warning('Target block not found by order', ['block_number' => $blockNumber]);
+                Log::warning('Target block not found by order', ['block_number' => $blockNumber]);
             }
         }
 
-        \Log::info('No matching navigation rule found');
+        Log::info('No matching navigation rule found');
         return null;
+    }
+
+    /**
+     * Save user answer for the current question
+     */
+    private function saveUserAnswer($surveyUser, $currentQuestion, $answer)
+    {
+        // Handle different answer formats
+        $answerValue = $answer;
+        
+        // For checkbox answers (array), convert to comma-separated string
+        if (is_array($answer)) {
+            $answerValue = implode(',', $answer);
+        }
+        
+        // Save or update the answer
+        SurveyUserJawaban::updateOrCreate(
+            [
+                'survey_user_id' => $surveyUser->id,
+                'template_pertanyaan_id' => $currentQuestion->id
+            ],
+            [
+                'jawaban' => $answerValue
+            ]
+        );
+        
+        Log::info('User answer saved', [
+            'survey_user_id' => $surveyUser->id,
+            'question_id' => $currentQuestion->id,
+            'question_text' => substr($currentQuestion->pertanyaan, 0, 50),
+            'answer' => $answerValue
+        ]);
     }
 
     // ...existing methods...

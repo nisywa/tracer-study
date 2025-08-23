@@ -438,8 +438,19 @@
                         return;
                     }
 
+                    // Log current answer being sent
+                    console.log('📤 Saving answer for question:', {
+                        questionId: currentQuestion.id,
+                        questionText: currentQuestion.pertanyaan,
+                        answer: this.answers[currentQuestion.id],
+                        answerType: typeof this.answers[currentQuestion.id]
+                    });
+
                                         // Check for API-based branching if available
                     try {
+                        console.log('🔄 Making API call to:', `/user/survey/${this.surveyId}/next-question/${currentQuestion.id}`);
+                        console.log('📤 Sending answer:', this.answers[currentQuestion.id]);
+                        
                         const response = await fetch(`/user/survey/${this.surveyId}/next-question/${currentQuestion.id}`, {
                             method: 'POST',
                             headers: {
@@ -452,24 +463,40 @@
                             })
                         });
 
+                        console.log('📨 Response status:', response.status, response.statusText);
+
                         if (response.ok) {
                             const data = await response.json();
                             
-                            console.log('API response received:', data);
+                            console.log('📥 API response received:', data);
                             
                             if (data.completed) {
+                                console.log('✅ Survey completed from API response');
                                 this.completeSurvey();
                                 return;
                             }
 
                             if (data.question && data.block) {
                                 // API returned a specific next question, use server-side branching logic
-                                console.log('API provided next question:', data.question.id, 'in block:', data.block.nama);
-                                this.jumpToSpecificQuestion(data.question, data.block);
-                                return;
+                                console.log('✅ API provided next question:', data.question.id, 'in block:', data.block.nama);
+                                console.log('📝 Full API response data:', data);
+                                
+                                // Check if this is the same question as current
+                                const currentQuestion = this.currentQuestions[this.currentQuestionIndex];
+                                if (currentQuestion && data.question.id === currentQuestion.id) {
+                                    console.log('⚠️ API returned same question, continuing with normal flow instead');
+                                    // Fall back to normal flow since navigation leads to same question
+                                } else {
+                                    this.jumpToSpecificQuestion(data.question, data.block);
+                                    return;
+                                }
                             }
+                            
+                            console.warn('❌ API response missing question or block data:', data);
                         } else {
-                            console.warn('API response not ok:', response.status, response.statusText);
+                            const errorText = await response.text();
+                            console.warn('❌ API response not ok:', response.status, response.statusText);
+                            console.warn('❌ Error details:', errorText);
                         }
                     } catch (error) {
                         console.warn('API branching failed, using client-side logic:', error);
@@ -518,26 +545,55 @@
                 },
 
                 jumpToSpecificQuestion(question, block) {
-                    // Find the block index
-                    const blockIndex = this.allBlocks.findIndex(b => b.nama === block.nama);
-                    if (blockIndex === -1) {
-                        console.error('Block not found:', block.nama);
-                        return;
-                    }
-
-                    // Update current block
-                    this.currentBlockIndex = blockIndex;
-                    this.currentBlock = this.allBlocks[blockIndex];
+                    console.log('=== JUMPING TO SPECIFIC QUESTION ===');
+                    console.log('Target question ID:', question.id);
+                    console.log('Target block ID:', block.id, 'Name:', block.nama);
+                    console.log('Available blocks:', this.allBlocks.map(b => ({ id: b.id, nama: b.nama })));
                     
-                    // Find question index within the block
-                    const questionIndex = this.currentBlock.questions.findIndex(q => q.id === question.id);
-                    if (questionIndex === -1) {
-                        console.error('Question not found in block:', question.id);
-                        return;
+                    // Find the block index by ID (more reliable than name)
+                    const blockIndex = this.allBlocks.findIndex(b => b.id === block.id);
+                    if (blockIndex === -1) {
+                        console.error('Block not found by ID:', block.id);
+                        console.log('Trying to find by name as fallback:', block.nama);
+                        
+                        // Fallback: try to find by name
+                        const fallbackIndex = this.allBlocks.findIndex(b => b.nama === block.nama);
+                        if (fallbackIndex === -1) {
+                            console.error('Block not found by name either:', block.nama);
+                            return;
+                        }
+                        
+                        console.log('Found block by name fallback at index:', fallbackIndex);
+                        this.currentBlockIndex = fallbackIndex;
+                        this.currentBlock = this.allBlocks[fallbackIndex];
+                    } else {
+                        console.log('Found block by ID at index:', blockIndex);
+                        this.currentBlockIndex = blockIndex;
+                        this.currentBlock = this.allBlocks[blockIndex];
                     }
-
-                    this.currentQuestions = this.currentBlock.questions;
-                    this.currentQuestionIndex = questionIndex;
+                    
+                    // Check if we need to load questions for this block
+                    if (!this.currentBlock.questions || this.currentBlock.questions.length === 0) {
+                        console.log('Block has no questions loaded, using question from API response');
+                        this.currentBlock.questions = [question];
+                        this.currentQuestions = [question];
+                        this.currentQuestionIndex = 0;
+                    } else {
+                        // Find question index within the block
+                        const questionIndex = this.currentBlock.questions.findIndex(q => q.id === question.id);
+                        if (questionIndex === -1) {
+                            console.log('Question not found in block questions, adding it');
+                            this.currentBlock.questions.push(question);
+                            this.currentQuestions = this.currentBlock.questions;
+                            this.currentQuestionIndex = this.currentBlock.questions.length - 1;
+                        } else {
+                            console.log('Found question at index:', questionIndex);
+                            this.currentQuestions = this.currentBlock.questions;
+                            this.currentQuestionIndex = questionIndex;
+                        }
+                    }
+                    
+                    console.log('Jump completed. Current block:', this.currentBlock.nama, 'Question:', this.currentQuestions[this.currentQuestionIndex]?.pertanyaan);
                     this.updateProgress();
                 },
 
@@ -768,24 +824,24 @@
                             formData.append('_token', csrfToken);
                         }
 
-                        // Add answers
+                        // Add answers with correct field names for backend
                         Object.entries(this.answers).forEach(([questionId, answer]) => {
                             if (Array.isArray(answer)) {
                                 // Checkbox answers
                                 answer.forEach(value => {
-                                    formData.append(`${questionId}[]`, value);
+                                    formData.append(`answer_${questionId}[]`, value);
                                 });
                             } else if (answer instanceof File) {
                                 // File upload
-                                formData.append(questionId, answer);
+                                formData.append(`answer_${questionId}`, answer);
                             } else {
                                 // Regular answers
-                                formData.append(questionId, answer);
+                                formData.append(`answer_${questionId}`, answer);
                             }
                         });
 
                         // Submit to server
-                        const response = await fetch(`/user/survey/save/${this.surveyId}`, {
+                        const response = await fetch(`/user/survey/${this.surveyId}`, {
                             method: 'POST',
                             body: formData,
                             headers: {
@@ -794,13 +850,20 @@
                         });
 
                         if (response.ok) {
-                            this.completeSurvey();
-                            // Optionally redirect or show success message
-                            setTimeout(() => {
-                                window.location.href = '/user/profile';
-                            }, 3000);
+                            const result = await response.json();
+                            if (result.success) {
+                                console.log('✅ Survey submitted successfully:', result.message);
+                                this.completeSurvey();
+                                // Show success message for 3 seconds then redirect
+                                setTimeout(() => {
+                                    window.location.href = result.redirect || '/user/profile';
+                                }, 3000);
+                            } else {
+                                throw new Error(result.message || 'Survey submission failed');
+                            }
                         } else {
-                            throw new Error('Survey submission failed');
+                            const errorResult = await response.json();
+                            throw new Error(errorResult.message || 'Survey submission failed');
                         }
                     } catch (error) {
                         console.error('Error submitting survey:', error);

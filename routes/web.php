@@ -68,20 +68,11 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
         Route::put('blocks/{block}', [App\Http\Controllers\SurveyBlockController::class, 'update'])->name('blocks.update');
         Route::delete('blocks/{block}', [App\Http\Controllers\SurveyBlockController::class, 'destroy'])->name('blocks.destroy');
         Route::post('blocks/reorder', [App\Http\Controllers\SurveyBlockController::class, 'reorder'])->name('blocks.reorder');
-        
-        // Branch Rules for Questions
-        Route::prefix('questions/{question}')->name('questions.')->group(function () {
-            Route::get('branch-rules', [App\Http\Controllers\BranchRuleController::class, 'index'])->name('branch-rules.index');
-            Route::post('branch-rules', [App\Http\Controllers\BranchRuleController::class, 'store'])->name('branch-rules.store');
-            Route::get('branch-rules/{rule}', [App\Http\Controllers\BranchRuleController::class, 'show'])->name('branch-rules.show');
-            Route::put('branch-rules/{rule}', [App\Http\Controllers\BranchRuleController::class, 'update'])->name('branch-rules.update');
-            Route::delete('branch-rules/{rule}', [App\Http\Controllers\BranchRuleController::class, 'destroy'])->name('branch-rules.destroy');
-        });
     });
 
     Route::resource('survey', SurveyController::class);
     // Route::get('monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
-    
+
     Route::get('monitoring/export/{surveyId}', [MonitoringController::class, 'export'])->name('monitoring.export');
     Route::get('monitoring/details/{id}', [MonitoringController::class, 'details'])->name('monitoring.details');
     Route::resource('monitoring', MonitoringController::class);
@@ -108,7 +99,7 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
 });
 
 // User route
-Route::middleware(['auth', 'role:alumni|atasan'])->name('user.')->group(function () {
+Route::middleware(['auth', 'role:alumni|atasan'])->prefix('user')->name('user.')->group(function () {
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('survey/{id}', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
     Route::post('survey/{id}', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');

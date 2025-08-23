@@ -859,7 +859,7 @@ function addQuestion(sectionId) {
     `;
 
     document.getElementById(`questions-${sectionId}`).insertAdjacentHTML('beforeend', questionHtml);
-    
+
     // Update question numbers for visual consistency
     updateQuestionNumbers(sectionId);
 }
@@ -1129,12 +1129,12 @@ function cloneQuestion(sectionId, questionId) {
         optionInputs.forEach((input, index) => {
             if (input.value.trim()) {
                 originalData.options.push(input.value.trim());
-                
+
                 // Get navigation value for this option
                 const optionItem = input.closest('.option-item');
                 const navSelect = optionItem ? optionItem.querySelector('.option-navigation-select') : null;
                 const hiddenNav = optionItem ? optionItem.querySelector('.hidden-navigation-input') : null;
-                
+
                 if (navSelect && navSelect.value) {
                     originalData.optionNavigation.push(navSelect.value);
                 } else if (hiddenNav && hiddenNav.value) {
@@ -1216,13 +1216,13 @@ function cloneQuestion(sectionId, questionId) {
                                             if (optionInputs[optIndex]) {
                                                 optionInputs[optIndex].value = optionText;
                                                 console.log('Set option:', optionText);
-                                                
+
                                                 // Set navigation value
                                                 const newOptionItem = optionInputs[optIndex].closest('.option-item');
                                                 if (newOptionItem && originalData.optionNavigation[optIndex]) {
                                                     const navSelect = newOptionItem.querySelector('.option-navigation-select');
                                                     const hiddenNav = newOptionItem.querySelector('.hidden-navigation-input');
-                                                    
+
                                                     if (navSelect) {
                                                         navSelect.value = originalData.optionNavigation[optIndex];
                                                         navSelect.setAttribute('data-original-value', originalData.optionNavigation[optIndex]);
@@ -1230,7 +1230,7 @@ function cloneQuestion(sectionId, questionId) {
                                                     if (hiddenNav) {
                                                         hiddenNav.value = originalData.optionNavigation[optIndex];
                                                     }
-                                                    
+
                                                     // If custom navigation, enable the toggle
                                                     if (originalData.optionNavigation[optIndex] !== 'next') {
                                                         const checkbox = newOptionItem.querySelector('input[type="checkbox"]');

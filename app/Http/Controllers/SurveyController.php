@@ -141,50 +141,58 @@ class SurveyController extends Controller
     }
 
     /**
-     * Create form builder content (blocks and questions)
+     * Create form builder content (blocks and questions) - Two-Pass Approach
      */
     private function createFormBuilderContent($survey, $sections)
     {
-        Log::info('Creating form builder content', [
+        Log::info('Creating form builder content with two-pass approach', [
             'survey_id' => $survey->id,
-            'sections_count' => count($sections),
-            'sections_data' => $sections
+            'sections_count' => count($sections)
         ]);
 
+        // PASS 1: Create all blocks first
+        $createdBlocks = [];
         foreach ($sections as $sectionIndex => $sectionData) {
-            // Create survey block with proper kode generation
             $kode = 'BLOCK_' . str_pad(($sectionIndex + 1), 2, '0', STR_PAD_LEFT);
+            $blockNumber = $sectionIndex + 1;
 
             $blockData = [
                 'survey_id' => $survey->id,
                 'kode' => $kode,
                 'nama' => $sectionData['section_name'],
                 'deskripsi' => $sectionData['section_description'] ?? '',
-                'urutan' => $sectionIndex + 1,
+                'urutan' => $blockNumber,
                 'navigation_type' => $sectionData['navigation_type'] ?? 'next',
                 'is_terminal' => false,
+                'target_section_id' => null, // Will be updated in PASS 3
                 'created_at' => now(),
                 'updated_at' => now()
             ];
 
-            Log::info('Attempting to create survey block', [
-                'block_data' => $blockData,
-                'section_index' => $sectionIndex
-            ]);
-
             try {
                 $block = \App\Models\SurveyBlock::create($blockData);
-                Log::info('Survey block created successfully', ['block_id' => $block->id]);
+                $createdBlocks[$blockNumber] = $block; // Key = block number for easy lookup
+                
+                Log::info('Block created in pass 1', [
+                    'block_id' => $block->id,
+                    'block_number' => $blockNumber,
+                    'block_name' => $block->nama
+                ]);
 
             } catch (\Exception $e) {
-                Log::error('Failed to create survey block', [
+                Log::error('Failed to create survey block in pass 1', [
                     'error' => $e->getMessage(),
                     'data' => $blockData
                 ]);
                 throw new \Exception('Gagal membuat survey block: ' . $e->getMessage());
             }
+        }
 
-            // Create questions for this block
+        // PASS 2: Create questions and answers with resolved navigation
+        foreach ($sections as $sectionIndex => $sectionData) {
+            $blockNumber = $sectionIndex + 1;
+            $block = $createdBlocks[$blockNumber];
+
             if (isset($sectionData['questions']) && is_array($sectionData['questions'])) {
                 foreach ($sectionData['questions'] as $questionIndex => $questionData) {
                     $question = \App\Models\TemplatePertanyaan::create([
@@ -200,7 +208,10 @@ class SurveyController extends Controller
                         'updated_at' => now()
                     ]);
 
-                    Log::info('Created question', ['question_id' => $question->id, 'block_id' => $block->id]);
+                    Log::info('Question created in pass 2', [
+                        'question_id' => $question->id, 
+                        'block_id' => $block->id
+                    ]);
 
                     // Create template answers for radio, checkbox, select types
                     if (in_array($questionData['type'], ['radio', 'checkbox', 'select']) &&
@@ -212,16 +223,27 @@ class SurveyController extends Controller
 
                                 // Check if navigation array exists and has value for this option
                                 if (isset($questionData['option_navigation']) &&
-                                    is_array($questionData['option_navigation'])) {
-
-                                    // Handle both indexed and non-indexed arrays
-                                    if (isset($questionData['option_navigation'][$optionIndex])) {
-                                        $navValue = trim($questionData['option_navigation'][$optionIndex]);
-                                        // Set navigation value, allowing 'next', 'end', 'block_X', etc.
-                                        // Only skip if completely empty string
-                                        if ($navValue !== '') {
-                                            $optionNavigation = $this->resolveNavigationTarget($navValue, $survey->id, $sections);
-                                        }
+                                    is_array($questionData['option_navigation']) &&
+                                    isset($questionData['option_navigation'][$optionIndex])) {
+                                    
+                                    $navValue = trim($questionData['option_navigation'][$optionIndex]);
+                                    
+                                    Log::info('Processing option navigation', [
+                                        'option' => $option,
+                                        'option_index' => $optionIndex,
+                                        'nav_value_raw' => $questionData['option_navigation'][$optionIndex],
+                                        'nav_value_trimmed' => $navValue,
+                                        'question_id' => $question->id
+                                    ]);
+                                    
+                                    if ($navValue !== '') {
+                                        $optionNavigation = $this->simpleNavigationResolve($navValue, $createdBlocks);
+                                        
+                                        Log::info('Option navigation resolved', [
+                                            'option' => $option,
+                                            'nav_input' => $navValue,
+                                            'nav_output' => $optionNavigation
+                                        ]);
                                     }
                                 }
 
@@ -239,180 +261,186 @@ class SurveyController extends Controller
                 }
             }
         }
+
+        // PASS 3: Update target_section_id for blocks that have default navigation
+        foreach ($sections as $sectionIndex => $sectionData) {
+            $blockNumber = $sectionIndex + 1;
+            $block = $createdBlocks[$blockNumber];
+            
+            // Determine target section based on navigation_type
+            $targetSectionId = null;
+            $navigationType = $sectionData['navigation_type'] ?? 'next';
+            
+            Log::info('Processing block navigation_type', [
+                'block_number' => $blockNumber,
+                'block_name' => $block->nama,
+                'navigation_type' => $navigationType
+            ]);
+            
+            if ($navigationType === 'next') {
+                // Point to next block if exists
+                $nextBlockNumber = $blockNumber + 1;
+                if (isset($createdBlocks[$nextBlockNumber])) {
+                    $targetSectionId = $createdBlocks[$nextBlockNumber]->id;
+                }
+            } elseif ($navigationType === 'end') {
+                // No target for end type
+                $targetSectionId = null;
+            } elseif (strpos($navigationType, 'block_') === 0) {
+                // Specific block target - extract block number carefully
+                $targetBlockNumberStr = substr($navigationType, 6);
+                $targetBlockNumber = (int) $targetBlockNumberStr;
+                
+                Log::info('Resolving block navigation type', [
+                    'navigation_type' => $navigationType,
+                    'target_block_str' => $targetBlockNumberStr,
+                    'target_block_number' => $targetBlockNumber
+                ]);
+                
+                // Validate block number is positive and exists
+                if ($targetBlockNumber > 0 && isset($createdBlocks[$targetBlockNumber])) {
+                    $targetSectionId = $createdBlocks[$targetBlockNumber]->id;
+                    
+                    Log::info('Block navigation resolved', [
+                        'source_block' => $blockNumber,
+                        'target_block_number' => $targetBlockNumber,
+                        'target_section_id' => $targetSectionId
+                    ]);
+                } else {
+                    Log::error('Target block not found for navigation_type', [
+                        'navigation_type' => $navigationType,
+                        'target_block_str' => $targetBlockNumberStr,
+                        'target_block_number' => $targetBlockNumber,
+                        'available_blocks' => array_keys($createdBlocks),
+                        'block_exists' => isset($createdBlocks[$targetBlockNumber]),
+                        'block_positive' => $targetBlockNumber > 0
+                    ]);
+                }
+            }
+            
+            // Update block with target_section_id
+            if ($targetSectionId) {
+                $block->update(['target_section_id' => $targetSectionId]);
+                Log::info('Updated block target_section_id', [
+                    'block_id' => $block->id,
+                    'block_number' => $blockNumber,
+                    'target_section_id' => $targetSectionId
+                ]);
+            } else {
+                Log::info('No target_section_id set for block', [
+                    'block_id' => $block->id,
+                    'block_number' => $blockNumber,
+                    'navigation_type' => $navigationType
+                ]);
+            }
+        }
+
+        Log::info('Form builder content created successfully', [
+            'survey_id' => $survey->id,
+            'total_blocks' => count($createdBlocks)
+        ]);
     }
 
     /**
-     * Resolve navigation target from string format to actual block ID
+     * Simple navigation resolver - Clean approach using pre-created blocks
      */
-    private function resolveNavigationTarget($navValue, $surveyId, $sections)
+    private function simpleNavigationResolve($navValue, $createdBlocks)
     {
         // Handle special values that don't need resolution
         if (in_array($navValue, ['next', 'end', ''])) {
             return $navValue;
         }
 
-        // Handle block_X format
+        // Handle block_X format (including block_1)
         if (strpos($navValue, 'block_') === 0) {
-            $blockNumber = (int) substr($navValue, 6);
-            $kode = 'BLOCK_' . str_pad($blockNumber, 2, '0', STR_PAD_LEFT);
+            // Extract block number more carefully
+            $blockNumberStr = substr($navValue, 6); // Remove 'block_' prefix
+            $blockNumber = (int) $blockNumberStr;
             
-            Log::info('Resolving navigation target', [
+            Log::info('Attempting to resolve navigation', [
                 'nav_value' => $navValue,
-                'block_number' => $blockNumber,
-                'block_code' => $kode,
-                'survey_id' => $surveyId
+                'block_number_str' => $blockNumberStr,
+                'block_number_int' => $blockNumber,
+                'available_blocks' => array_keys($createdBlocks)
             ]);
-
-            // Find existing block by urutan (order) OR by kode
-            $existingBlock = \App\Models\SurveyBlock::where('survey_id', $surveyId)
-                ->where(function($query) use ($blockNumber, $kode) {
-                    $query->where('urutan', $blockNumber)
-                          ->orWhere('kode', $kode);
-                })
-                ->first();
-
-            if ($existingBlock) {
-                Log::info('Found existing block', [
-                    'block_id' => $existingBlock->id,
-                    'block_name' => $existingBlock->nama,
-                    'block_code' => $existingBlock->kode,
-                    'block_order' => $existingBlock->urutan
-                ]);
-                return (string) $existingBlock->id;
-            }
-
-            // Block doesn't exist yet, create placeholder if we have section data
-            if (isset($sections[$blockNumber - 1])) {
-                $sectionData = $sections[$blockNumber - 1];
+            
+            // Validate block number is positive and exists
+            if ($blockNumber > 0 && isset($createdBlocks[$blockNumber])) {
+                $targetBlockId = (string) $createdBlocks[$blockNumber]->id;
                 
-                try {
-                    // Double check that block doesn't exist before creating
-                    $doubleCheckBlock = \App\Models\SurveyBlock::where('survey_id', $surveyId)
-                        ->where(function($query) use ($blockNumber, $kode) {
-                            $query->where('urutan', $blockNumber)
-                                  ->orWhere('kode', $kode);
-                        })
-                        ->first();
-                    
-                    if ($doubleCheckBlock) {
-                        Log::info('Block found in double-check', [
-                            'block_id' => $doubleCheckBlock->id
-                        ]);
-                        return (string) $doubleCheckBlock->id;
-                    }
-                    
-                    $newBlock = \App\Models\SurveyBlock::create([
-                        'survey_id' => $surveyId,
-                        'kode' => $kode,
-                        'nama' => $sectionData['section_name'],
-                        'deskripsi' => $sectionData['section_description'] ?? '',
-                        'urutan' => $blockNumber,
-                        'navigation_type' => $sectionData['navigation_type'] ?? 'next',
-                        'is_terminal' => false,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
-
-                    Log::info('Created new block for navigation', [
-                        'block_id' => $newBlock->id,
-                        'block_name' => $newBlock->nama,
-                        'block_order' => $newBlock->urutan
-                    ]);
-
-                    return (string) $newBlock->id;
-
-                } catch (\Exception $e) {
-                    Log::error('Failed to create block for navigation', [
-                        'error' => $e->getMessage(),
-                        'block_number' => $blockNumber,
-                        'survey_id' => $surveyId
-                    ]);
-                    
-                    // Fallback: return original value if block creation fails
-                    return $navValue;
-                }
-            } else {
-                Log::warning('No section data found for block number', [
+                Log::info('Navigation resolved successfully', [
+                    'nav_value' => $navValue,
                     'block_number' => $blockNumber,
-                    'available_sections' => array_keys($sections)
+                    'target_block_id' => $targetBlockId,
+                    'target_block_name' => $createdBlocks[$blockNumber]->nama
                 ]);
                 
-                try {
-                    // Double check that block doesn't exist before creating
-                    $doubleCheckBlock = \App\Models\SurveyBlock::where('survey_id', $surveyId)
-                        ->where(function($query) use ($blockNumber, $kode) {
-                            $query->where('urutan', $blockNumber)
-                                  ->orWhere('kode', $kode);
-                        })
-                        ->first();
-                    
-                    if ($doubleCheckBlock) {
-                        Log::info('Block found in double-check (fallback)', [
-                            'block_id' => $doubleCheckBlock->id
-                        ]);
-                        return (string) $doubleCheckBlock->id;
-                    }
+                return $targetBlockId;
+            } else {
+                Log::error('Block number not found or invalid', [
+                    'nav_value' => $navValue,
+                    'block_number_str' => $blockNumberStr,
+                    'block_number_int' => $blockNumber,
+                    'available_blocks' => array_keys($createdBlocks),
+                    'block_exists' => isset($createdBlocks[$blockNumber]),
+                    'block_positive' => $blockNumber > 0
+                ]);
                 
-                    // Create a basic placeholder block
-                    $newBlock = \App\Models\SurveyBlock::create([
-                        'survey_id' => $surveyId,
-                        'kode' => $kode,
-                        'nama' => 'Blok ' . $blockNumber,
-                        'deskripsi' => '',
-                        'urutan' => $blockNumber,
-                        'navigation_type' => 'next',
-                        'is_terminal' => false,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
-
-                    Log::info('Created placeholder block', [
-                        'block_id' => $newBlock->id,
-                        'block_name' => $newBlock->nama
-                    ]);
-
-                    return (string) $newBlock->id;
-
-                } catch (\Exception $e) {
-                    Log::error('Failed to create placeholder block', [
-                        'error' => $e->getMessage(),
-                        'block_number' => $blockNumber,
-                        'survey_id' => $surveyId
-                    ]);
-                    
-                    // Final fallback: return original value
-                    return $navValue;
-                }
+                // Return the nav_value as fallback untuk debugging
+                return $navValue;
             }
         }
 
-        // Return original value for unknown formats
-        Log::info('Unknown navigation target format', ['nav_value' => $navValue]);
+        // Fallback: return original value for unknown formats
+        Log::info('Navigation fallback - unknown format', [
+            'nav_value' => $navValue
+        ]);
         return $navValue;
     }
 
     /**
-     * Update form builder content (blocks and questions)
+     * Reverse navigation transform - Convert block ID back to block_x format for editing
+     */
+    private function reverseNavigationTransform($navigationTarget, $surveyBlocks)
+    {
+        // Handle special values that don't need transformation
+        if (in_array($navigationTarget, ['next', 'end', '', null])) {
+            return $navigationTarget ?? '';
+        }
+
+        // If it's a numeric block ID, find the corresponding block and convert to block_x format
+        if (is_numeric($navigationTarget)) {
+            foreach ($surveyBlocks as $block) {
+                if ($block->id == $navigationTarget) {
+                    return 'block_' . $block->urutan;
+                }
+            }
+        }
+
+        // Return original value if no transformation needed
+        return $navigationTarget;
+    }
+
+    /**
+     * Update form builder content (blocks and questions) - Two-Pass Approach
      */
     private function updateFormBuilderContent($survey, $sections)
     {
-        Log::info('Updating form builder content', [
+        Log::info('Updating form builder content with two-pass approach', [
             'survey_id' => $survey->id,
-            'sections_count' => count($sections),
-            'sections_data' => $sections
+            'sections_count' => count($sections)
         ]);
 
         try {
             // Step 1: Completely delete existing survey data
             $this->deleteExistingSurveyData($survey->id);
-            
-            // Step 2: Clear any cached models to avoid stale data
-            \App\Models\SurveyBlock::flushEventListeners();
-            \App\Models\TemplatePertanyaan::flushEventListeners();
-            \App\Models\TemplateJawaban::flushEventListeners();
 
-            // Step 3: Create new content using the same method as create
+            // Step 2: Create new content using the same two-pass method as create
             $this->createFormBuilderContent($survey, $sections);
+
+            Log::info('Form builder content updated successfully', [
+                'survey_id' => $survey->id
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Error in updateFormBuilderContent', [
@@ -460,9 +488,6 @@ class SurveyController extends Controller
                 'deleted_questions' => $deletedQuestions,
                 'deleted_blocks' => $deletedBlocks
             ]);
-
-            // Force refresh any cached models
-            DB::statement('FLUSH TABLES');
 
         } catch (\Exception $e) {
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -524,7 +549,9 @@ class SurveyController extends Controller
                             $questionData['option_navigation'] = [];
                             foreach ($question->templateJawaban as $answer) {
                                 $questionData['options'][] = $answer->pilihan_jawaban;
-                                $questionData['option_navigation'][] = $answer->navigation_target ?? '';
+                                // Transform block ID back to block_x format for editing
+                                $navigationValue = $this->reverseNavigationTransform($answer->navigation_target, $surveyBlocks);
+                                $questionData['option_navigation'][] = $navigationValue;
                             }
                         }
 
