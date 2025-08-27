@@ -412,7 +412,8 @@
                                             Simpan
                                         </button>
                                         <button type="button" onclick="cancelEdit()" 
-                                            class="px-6 py-3 text-sm font-bold text-gray-700 bg-gray-300 hover:bg-gray-400 rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md">
+                                            class="px-6 py-3 text-sm font-bold text-gray-700 bg-gray-300 hover:bg-gray-400 rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md"
+                                            style="background-color: #d1d5db !important;">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
@@ -520,6 +521,7 @@
                     Batal
                 `;
                 editButton.className = 'px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-300 hover:bg-gray-400 rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md';
+                editButton.style.backgroundColor = '#d1d5db';
             } else {
                 editButton.innerHTML = `
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -528,6 +530,7 @@
                     Edit
                 `;
                 editButton.className = 'px-4 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-dark rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md';
+                editButton.style.backgroundColor = '';
             }
         }
 
