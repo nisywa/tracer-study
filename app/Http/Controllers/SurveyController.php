@@ -675,8 +675,16 @@ class SurveyController extends Controller
             }
         ])->where('survey_id', $id)->orderBy('urutan')->get();
 
+        // Format dates and set status like in index method
         $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("d-m-Y");
         $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("d-m-Y");
+        
+        // Set status based on end date comparison (same logic as index method)
+        if (Carbon::parse($survey->tanggal_selesai) >= now()) {
+            $survey->status = "Aktif";
+        } else {
+            $survey->status = "Selesai";
+        }
 
         return view('admin.views.survey.details', [
             'survey' => $survey,
@@ -686,11 +694,185 @@ class SurveyController extends Controller
     }
 
     /**
+     * Duplicate the specified survey
+     */
+    public function duplicate($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Find the original survey
+            $originalSurvey = Survey::findOrFail($id);
+
+            // Create new survey with duplicated data
+            $newSurvey = Survey::create([
+                'nama' => $originalSurvey->nama . ' (Copy)',
+                'tanggal_mulai' => $originalSurvey->tanggal_mulai,
+                'tanggal_selesai' => $originalSurvey->tanggal_selesai,
+                'type_survei' => $originalSurvey->type_survei,
+                'deskripsi' => $originalSurvey->deskripsi,
+                'created_by' => Auth::id(),
+            ]);
+
+            // Get original survey blocks with questions and answers
+            $originalBlocks = \App\Models\SurveyBlock::with([
+                'questions.templateJawaban'
+            ])->where('survey_id', $id)->orderBy('urutan')->get();
+
+            // Duplicate blocks, questions, and answers
+            $blockMapping = []; // To map original block IDs to new block IDs
+            
+            foreach ($originalBlocks as $originalBlock) {
+                // Create new block
+                $newBlock = \App\Models\SurveyBlock::create([
+                    'survey_id' => $newSurvey->id,
+                    'kode' => $originalBlock->kode,
+                    'nama' => $originalBlock->nama,
+                    'deskripsi' => $originalBlock->deskripsi,
+                    'urutan' => $originalBlock->urutan,
+                    'navigation_type' => $originalBlock->navigation_type,
+                    'is_terminal' => $originalBlock->is_terminal,
+                    'target_section_id' => null, // Will be updated later
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                // Store mapping for later reference
+                $blockMapping[$originalBlock->id] = $newBlock->id;
+
+                // Duplicate questions for this block
+                foreach ($originalBlock->questions as $originalQuestion) {
+                    $newQuestion = \App\Models\TemplatePertanyaan::create([
+                        'id_survey' => $newSurvey->id,
+                        'block_id' => $newBlock->id,
+                        'pertanyaan' => $originalQuestion->pertanyaan,
+                        'deskripsi_pertanyaan' => $originalQuestion->deskripsi_pertanyaan,
+                        'tipe' => $originalQuestion->tipe,
+                        'urutan' => $originalQuestion->urutan,
+                        'is_required' => $originalQuestion->is_required,
+                        'visualisasi' => $originalQuestion->visualisasi,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+
+                    // Duplicate template answers for this question
+                    foreach ($originalQuestion->templateJawaban as $originalAnswer) {
+                        // Handle navigation target mapping
+                        $navigationTarget = $originalAnswer->navigation_target;
+                        if (is_numeric($navigationTarget) && isset($blockMapping[$navigationTarget])) {
+                            $navigationTarget = $blockMapping[$navigationTarget];
+                        }
+
+                        \App\Models\TemplateJawaban::create([
+                            'id_template_pertanyaan' => $newQuestion->id,
+                            'pilihan_jawaban' => $originalAnswer->pilihan_jawaban,
+                            'urutan' => $originalAnswer->urutan,
+                            'navigation_target' => $navigationTarget,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+                }
+            }
+
+            // Update target_section_id for blocks that reference other blocks
+            foreach ($originalBlocks as $originalBlock) {
+                if ($originalBlock->target_section_id && isset($blockMapping[$originalBlock->target_section_id])) {
+                    $newBlockId = $blockMapping[$originalBlock->id];
+                    $newTargetId = $blockMapping[$originalBlock->target_section_id];
+                    
+                    \App\Models\SurveyBlock::where('id', $newBlockId)
+                        ->update(['target_section_id' => $newTargetId]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.survey.index')->with('success', 'Survey berhasil diduplikasi!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Error duplicating survey', [
+                'survey_id' => $id,
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+
+            return redirect()->route('admin.survey.index')->with('error', 'Gagal menduplikasi survey: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(survey $survey)
     {
-        $survey->delete();
-        return redirect()->route('admin.survey.index')->with('success', 'Survey deleted successfully.');
+        try {
+            DB::beginTransaction();
+
+            // Delete all related data in the correct order to avoid foreign key constraint violations
+            $surveyId = $survey->id;
+
+            Log::info('Starting survey deletion process', ['survey_id' => $surveyId]);
+
+            // 1. Delete survey user responses (survey_user_jawaban table)
+            $deletedJawaban = DB::table('survey_user_jawaban')
+                ->whereIn('survey_user_id', function($query) use ($surveyId) {
+                    $query->select('id')
+                          ->from('survey_user')
+                          ->where('survey_id', $surveyId);
+                })
+                ->delete();
+
+            // 2. Delete survey users
+            $deletedSurveyUsers = DB::table('survey_user')
+                ->where('survey_id', $surveyId)
+                ->delete();
+
+            // 3. Delete template answers (template_jawaban)
+            $deletedTemplateJawaban = DB::table('template_jawaban')
+                ->whereIn('id_template_pertanyaan', function($query) use ($surveyId) {
+                    $query->select('id')
+                          ->from('template_pertanyaan')
+                          ->where('id_survey', $surveyId);
+                })
+                ->delete();
+
+            // 4. Delete template questions (template_pertanyaan)
+            $deletedTemplatePertanyaan = DB::table('template_pertanyaan')
+                ->where('id_survey', $surveyId)
+                ->delete();
+
+            // 5. Delete survey blocks
+            $deletedSurveyBlocks = DB::table('survey_blocks')
+                ->where('survey_id', $surveyId)
+                ->delete();
+
+            // 6. Finally delete the survey itself
+            $survey->delete();
+
+            DB::commit();
+
+            Log::info('Survey deleted successfully', [
+                'survey_id' => $surveyId,
+                'deleted_survey_user_jawaban' => $deletedJawaban,
+                'deleted_survey_users' => $deletedSurveyUsers,
+                'deleted_template_jawaban' => $deletedTemplateJawaban,
+                'deleted_template_pertanyaan' => $deletedTemplatePertanyaan,
+                'deleted_survey_blocks' => $deletedSurveyBlocks
+            ]);
+
+            return redirect()->route('admin.survey.index')->with('success', 'Survey beserta seluruh data terkait berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Error deleting survey', [
+                'survey_id' => $survey->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->route('admin.survey.index')->with('error', 'Gagal menghapus survey: ' . $e->getMessage());
+        }
     }
 }

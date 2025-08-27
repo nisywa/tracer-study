@@ -402,7 +402,7 @@
                     
                     this.currentBlockIndex = 0;
                     this.loadCurrentBlock();
-                    this.updateProgress();
+                    this.updateProgress(); // Initialize progress at start
                 },
 
                 loadCurrentBlock() {
@@ -803,8 +803,26 @@
 
                 updateProgress() {
                     const totalQuestions = this.allBlocks.reduce((total, block) => total + block.questions.length, 0);
-                    const answeredQuestions = Object.keys(this.answers).length;
-                    this.progress = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+                    let completedQuestions = 0;
+                    
+                    // Count completed questions from previous blocks
+                    for (let i = 0; i < this.currentBlockIndex; i++) {
+                        completedQuestions += this.allBlocks[i].questions.length;
+                    }
+                    
+                    // Add current question index + 1 (since we're working on current question)
+                    completedQuestions += this.currentQuestionIndex + 1;
+                    
+                    // Calculate progress percentage
+                    this.progress = totalQuestions > 0 ? Math.min((completedQuestions / totalQuestions) * 100, 100) : 0;
+                    
+                    console.log('Progress update:', {
+                        currentBlock: this.currentBlockIndex,
+                        currentQuestion: this.currentQuestionIndex,
+                        completedQuestions: completedQuestions,
+                        totalQuestions: totalQuestions,
+                        progress: this.progress
+                    });
                 },
 
                 completeSurvey() {

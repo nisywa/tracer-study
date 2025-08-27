@@ -119,7 +119,7 @@
                             </a>
 
                             <!-- Duplicate -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Duplicate Survei" onclick="event.preventDefault(); document.getElementById('duplicate-form-{{ $srvy->id }}').submit();">
+                            <a href="javascript:;" class="icon-link" data-tooltip="Duplicate Survei" onclick="confirmDuplicate({{ $srvy->id }})">
                                 <i class="fas fa-copy"></i>
                             </a>
                             <form id="duplicate-form-{{ $srvy->id }}" action="{{ route('admin.survey.duplicate', $srvy->id) }}" method="POST" style="display: none;">
@@ -128,7 +128,7 @@
                             </form>
 
                             <!-- Delete -->
-                            <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $srvy->id }}').submit();">
+                            <a href="javascript:;" class="icon-link" data-tooltip="Delete" onclick="confirmDelete({{ $srvy->id }})">
                                 <i class="fas fa-trash"></i>
                             </a>
                             <form id="delete-form-{{ $srvy->id }}" action="{{ route('admin.survey.destroy', $srvy) }}" method="POST" style="display: none;">
@@ -198,6 +198,20 @@
             setTimeout(() => el.remove(), 500); // Hapus setelah animasi selesai
         });
     }, 3000);
+
+    // Confirmation dialog for delete action
+    function confirmDelete(surveyId) {
+        if (confirm('Apakah Anda yakin ingin menghapus survey ini? Semua data terkait termasuk pertanyaan, jawaban, dan responden akan ikut terhapus secara permanen.')) {
+            document.getElementById('delete-form-' + surveyId).submit();
+        }
+    }
+
+    // Confirmation dialog for duplicate action
+    function confirmDuplicate(surveyId) {
+        if (confirm('Apakah Anda yakin ingin menduplikasi survey ini? Survey baru akan dibuat dengan semua pertanyaan dan pengaturan yang sama.')) {
+            document.getElementById('duplicate-form-' + surveyId).submit();
+        }
+    }
     </script>
 
 
