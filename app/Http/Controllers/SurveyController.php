@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\survey;
+use App\Models\Survey;
 use App\Models\SurveyUser;
 use App\Models\TemplateJawaban;
 use App\Models\TemplatePertanyaan;
@@ -150,6 +150,15 @@ class SurveyController extends Controller
             'sections_count' => count($sections)
         ]);
 
+        // Reindex sections array to ensure sequential order (0, 1, 2, 3...)
+        // This fixes the issue where DOM insertion creates non-sequential keys
+        $sections = array_values($sections);
+        
+        Log::info('Sections reindexed for sequential processing', [
+            'original_keys' => array_keys($sections),
+            'reindexed_count' => count($sections)
+        ]);
+
         // PASS 1: Create all blocks first
         $createdBlocks = [];
         foreach ($sections as $sectionIndex => $sectionData) {
@@ -172,7 +181,7 @@ class SurveyController extends Controller
             try {
                 $block = \App\Models\SurveyBlock::create($blockData);
                 $createdBlocks[$blockNumber] = $block; // Key = block number for easy lookup
-                
+
                 Log::info('Block created in pass 1', [
                     'block_id' => $block->id,
                     'block_number' => $blockNumber,
@@ -194,7 +203,10 @@ class SurveyController extends Controller
             $block = $createdBlocks[$blockNumber];
 
             if (isset($sectionData['questions']) && is_array($sectionData['questions'])) {
-                foreach ($sectionData['questions'] as $questionIndex => $questionData) {
+                // Reindex questions array to ensure sequential order (0, 1, 2, 3...)
+                $questions = array_values($sectionData['questions']);
+                
+                foreach ($questions as $questionIndex => $questionData) {
                     $question = \App\Models\TemplatePertanyaan::create([
                         'id_survey' => $survey->id,
                         'block_id' => $block->id,
@@ -209,7 +221,7 @@ class SurveyController extends Controller
                     ]);
 
                     Log::info('Question created in pass 2', [
-                        'question_id' => $question->id, 
+                        'question_id' => $question->id,
                         'block_id' => $block->id
                     ]);
 
@@ -225,9 +237,9 @@ class SurveyController extends Controller
                                 if (isset($questionData['option_navigation']) &&
                                     is_array($questionData['option_navigation']) &&
                                     isset($questionData['option_navigation'][$optionIndex])) {
-                                    
+
                                     $navValue = trim($questionData['option_navigation'][$optionIndex]);
-                                    
+
                                     Log::info('Processing option navigation', [
                                         'option' => $option,
                                         'option_index' => $optionIndex,
@@ -235,10 +247,10 @@ class SurveyController extends Controller
                                         'nav_value_trimmed' => $navValue,
                                         'question_id' => $question->id
                                     ]);
-                                    
+
                                     if ($navValue !== '') {
                                         $optionNavigation = $this->simpleNavigationResolve($navValue, $createdBlocks);
-                                        
+
                                         Log::info('Option navigation resolved', [
                                             'option' => $option,
                                             'nav_input' => $navValue,
@@ -266,17 +278,17 @@ class SurveyController extends Controller
         foreach ($sections as $sectionIndex => $sectionData) {
             $blockNumber = $sectionIndex + 1;
             $block = $createdBlocks[$blockNumber];
-            
+
             // Determine target section based on navigation_type
             $targetSectionId = null;
             $navigationType = $sectionData['navigation_type'] ?? 'next';
-            
+
             Log::info('Processing block navigation_type', [
                 'block_number' => $blockNumber,
                 'block_name' => $block->nama,
                 'navigation_type' => $navigationType
             ]);
-            
+
             if ($navigationType === 'next') {
                 // Point to next block if exists
                 $nextBlockNumber = $blockNumber + 1;
@@ -290,17 +302,17 @@ class SurveyController extends Controller
                 // Specific block target - extract block number carefully
                 $targetBlockNumberStr = substr($navigationType, 6);
                 $targetBlockNumber = (int) $targetBlockNumberStr;
-                
+
                 Log::info('Resolving block navigation type', [
                     'navigation_type' => $navigationType,
                     'target_block_str' => $targetBlockNumberStr,
                     'target_block_number' => $targetBlockNumber
                 ]);
-                
+
                 // Validate block number is positive and exists
                 if ($targetBlockNumber > 0 && isset($createdBlocks[$targetBlockNumber])) {
                     $targetSectionId = $createdBlocks[$targetBlockNumber]->id;
-                    
+
                     Log::info('Block navigation resolved', [
                         'source_block' => $blockNumber,
                         'target_block_number' => $targetBlockNumber,
@@ -317,7 +329,7 @@ class SurveyController extends Controller
                     ]);
                 }
             }
-            
+
             // Update block with target_section_id
             if ($targetSectionId) {
                 $block->update(['target_section_id' => $targetSectionId]);
@@ -356,25 +368,25 @@ class SurveyController extends Controller
             // Extract block number more carefully
             $blockNumberStr = substr($navValue, 6); // Remove 'block_' prefix
             $blockNumber = (int) $blockNumberStr;
-            
+
             Log::info('Attempting to resolve navigation', [
                 'nav_value' => $navValue,
                 'block_number_str' => $blockNumberStr,
                 'block_number_int' => $blockNumber,
                 'available_blocks' => array_keys($createdBlocks)
             ]);
-            
+
             // Validate block number is positive and exists
             if ($blockNumber > 0 && isset($createdBlocks[$blockNumber])) {
                 $targetBlockId = (string) $createdBlocks[$blockNumber]->id;
-                
+
                 Log::info('Navigation resolved successfully', [
                     'nav_value' => $navValue,
                     'block_number' => $blockNumber,
                     'target_block_id' => $targetBlockId,
                     'target_block_name' => $createdBlocks[$blockNumber]->nama
                 ]);
-                
+
                 return $targetBlockId;
             } else {
                 Log::error('Block number not found or invalid', [
@@ -385,7 +397,7 @@ class SurveyController extends Controller
                     'block_exists' => isset($createdBlocks[$blockNumber]),
                     'block_positive' => $blockNumber > 0
                 ]);
-                
+
                 // Return the nav_value as fallback untuk debugging
                 return $navValue;
             }
@@ -516,7 +528,7 @@ class SurveyController extends Controller
             $survey = Survey::findOrFail($id);
             $survey->tanggal_mulai = Carbon::parse($survey->tanggal_mulai)->format("Y-m-d");
             $survey->tanggal_selesai = Carbon::parse($survey->tanggal_selesai)->format("Y-m-d");
-            
+
             // Load existing survey blocks with their questions
             $surveyBlocks = \App\Models\SurveyBlock::with([
                 'questions.templateJawaban' => function ($query) {

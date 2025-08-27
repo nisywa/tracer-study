@@ -784,17 +784,18 @@ function addSection() {
 }
 
 function addQuestion(sectionId) {
-    questionCounter++;
+    // Use timestamp as temporary question ID to avoid conflicts
+    const tempQuestionId = Date.now();
 
     const questionHtml = `
-        <div class="question-item" data-question-id="${questionCounter}" data-question-number="Q${questionCounter}">
+        <div class="question-item" data-question-id="${tempQuestionId}" data-question-number="Q${tempQuestionId}">
             <div class="flex justify-between items-center mb-3">
-                <h6 class="text-sm font-semibold">Pertanyaan ${questionCounter}</h6>
+                <h6 class="text-sm font-semibold">Pertanyaan ${tempQuestionId}</h6>
                 <div class="flex space-x-2">
-                    <button type="button" onclick="cloneQuestion(${sectionId}, ${questionCounter})" class="text-blue-500 hover:text-blue-700" title="Clone Question">
+                    <button type="button" onclick="cloneQuestion(${sectionId}, ${tempQuestionId})" class="text-blue-500 hover:text-blue-700" title="Clone Question">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button type="button" onclick="deleteQuestion(${sectionId}, ${questionCounter})" class="text-red-500 hover:text-red-700" title="Delete Question">
+                    <button type="button" onclick="deleteQuestion(${sectionId}, ${tempQuestionId})" class="text-red-500 hover:text-red-700" title="Delete Question">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -803,12 +804,12 @@ function addQuestion(sectionId) {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Pertanyaan <span class="text-red-500">*</span></label>
-                    <textarea name="sections[${sectionId}][questions][${questionCounter}][question]" rows="2" placeholder="Tulis pertanyaan disini..." required
+                    <textarea name="sections[${sectionId}][questions][${tempQuestionId}][question]" rows="2" placeholder="Tulis pertanyaan disini..." required
                               class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"></textarea>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Deskripsi</label>
-                    <textarea name="sections[${sectionId}][questions][${questionCounter}][description]" rows="2" placeholder="Deskripsi pertanyaan (opsional)"
+                    <textarea name="sections[${sectionId}][questions][${tempQuestionId}][description]" rows="2" placeholder="Deskripsi pertanyaan (opsional)"
                               class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"></textarea>
                 </div>
             </div>
@@ -816,7 +817,7 @@ function addQuestion(sectionId) {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Tipe Pertanyaan</label>
-                    <select name="sections[${sectionId}][questions][${questionCounter}][type]" onchange="toggleOptions(${sectionId}, ${questionCounter})" required
+                    <select name="sections[${sectionId}][questions][${tempQuestionId}][type]" onchange="toggleOptions(${sectionId}, ${tempQuestionId})" required
                             class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="text">Text Input</option>
                         <option value="textarea">Text Area</option>
@@ -829,7 +830,7 @@ function addQuestion(sectionId) {
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Visualisasi</label>
-                    <select name="sections[${sectionId}][questions][${questionCounter}][visualization]"
+                    <select name="sections[${sectionId}][questions][${tempQuestionId}][visualization]"
                             class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="">Tidak ada visualisasi</option>
                         <option value="bar">Bar Chart</option>
@@ -837,21 +838,21 @@ function addQuestion(sectionId) {
                     </select>
                 </div>
                 <div class="flex items-center pt-6">
-                    <input type="checkbox" name="sections[${sectionId}][questions][${questionCounter}][required]" value="1"
+                    <input type="checkbox" name="sections[${sectionId}][questions][${tempQuestionId}][required]" value="1"
                            class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                     <label class="text-xs font-medium text-gray-700">Wajib diisi</label>
                 </div>
             </div>
 
             <!-- Options Container -->
-            <div class="options-container" id="options-${sectionId}-${questionCounter}" style="display: none;">
+            <div class="options-container" id="options-${sectionId}-${tempQuestionId}" style="display: none;">
                 <div class="flex justify-between items-center mb-2">
                     <label class="block text-xs font-medium text-gray-700">Pilihan Jawaban</label>
-                    <button type="button" onclick="addOption(${sectionId}, ${questionCounter})" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors">
+                    <button type="button" onclick="addOption(${sectionId}, ${tempQuestionId})" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors">
                         <i class="fas fa-plus mr-1"></i>Tambah Pilihan
                     </button>
                 </div>
-                <div class="options-list space-y-2" id="options-list-${sectionId}-${questionCounter}">
+                <div class="options-list space-y-2" id="optionsList-${sectionId}-${tempQuestionId}">
                     <!-- Options will be added here -->
                 </div>
             </div>
@@ -859,9 +860,12 @@ function addQuestion(sectionId) {
     `;
 
     document.getElementById(`questions-${sectionId}`).insertAdjacentHTML('beforeend', questionHtml);
-
-    // Update question numbers for visual consistency
-    updateQuestionNumbers(sectionId);
+    
+    // After adding the question, reindex all sections and questions to ensure proper order
+    setTimeout(() => {
+        updateSectionNumbers();
+        updateNavigationOptions();
+    }, 50);
 }
 
 function updateQuestionNumbers(sectionId) {
@@ -1053,6 +1057,9 @@ function updateExistingOptionsNavigation(sectionId, questionId, questionType) {
 function deleteSection(sectionId) {
     if (confirm('Apakah Anda yakin ingin menghapus block ini?')) {
         document.querySelector(`[data-section-id="${sectionId}"]`).remove();
+        
+        // Update all section numbers and form names to be sequential
+        updateSectionNumbers();
         updateNavigationOptions();
     }
 }
@@ -1071,7 +1078,12 @@ function deleteQuestion(sectionId, questionId) {
             const question = questionsContainer.querySelector(`[data-question-id="${questionId}"]`);
             if (question) {
                 question.remove();
-                updateQuestionNumbers(sectionId);
+                
+                // After deleting, reindex all sections and questions to ensure proper order
+                setTimeout(() => {
+                    updateSectionNumbers();
+                    updateNavigationOptions();
+                }, 50);
             }
         }
     }
@@ -1080,30 +1092,41 @@ function deleteQuestion(sectionId, questionId) {
 function cloneSection(sectionId) {
     const originalSection = document.querySelector(`[data-section-id="${sectionId}"]`);
     if (originalSection) {
-        sectionCounter++;
-        const colorClass = (sectionCounter % 2 === 0) ? 'block-color-even' : 'block-color-odd';
+        // Create temporary section ID for initial creation
+        const tempSectionId = Date.now(); // Use timestamp as temp ID
+        const colorClass = 'block-color-odd'; // Will be updated by updateSectionNumbers()
 
         // Get all form data from the original section
         const originalData = getFormDataFromSection(originalSection, sectionId);
 
         const clonedHtml = originalSection.outerHTML
-            .replace(new RegExp(`sections\\[${sectionId}\\]`, 'g'), `sections[${sectionCounter}]`)
-            .replace(new RegExp(`data-section-id="${sectionId}"`, 'g'), `data-section-id="${sectionCounter}"`)
-            .replace(new RegExp(`Block ${sectionId}`, 'g'), `Block ${sectionCounter}`)
-            .replace(new RegExp(`questions-${sectionId}`, 'g'), `questions-${sectionCounter}`)
-            .replace(new RegExp(`deleteSection\\(${sectionId}\\)`, 'g'), `deleteSection(${sectionCounter})`)
-            .replace(new RegExp(`cloneSection\\(${sectionId}\\)`, 'g'), `cloneSection(${sectionCounter})`)
-            .replace(new RegExp(`addQuestion\\(${sectionId}\\)`, 'g'), `addQuestion(${sectionCounter})`)
-            .replace(new RegExp(`addSectionAfter\\(${sectionId}\\)`, 'g'), `addSectionAfter(${sectionCounter})`)
+            .replace(new RegExp(`sections\\[${sectionId}\\]`, 'g'), `sections[${tempSectionId}]`)
+            .replace(new RegExp(`data-section-id="${sectionId}"`, 'g'), `data-section-id="${tempSectionId}"`)
+            .replace(new RegExp(`Block ${sectionId}`, 'g'), `Block ${tempSectionId}`)
+            .replace(new RegExp(`questions-${sectionId}`, 'g'), `questions-${tempSectionId}`)
+            .replace(new RegExp(`deleteSection\\(${sectionId}\\)`, 'g'), `deleteSection(${tempSectionId})`)
+            .replace(new RegExp(`cloneSection\\(${sectionId}\\)`, 'g'), `cloneSection(${tempSectionId})`)
+            .replace(new RegExp(`addQuestion\\(${sectionId}\\)`, 'g'), `addQuestion(${tempSectionId})`)
+            .replace(new RegExp(`addSectionAfter\\(${sectionId}\\)`, 'g'), `addSectionAfter(${tempSectionId})`)
             .replace(/block-color-\w+/, colorClass); // Replace color class
 
         originalSection.insertAdjacentHTML('afterend', clonedHtml);
 
-        // Restore form data to cloned section
+        // Update all sections after cloning and restore form data
         setTimeout(() => {
-            restoreFormDataToSection(sectionCounter, originalData);
-            updateSectionNumbers();
-            updateNavigationOptions();
+            // Find the cloned section by its position
+            const clonedSection = originalSection.nextElementSibling;
+            if (clonedSection && clonedSection.classList.contains('section-block')) {
+                const clonedSectionId = clonedSection.getAttribute('data-section-id');
+                
+                // Update all section numbers and form names to be sequential
+                updateSectionNumbers();
+                updateNavigationOptions();
+                
+                // Restore form data to cloned section using new sequential ID
+                const newSectionId = clonedSection.getAttribute('data-section-id');
+                restoreFormDataToSection(newSectionId, originalData);
+            }
         }, 100);
     }
 }
@@ -1147,111 +1170,67 @@ function cloneQuestion(sectionId, questionId) {
 
         console.log('Original question data:', originalData);
 
-        // Add new question
-        addQuestion(sectionId);
+        // Create temporary question using timestamp
+        const tempQuestionId = Date.now();
+        
+        // Clone the HTML and insert it after the original question
+        const clonedHtml = originalQuestion.outerHTML
+            .replace(new RegExp(`data-question-id="${questionId}"`, 'g'), `data-question-id="${tempQuestionId}"`)
+            .replace(new RegExp(`data-question-number="Q\\d+"`, 'g'), `data-question-number="Q${tempQuestionId}"`)
+            .replace(new RegExp(`Pertanyaan \\d+`, 'g'), `Pertanyaan ${tempQuestionId}`)
+            .replace(new RegExp(`cloneQuestion\\(${sectionId}, ${questionId}\\)`, 'g'), `cloneQuestion(${sectionId}, ${tempQuestionId})`)
+            .replace(new RegExp(`deleteQuestion\\(${sectionId}, ${questionId}\\)`, 'g'), `deleteQuestion(${sectionId}, ${tempQuestionId})`)
+            .replace(new RegExp(`toggleOptions\\(${sectionId}, ${questionId}\\)`, 'g'), `toggleOptions(${sectionId}, ${tempQuestionId})`)
+            .replace(new RegExp(`addOption\\(${sectionId}, ${questionId}\\)`, 'g'), `addOption(${sectionId}, ${tempQuestionId})`)
+            .replace(new RegExp(`options-${sectionId}-${questionId}`, 'g'), `options-${sectionId}-${tempQuestionId}`)
+            .replace(new RegExp(`optionsList-${sectionId}-${questionId}`, 'g'), `optionsList-${sectionId}-${tempQuestionId}`);
 
-        // Restore data to new question
+        // Insert the cloned question after the original
+        originalQuestion.insertAdjacentHTML('afterend', clonedHtml);
+
+        // After cloning, reindex all sections and questions to ensure proper order
         setTimeout(() => {
-            const questionsContainer = document.querySelector(`#questions-${sectionId}`);
-            const allQuestions = questionsContainer.querySelectorAll('.question-item');
-            const newQuestion = allQuestions[allQuestions.length - 1]; // Get the last added question
-
-            if (newQuestion) {
-                console.log('Restoring to new question');
-
-                const questionInput = newQuestion.querySelector(`textarea[name*="[question]"]`);
+            updateSectionNumbers();
+            updateNavigationOptions();
+            
+            // Find the cloned question by its position (should be right after original)
+            const clonedQuestion = originalQuestion.nextElementSibling;
+            if (clonedQuestion && clonedQuestion.classList.contains('question-item')) {
+                console.log('Restoring data to cloned question');
+                
+                // Restore the original form values to the cloned question
+                const questionInput = clonedQuestion.querySelector(`textarea[name*="[question]"]`);
                 if (questionInput) {
                     questionInput.value = originalData.question;
-                    console.log('Set question text:', originalData.question);
                 }
 
-                const descInput = newQuestion.querySelector(`textarea[name*="[description]"]`);
+                const descInput = clonedQuestion.querySelector(`textarea[name*="[description]"]`);
                 if (descInput) {
                     descInput.value = originalData.description;
-                    console.log('Set description:', originalData.description);
                 }
 
-                const typeSelect = newQuestion.querySelector(`select[name*="[type]"]`);
+                const typeSelect = clonedQuestion.querySelector(`select[name*="[type]"]`);
                 if (typeSelect) {
                     typeSelect.value = originalData.type;
-                    // Trigger change event
                     typeSelect.dispatchEvent(new Event('change'));
-                    console.log('Set type:', originalData.type);
                 }
 
-                const requiredInput = newQuestion.querySelector(`input[name*="[required]"]`);
+                const requiredInput = clonedQuestion.querySelector(`input[name*="[required]"]`);
                 if (requiredInput) {
                     requiredInput.checked = originalData.required;
-                    console.log('Set required:', originalData.required);
                 }
 
-                const vizSelect = newQuestion.querySelector(`select[name*="[visualization]"]`);
+                const vizSelect = clonedQuestion.querySelector(`select[name*="[visualization]"]`);
                 if (vizSelect) {
                     vizSelect.value = originalData.visualization;
-                    console.log('Set visualization:', originalData.visualization);
                 }
 
-                // Add options if needed
-                if (['radio', 'checkbox', 'select'].includes(originalData.type) && originalData.options.length > 0) {
-                    setTimeout(() => {
-                        const optionsList = newQuestion.querySelector(`div[id*="options-list"]`);
-                        if (optionsList) {
-                            console.log('Adding options:', originalData.options);
-                            optionsList.innerHTML = '';
-
-                            // Extract section and question numbers from the new question's name attributes
-                            const questionTextarea = newQuestion.querySelector('textarea[name*="[question]"]');
-                            if (questionTextarea) {
-                                const nameAttr = questionTextarea.name;
-                                const matches = nameAttr.match(/sections\[(\d+)\]\[questions\]\[(\d+)\]/);
-                                if (matches) {
-                                    const newSectionId = matches[1];
-                                    const newQuestionId = matches[2];
-
-                                    originalData.options.forEach((optionText, optIndex) => {
-                                        addOption(newSectionId, newQuestionId);
-                                        // Set option value and navigation after a short delay
-                                        setTimeout(() => {
-                                            const optionInputs = optionsList.querySelectorAll('input[type="text"]');
-                                            if (optionInputs[optIndex]) {
-                                                optionInputs[optIndex].value = optionText;
-                                                console.log('Set option:', optionText);
-
-                                                // Set navigation value
-                                                const newOptionItem = optionInputs[optIndex].closest('.option-item');
-                                                if (newOptionItem && originalData.optionNavigation[optIndex]) {
-                                                    const navSelect = newOptionItem.querySelector('.option-navigation-select');
-                                                    const hiddenNav = newOptionItem.querySelector('.hidden-navigation-input');
-
-                                                    if (navSelect) {
-                                                        navSelect.value = originalData.optionNavigation[optIndex];
-                                                        navSelect.setAttribute('data-original-value', originalData.optionNavigation[optIndex]);
-                                                    }
-                                                    if (hiddenNav) {
-                                                        hiddenNav.value = originalData.optionNavigation[optIndex];
-                                                    }
-
-                                                    // If custom navigation, enable the toggle
-                                                    if (originalData.optionNavigation[optIndex] !== 'next') {
-                                                        const checkbox = newOptionItem.querySelector('input[type="checkbox"]');
-                                                        if (checkbox) {
-                                                            checkbox.checked = true;
-                                                            toggleOptionNavigation(checkbox);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }, 100 * (optIndex + 1));
-                                    });
-                                }
-                            }
-                        }
-                    }, 300);
-                }
+                console.log('Question cloned and data restored successfully');
             }
-        }, 200);
+        }, 100);
     }
 }
+
 function getFormDataFromSection(sectionElement, sectionId) {
     const data = {
         sectionName: sectionElement.querySelector(`input[name="sections[${sectionId}][section_name]"]`)?.value || '',
@@ -1379,16 +1358,116 @@ function restoreFormDataToSection(sectionId, data) {
 }
 function updateSectionNumbers() {
     const sections = document.querySelectorAll('.section-block');
+    
     sections.forEach((section, index) => {
+        const newSectionId = index + 1;
+        const oldSectionId = section.getAttribute('data-section-id');
+        
+        // Update data-section-id attribute
+        section.setAttribute('data-section-id', newSectionId);
+        
+        // Update visual header
         const header = section.querySelector('.block-header h4');
         if (header) {
-            header.textContent = `Block ${index + 1}`;
+            header.textContent = `Block ${newSectionId}`;
         }
 
         // Update color class
-        const colorClass = ((index + 1) % 2 === 0) ? 'block-color-even' : 'block-color-odd';
+        const colorClass = (newSectionId % 2 === 0) ? 'block-color-even' : 'block-color-odd';
         section.className = section.className.replace(/block-color-\w+/, colorClass);
+        
+        // Update all form field names in this section
+        updateSectionFormNames(section, oldSectionId, newSectionId);
+        
+        // Update all onclick handlers for this section
+        updateSectionOnclickHandlers(section, oldSectionId, newSectionId);
     });
+}
+
+function updateSectionFormNames(section, oldId, newId) {
+    // Update section-level form names
+    const sectionInputs = section.querySelectorAll(`[name*="sections[${oldId}]"]`);
+    sectionInputs.forEach(input => {
+        input.name = input.name.replace(`sections[${oldId}]`, `sections[${newId}]`);
+    });
+    
+    // Update question container ID
+    const questionsContainer = section.querySelector(`#questions-${oldId}`);
+    if (questionsContainer) {
+        questionsContainer.id = `questions-${newId}`;
+    }
+    
+    // Update questions form names and reindex them sequentially
+    const questions = section.querySelectorAll('.question-item');
+    questions.forEach((question, questionIndex) => {
+        const newQuestionId = questionIndex + 1;
+        const oldQuestionId = question.getAttribute('data-question-id');
+        
+        // Update question data attribute
+        question.setAttribute('data-question-id', newQuestionId);
+        
+        // Update question number display
+        question.setAttribute('data-question-number', `Q${newQuestionId}`);
+        
+        // Update question header text
+        const questionHeader = question.querySelector('h6');
+        if (questionHeader) {
+            questionHeader.textContent = `Pertanyaan ${newQuestionId}`;
+        }
+        
+        // Update all question form field names
+        const questionInputs = question.querySelectorAll(`[name*="sections[${newId}][questions]"]`);
+        questionInputs.forEach(input => {
+            // Replace the old question index with new sequential index
+            input.name = input.name.replace(
+                new RegExp(`sections\\[${newId}\\]\\[questions\\]\\[\\d+\\]`), 
+                `sections[${newId}][questions][${questionIndex}]`
+            );
+        });
+        
+        // Update onclick handlers for questions
+        updateQuestionOnclickHandlers(question, newId, oldQuestionId, newQuestionId);
+    });
+}
+
+function updateSectionOnclickHandlers(section, oldId, newId) {
+    // Update clone section button
+    const cloneBtn = section.querySelector(`[onclick*="cloneSection(${oldId})"]`);
+    if (cloneBtn) {
+        cloneBtn.setAttribute('onclick', `cloneSection(${newId})`);
+    }
+    
+    // Update delete section button
+    const deleteBtn = section.querySelector(`[onclick*="deleteSection(${oldId})"]`);
+    if (deleteBtn) {
+        deleteBtn.setAttribute('onclick', `deleteSection(${newId})`);
+    }
+    
+    // Update add question button
+    const addQuestionBtn = section.querySelector(`[onclick*="addQuestion(${oldId})"]`);
+    if (addQuestionBtn) {
+        addQuestionBtn.setAttribute('onclick', `addQuestion(${newId})`);
+    }
+    
+    // Update add section after button
+    const addSectionBtn = section.querySelector(`[onclick*="addSectionAfter(${oldId})"]`);
+    if (addSectionBtn) {
+        addSectionBtn.setAttribute('onclick', `addSectionAfter(${newId})`);
+    }
+}
+
+function updateQuestionOnclickHandlers(question, sectionId, oldQuestionId, newQuestionId) {
+    // Update clone question button
+    const cloneBtn = question.querySelector(`[onclick*="cloneQuestion(${sectionId}, ${oldQuestionId})"]`);
+    if (cloneBtn) {
+        cloneBtn.setAttribute('onclick', `cloneQuestion(${sectionId}, ${newQuestionId})`);
+    }
+    
+    // Update delete question button
+    const deleteBtn = question.querySelector(`[onclick*="deleteQuestion(${sectionId}, ${oldQuestionId})"]`);
+    if (deleteBtn) {
+        deleteBtn.setAttribute('onclick', `deleteQuestion(${sectionId}, ${newQuestionId})`);
+    }
 }
 function updateNavigationOptions() {
     const sections = document.querySelectorAll('.section-block');
@@ -1473,19 +1552,27 @@ function updateNavigationOptions() {
 
 // Function to add a section after a specific section (for the "Tambah Block Baru" button)
 function addSectionAfter(afterSectionId) {
-    sectionCounter++;
-    const colorClass = (sectionCounter % 2 === 0) ? 'block-color-even' : 'block-color-odd';
+    // Get reference to the section we're inserting after
+    const currentSection = document.querySelector(`[data-section-id="${afterSectionId}"]`);
+    if (!currentSection) {
+        console.error('Could not find section to insert after:', afterSectionId);
+        return;
+    }
+    
+    // Create temporary section ID for initial creation
+    const tempSectionId = Date.now(); // Use timestamp as temp ID
+    const colorClass = 'block-color-odd'; // Will be updated by updateSectionNumbers()
 
     const sectionHtml = `
-        <div class="section-block p-6 ${colorClass}" data-section-id="${sectionCounter}">
+        <div class="section-block p-6 ${colorClass}" data-section-id="${tempSectionId}">
             <div class="block-header">
                 <div class="flex justify-between items-center">
-                    <h4 class="block-title">Block ${sectionCounter}</h4>
+                    <h4 class="block-title">Block ${tempSectionId}</h4>
                     <div class="icon-container">
-                        <button type="button" onclick="cloneSection(${sectionCounter})" class="icon-link" title="Clone Block">
+                        <button type="button" onclick="cloneSection(${tempSectionId})" class="icon-link" title="Clone Block">
                             <i class="fas fa-copy"></i>
                         </button>
-                        <button type="button" onclick="deleteSection(${sectionCounter})" class="icon-link" title="Delete Block">
+                        <button type="button" onclick="deleteSection(${tempSectionId})" class="icon-link" title="Delete Block">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -1496,33 +1583,33 @@ function addSectionAfter(afterSectionId) {
                 <!-- Block Info -->
                 <div class="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 class="text-sm font-medium text-gray-700 mb-3">Nama Block <span class="text-red-500">*</span></h5>
-                    <input type="text" name="sections[${sectionCounter}][section_name]" placeholder="Tulis nama blok disini..." required
+                    <input type="text" name="sections[${tempSectionId}][section_name]" placeholder="Tulis nama blok disini..." required
                            class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 class="text-sm font-medium text-gray-700 mb-3">Deskripsi Block</h5>
-                    <textarea name="sections[${sectionCounter}][section_description]" rows="2" placeholder="Tulis deskripsi blok disini..."
+                    <textarea name="sections[${tempSectionId}][section_description]" rows="2" placeholder="Tulis deskripsi blok disini..."
                               class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"></textarea>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-lg mb-4">
                     <h5 class="text-sm font-medium text-gray-700 mb-3">Navigasi Block</h5>
-                    <select name="sections[${sectionCounter}][navigation_type]" data-original-value="next" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
+                    <select name="sections[${tempSectionId}][navigation_type]" data-original-value="next" class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="next">Lanjut ke block berikutnya</option>
                         <option value="end">Akhiri survey</option>
                     </select>
                 </div>
 
                 <!-- Questions Container -->
-                <div class="questions-container" data-section-id="${sectionCounter}">
+                <div class="questions-container" data-section-id="${tempSectionId}">
                     <div class="flex justify-between items-center mb-4">
                         <h5 class="text-sm font-medium text-gray-700">Pertanyaan</h5>
-                        <button type="button" onclick="addQuestion(${sectionCounter})" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
+                        <button type="button" onclick="addQuestion(${tempSectionId})" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors">
                             <i class="fas fa-plus mr-1"></i>Tambah Pertanyaan
                         </button>
                     </div>
-                    <div class="questions-list space-y-3" id="questions-${sectionCounter}">
+                    <div class="questions-list space-y-3" id="questions-${tempSectionId}">
                         <!-- Questions will be added here -->
                     </div>
                 </div>
@@ -1530,7 +1617,7 @@ function addSectionAfter(afterSectionId) {
                 <!-- Add Block Button -->
                 <div class="add-block-section mt-6 pt-4">
                     <div class="flex justify-center">
-                        <button type="button" onclick="addSectionAfter(${sectionCounter})" class="inline-block px-6 py-3 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-gradient-to-r from-green-500 to-green-600 border-0 rounded-lg shadow-lg cursor-pointer text-sm tracking-tight-rem hover:shadow-xl hover:-translate-y-1 active:opacity-85 hover:from-green-600 hover:to-green-700">
+                        <button type="button" onclick="addSectionAfter(${tempSectionId})" class="inline-block px-6 py-3 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-gradient-to-r from-green-500 to-green-600 border-0 rounded-lg shadow-lg cursor-pointer text-sm tracking-tight-rem hover:shadow-xl hover:-translate-y-1 active:opacity-85 hover:from-green-600 hover:to-green-700">
                             <i class="fas fa-plus-circle mr-2"></i> Tambah Block Baru
                         </button>
                     </div>
@@ -1539,14 +1626,21 @@ function addSectionAfter(afterSectionId) {
         </div>
     `;
 
-    // Find the current section and insert the new section after it
-    const currentSection = document.querySelector(`[data-section-id="${afterSectionId}"]`);
+    // Insert the new section after the current section
     currentSection.insertAdjacentHTML('afterend', sectionHtml);
 
-    // Add first question to new section
+    // Now update all section numbers and form names to be sequential
     setTimeout(() => {
-        addQuestion(sectionCounter);
+        updateSectionNumbers();
         updateNavigationOptions();
+        
+        // Add first question to the newly created section
+        // Find the new section by its position (it should be right after currentSection)
+        const newSection = currentSection.nextElementSibling;
+        if (newSection && newSection.classList.contains('section-block')) {
+            const newSectionId = newSection.getAttribute('data-section-id');
+            addQuestion(newSectionId);
+        }
     }, 100);
 }
 
