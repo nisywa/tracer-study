@@ -232,8 +232,7 @@
                             <h3 class="text-xl sm:text-2xl md:text-[28px] md:leading-[1.42] font-semibold text-dark dark:text-white">
                                 Informasi User
                             </h3>
-                            <button id="editToggle" onclick="toggleEdit()" 
-                                class="px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand cursor-pointer flex items-center gap-2">
+                            <button id="editToggle" onclick="toggleEdit()" class="px-4 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-dark rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
@@ -406,14 +405,14 @@
                                 <div id="actionButtons" class="hidden pt-4">
                                     <div class="flex gap-3">
                                         <button type="submit" 
-                                            class="px-6 py-3 text-sm font-bold text-white bg-green-700 hover:bg-green-800 dark:bg-blue-600 dark:hover:bg-blue-700 border-2 border-green-700 hover:border-green-800 dark:border-blue-600 dark:hover:border-blue-700 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105">
+                                            class="px-6 py-3 text-sm font-bold text-white bg-primary hover:bg-blue-dark rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                                             </svg>
                                             Simpan
                                         </button>
                                         <button type="button" onclick="cancelEdit()" 
-                                            class="px-6 py-3 text-sm font-bold text-gray-800 bg-gray-400 hover:bg-gray-500 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-700 border-2 border-gray-400 hover:border-gray-500 dark:border-gray-600 dark:hover:border-gray-700 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105">
+                                            class="px-6 py-3 text-sm font-bold text-gray-700 bg-gray-300 hover:bg-gray-400 rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                                             </svg>
@@ -520,7 +519,7 @@
                     </svg>
                     Batal
                 `;
-                editButton.className = 'px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand cursor-pointer flex items-center gap-2';
+                editButton.className = 'px-4 py-2 text-sm font-semibold text-gray-700 bg-gray-300 hover:bg-gray-400 rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md';
             } else {
                 editButton.innerHTML = `
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -528,7 +527,7 @@
                     </svg>
                     Edit
                 `;
-                editButton.className = 'px-0 py-2 text-sm font-semibold text-white transition-all ease-nav-brand cursor-pointer flex items-center gap-2';
+                editButton.className = 'px-4 py-2 text-sm font-semibold text-white bg-primary hover:bg-blue-dark rounded-lg transition-all ease-nav-brand cursor-pointer flex items-center gap-2 shadow-md';
             }
         }
 
