@@ -1086,10 +1086,21 @@ function cloneQuestion(sectionId, questionId) {
 function handleQuestionTypeChange(sectionId, questionId, type) {
     const optionsContainer = document.getElementById(`optionsContainer-${sectionId}-${questionId}`);
 
+    if (!optionsContainer) {
+        console.error(`Options container not found: optionsContainer-${sectionId}-${questionId}`);
+        return;
+    }
+
     if (['radio', 'checkbox', 'select'].includes(type)) {
         optionsContainer.style.display = 'block';
         // Add default options if none exist
         const optionsList = document.getElementById(`optionsList-${sectionId}-${questionId}`);
+        
+        if (!optionsList) {
+            console.error(`Options list not found for question ${questionId}`);
+            return;
+        }
+        
         if (optionsList.children.length === 0) {
             addOption(sectionId, questionId);
             addOption(sectionId, questionId);
@@ -1122,6 +1133,7 @@ function updateExistingOptionsNavigation(sectionId, questionId, type) {
         // Add navigation toggle and block if needed
         if (showNavigationToggle) {
             const inputElement = option.querySelector('input[type="text"]');
+            const blockNavigation = getBlockLevelNavigation(sectionId);
             const navigationHtml = `
                 <div class="mt-2 flex items-center gap-2">
                     <label class="flex items-center cursor-pointer navigation-toggle-label">
@@ -1136,7 +1148,7 @@ function updateExistingOptionsNavigation(sectionId, questionId, type) {
                         <option value="next">Block Berikutnya</option>
                         <option value="end">Selesai Survey</option>
                     </select>
-                    <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="hidden-navigation-input">
+                    <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="${blockNavigation}" class="hidden-navigation-input">
                 </div>
             `;
 
@@ -1159,6 +1171,9 @@ function addOption(sectionId, questionId) {
     const questionTypeSelect = questionElement.querySelector('select[name*="[type]"]');
     const questionType = questionTypeSelect ? questionTypeSelect.value : 'text';
     const showNavigationToggle = ['radio', 'select'].includes(questionType);
+    
+    // Get block-level navigation as default for select questions
+    const blockNavigation = getBlockLevelNavigation(sectionId);
 
     const optionHtml = `
         <div class="option-item mb-3" data-option-index="${optionCount}">
@@ -1189,7 +1204,7 @@ function addOption(sectionId, questionId) {
                             <option value="next">Block Berikutnya</option>
                             <option value="end">Selesai Survey</option>
                         </select>
-                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="hidden-navigation-input">
+                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="${blockNavigation}" class="hidden-navigation-input">
                     </div>
                     ` : ''}
                 </div>
@@ -1310,6 +1325,18 @@ function debugOptionAdd(sectionId, questionId) {
     console.log('Debug option added with navigation block');
 }
 
+// Helper function to get block-level navigation for a section
+function getBlockLevelNavigation(sectionId) {
+    const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+    if (section) {
+        const navSelect = section.querySelector('select[name*="[navigation_type]"]');
+        if (navSelect) {
+            return navSelect.value || 'next';
+        }
+    }
+    return 'next';
+}
+
 // Toggle navigation block visibility
 function toggleOptionNavigation(checkbox) {
     const optionItem = checkbox.closest('.option-item');
@@ -1326,12 +1353,16 @@ function toggleOptionNavigation(checkbox) {
     } else {
         navigationBlock.classList.add('hidden');
         navigationBlock.classList.remove('block');
-        // Reset and disable select, enable hidden input with default value
+        // Reset and disable select, enable hidden input with block-level navigation as default
         navigationSelect.value = '';
         navigationSelect.disabled = true;
         if (hiddenInput) {
             hiddenInput.disabled = false;
-            hiddenInput.value = 'next';
+            // Get the section ID from the input name to determine block-level navigation
+            const sectionMatch = hiddenInput.name.match(/sections\[(\d+)\]/);
+            const sectionId = sectionMatch ? sectionMatch[1] : null;
+            const blockNavigation = sectionId ? getBlockLevelNavigation(sectionId) : 'next';
+            hiddenInput.value = blockNavigation;
         }
     }
 }
@@ -1443,6 +1474,28 @@ function markFieldValid(field) {
 document.addEventListener('input', function(e) {
     if (e.target.matches('input, textarea, select')) {
         e.target.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50');
+    }
+});
+
+// Add event listener for navigation changes
+document.addEventListener('change', function(e) {
+    // Handle block navigation selects
+    if (e.target.matches('select[name*="[navigation_type]"]')) {
+        // When block-level navigation changes, update all hidden inputs in select-type questions within this block
+        const section = e.target.closest('.section-block');
+        const sectionId = section ? section.getAttribute('data-section-id') : null;
+        
+        if (sectionId) {
+            const blockNavigation = e.target.value || 'next';
+            
+            // Update all hidden inputs in select/radio questions within this section that don't have custom navigation
+            const hiddenInputs = section.querySelectorAll('.hidden-navigation-input');
+            hiddenInputs.forEach(hiddenInput => {
+                if (!hiddenInput.disabled) { // Only update if not using custom navigation
+                    hiddenInput.value = blockNavigation;
+                }
+            });
+        }
     }
 });
 

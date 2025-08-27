@@ -581,7 +581,7 @@ function loadExistingQuestion(sectionId, questionData) {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Tipe Pertanyaan</label>
-                    <select name="sections[${sectionId}][questions][${questionCounter}][type]" onchange="toggleOptions(${sectionId}, ${questionCounter})" required
+                    <select name="sections[${sectionId}][questions][${questionCounter}][type]" onchange="handleQuestionTypeChange(${sectionId}, ${questionCounter}, this.value)" required
                             class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="text" ${questionData.type === 'text' ? 'selected' : ''}>Text Input</option>
                         <option value="textarea" ${questionData.type === 'textarea' ? 'selected' : ''}>Text Area</option>
@@ -609,14 +609,14 @@ function loadExistingQuestion(sectionId, questionData) {
             </div>
 
             <!-- Options Container -->
-            <div class="options-container" id="options-${sectionId}-${questionCounter}" style="display: ${['radio', 'checkbox', 'select'].includes(questionData.type) ? 'block' : 'none'};">
+            <div class="options-container" id="optionsContainer-${sectionId}-${questionCounter}" style="display: ${['radio', 'checkbox', 'select'].includes(questionData.type) ? 'block' : 'none'};">
                 <div class="flex justify-between items-center mb-2">
                     <label class="block text-xs font-medium text-gray-700">Pilihan Jawaban</label>
                     <button type="button" onclick="addOption(${sectionId}, ${questionCounter})" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors">
                         <i class="fas fa-plus mr-1"></i>Tambah Pilihan
                     </button>
                 </div>
-                <div class="options-list space-y-2" id="options-list-${sectionId}-${questionCounter}">
+                <div class="options-list space-y-2" id="optionsList-${sectionId}-${questionCounter}">
                     <!-- Options will be loaded here -->
                 </div>
             </div>
@@ -635,7 +635,7 @@ function loadExistingQuestion(sectionId, questionData) {
 
 // Load existing option
 function loadExistingOption(sectionId, questionId, optionText, navigationValue) {
-    const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
+    const optionsList = document.getElementById(`optionsList-${sectionId}-${questionId}`);
     const optionCount = optionsList.children.length + 1;
 
     // Check if this question type supports navigation
@@ -646,6 +646,10 @@ function loadExistingOption(sectionId, questionId, optionText, navigationValue) 
     // Determine if custom navigation is being used
     // Custom navigation is active if navigationValue is not null, undefined, empty, or 'next' (default)
     const isCustomNavigation = navigationValue && navigationValue !== '' && navigationValue !== 'next';
+    
+    // Get block-level navigation as default for select questions when no custom navigation is set
+    const blockNavigation = getBlockLevelNavigation(sectionId);
+    const defaultNavigationValue = isCustomNavigation ? 'next' : blockNavigation;
 
     const optionHtml = `
         <div class="option-item mb-3" data-option-index="${optionCount}">
@@ -676,7 +680,7 @@ function loadExistingOption(sectionId, questionId, optionText, navigationValue) 
                             <option value="next">Block Berikutnya</option>
                             <option value="end">Selesai Survey</option>
                         </select>
-                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="hidden-navigation-input" ${isCustomNavigation ? 'disabled' : ''}>
+                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="${defaultNavigationValue}" class="hidden-navigation-input" ${isCustomNavigation ? 'disabled' : ''}>
                     </div>
                     ` : ''}
                 </div>
@@ -817,7 +821,7 @@ function addQuestion(sectionId) {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-700 mb-1">Tipe Pertanyaan</label>
-                    <select name="sections[${sectionId}][questions][${tempQuestionId}][type]" onchange="toggleOptions(${sectionId}, ${tempQuestionId})" required
+                    <select name="sections[${sectionId}][questions][${tempQuestionId}][type]" onchange="handleQuestionTypeChange(${sectionId}, ${tempQuestionId}, this.value)" required
                             class="focus:shadow-primary-outline text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="text">Text Input</option>
                         <option value="textarea">Text Area</option>
@@ -845,7 +849,7 @@ function addQuestion(sectionId) {
             </div>
 
             <!-- Options Container -->
-            <div class="options-container" id="options-${sectionId}-${tempQuestionId}" style="display: none;">
+            <div class="options-container" id="optionsContainer-${sectionId}-${tempQuestionId}" style="display: none;">
                 <div class="flex justify-between items-center mb-2">
                     <label class="block text-xs font-medium text-gray-700">Pilihan Jawaban</label>
                     <button type="button" onclick="addOption(${sectionId}, ${tempQuestionId})" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors">
@@ -885,35 +889,54 @@ function updateQuestionNumbers(sectionId) {
     }
 }
 
-function toggleOptions(sectionId, questionId) {
-    const questionType = document.querySelector(`select[name="sections[${sectionId}][questions][${questionId}][type]"]`).value;
-    const optionsContainer = document.getElementById(`options-${sectionId}-${questionId}`);
+function handleQuestionTypeChange(sectionId, questionId, type) {
+    const optionsContainer = document.getElementById(`optionsContainer-${sectionId}-${questionId}`);
 
-    if (['radio', 'checkbox', 'select'].includes(questionType)) {
+    if (!optionsContainer) {
+        console.error(`Options container not found: optionsContainer-${sectionId}-${questionId}`);
+        return;
+    }
+
+    if (['radio', 'checkbox', 'select'].includes(type)) {
         optionsContainer.style.display = 'block';
 
         // Add default options if none exist
-        const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
+        const optionsList = document.getElementById(`optionsList-${sectionId}-${questionId}`);
+        
+        if (!optionsList) {
+            console.error(`Options list not found for question ${questionId}`);
+            return;
+        }
+
         if (optionsList.children.length === 0) {
             addOption(sectionId, questionId);
             addOption(sectionId, questionId);
+        } else {
+            // Update existing options to add/remove navigation based on type
+            updateExistingOptionsNavigation(sectionId, questionId, type);
         }
-
-        // Update existing options for navigation support
-        updateExistingOptionsNavigation(sectionId, questionId, questionType);
     } else {
         optionsContainer.style.display = 'none';
     }
 }
 
 function addOption(sectionId, questionId) {
-    const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
+    const optionsList = document.getElementById(`optionsList-${sectionId}-${questionId}`);
+    
+    if (!optionsList) {
+        console.error(`Options list not found for adding option: ${sectionId}-${questionId}`);
+        return;
+    }
+    
     const optionCount = optionsList.children.length + 1;
 
     // Check if this question type supports navigation
     const questionTypeSelect = document.querySelector(`select[name="sections[${sectionId}][questions][${questionId}][type]"]`);
     const questionType = questionTypeSelect ? questionTypeSelect.value : 'text';
     const showNavigationToggle = ['radio', 'select'].includes(questionType);
+    
+    // Get block-level navigation as default for select questions
+    const blockNavigation = getBlockLevelNavigation(sectionId);
 
     const optionHtml = `
         <div class="option-item mb-3" data-option-index="${optionCount}">
@@ -944,7 +967,7 @@ function addOption(sectionId, questionId) {
                             <option value="next">Block Berikutnya</option>
                             <option value="end">Selesai Survey</option>
                         </select>
-                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="next" class="hidden-navigation-input">
+                        <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="${blockNavigation}" class="hidden-navigation-input">
                     </div>
                     ` : ''}
                 </div>
@@ -965,6 +988,18 @@ function addOption(sectionId, questionId) {
     }
 }
 
+// Helper function to get block-level navigation for a section
+function getBlockLevelNavigation(sectionId) {
+    const section = document.querySelector(`[data-section-id="${sectionId}"]`);
+    if (section) {
+        const navSelect = section.querySelector('select[name*="[navigation_type]"]');
+        if (navSelect) {
+            return navSelect.value || 'next';
+        }
+    }
+    return 'next';
+}
+
 // Toggle option navigation
 function toggleOptionNavigation(checkbox) {
     const optionItem = checkbox.closest('.option-item');
@@ -981,13 +1016,17 @@ function toggleOptionNavigation(checkbox) {
     } else {
         navigationBlock.classList.remove('block');
         navigationBlock.classList.add('hidden');
-        // Reset and disable select, enable hidden input with default value
+        // Reset and disable select, enable hidden input with block-level navigation as default
         navigationSelect.value = '';
         navigationSelect.disabled = true;
         navigationSelect.setAttribute('data-original-value', '');
         if (hiddenInput) {
             hiddenInput.disabled = false;
-            hiddenInput.value = 'next';
+            // Get the section ID from the input name to determine block-level navigation
+            const sectionMatch = hiddenInput.name.match(/sections\[(\d+)\]/);
+            const sectionId = sectionMatch ? sectionMatch[1] : null;
+            const blockNavigation = sectionId ? getBlockLevelNavigation(sectionId) : 'next';
+            hiddenInput.value = blockNavigation;
         }
     }
 }
@@ -1003,12 +1042,34 @@ document.addEventListener('change', function(e) {
     if (e.target.matches('select[name*="[navigation_type]"]')) {
         // Update data-original-value when user changes the block navigation
         e.target.setAttribute('data-original-value', e.target.value);
+        
+        // When block-level navigation changes, update all hidden inputs in select-type questions within this block
+        const section = e.target.closest('.section-block');
+        const sectionId = section ? section.getAttribute('data-section-id') : null;
+        
+        if (sectionId) {
+            const blockNavigation = e.target.value || 'next';
+            
+            // Update all hidden inputs in select/radio questions within this section that don't have custom navigation
+            const hiddenInputs = section.querySelectorAll('.hidden-navigation-input');
+            hiddenInputs.forEach(hiddenInput => {
+                if (!hiddenInput.disabled) { // Only update if not using custom navigation
+                    hiddenInput.value = blockNavigation;
+                }
+            });
+        }
     }
 });
 
 // Update existing options when question type changes
 function updateExistingOptionsNavigation(sectionId, questionId, questionType) {
-    const optionsList = document.getElementById(`options-list-${sectionId}-${questionId}`);
+    const optionsList = document.getElementById(`optionsList-${sectionId}-${questionId}`);
+    
+    if (!optionsList) {
+        console.error(`Options list not found for updating navigation: ${sectionId}-${questionId}`);
+        return;
+    }
+    
     const options = optionsList.querySelectorAll('.option-item');
     const showNavigationToggle = ['radio', 'select'].includes(questionType);
 
@@ -1027,6 +1088,7 @@ function updateExistingOptionsNavigation(sectionId, questionId, questionType) {
         // Add navigation toggle and block if needed
         if (showNavigationToggle) {
             const inputElement = option.querySelector('input[type="text"]');
+            const blockNavigation = getBlockLevelNavigation(sectionId);
             const navigationHtml = `
                 <div class="mt-2 flex items-center gap-2">
                     <label class="flex items-center cursor-pointer navigation-toggle-label">
@@ -1041,6 +1103,7 @@ function updateExistingOptionsNavigation(sectionId, questionId, questionType) {
                         <option value="next">Block Berikutnya</option>
                         <option value="end">Selesai Survey</option>
                     </select>
+                    <input type="hidden" name="sections[${sectionId}][questions][${questionId}][option_navigation][]" value="${blockNavigation}" class="hidden-navigation-input">
                 </div>
             `;
 
@@ -1180,7 +1243,7 @@ function cloneQuestion(sectionId, questionId) {
             .replace(new RegExp(`Pertanyaan \\d+`, 'g'), `Pertanyaan ${tempQuestionId}`)
             .replace(new RegExp(`cloneQuestion\\(${sectionId}, ${questionId}\\)`, 'g'), `cloneQuestion(${sectionId}, ${tempQuestionId})`)
             .replace(new RegExp(`deleteQuestion\\(${sectionId}, ${questionId}\\)`, 'g'), `deleteQuestion(${sectionId}, ${tempQuestionId})`)
-            .replace(new RegExp(`toggleOptions\\(${sectionId}, ${questionId}\\)`, 'g'), `toggleOptions(${sectionId}, ${tempQuestionId})`)
+            .replace(new RegExp(`handleQuestionTypeChange\\(${sectionId}, ${questionId}, this\\.value\\)`, 'g'), `handleQuestionTypeChange(${sectionId}, ${tempQuestionId}, this.value)`)
             .replace(new RegExp(`addOption\\(${sectionId}, ${questionId}\\)`, 'g'), `addOption(${sectionId}, ${tempQuestionId})`)
             .replace(new RegExp(`options-${sectionId}-${questionId}`, 'g'), `options-${sectionId}-${tempQuestionId}`)
             .replace(new RegExp(`optionsList-${sectionId}-${questionId}`, 'g'), `optionsList-${sectionId}-${tempQuestionId}`);
@@ -1544,7 +1607,11 @@ function updateNavigationOptions() {
 
             // Update hidden input to match if it exists
             if (hiddenInput) {
-                hiddenInput.value = optionNavSelect.value || 'next';
+                // Use block-level navigation as default instead of hardcoded 'next'
+                const sectionElement = optionNavSelect.closest('.section-block');
+                const sectionId = sectionElement ? sectionElement.getAttribute('data-section-id') : null;
+                const blockNavigation = sectionId ? getBlockLevelNavigation(sectionId) : 'next';
+                hiddenInput.value = optionNavSelect.value || blockNavigation;
             }
         });
     });
