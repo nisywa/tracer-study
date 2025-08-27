@@ -36,12 +36,51 @@ class SurveyUserController extends Controller
             ->where('tanggal_selesai', '>=', now())
             ->get();
 
-        $alumni = Auth::user();
+        $user = Auth::user();
 
         return view('user.views.index', [
-            'surveys' => $surveys,
-            'alumni' => $alumni
+            'survey' => $surveys,
+            'user' => $user
         ]);
+    }
+
+    /**
+     * Update user profile information (alumni or atasan)
+     */
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'jabatan' => 'nullable|string|max:255',
+            'satuan_kerja' => 'nullable|string|max:255',
+            'unit_kerja' => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:20',
+        ]);
+
+        $user = Auth::user();
+
+        try {
+            if ($user->hasRole('alumni') && $user->alumni) {
+                $user->alumni->update([
+                    'jabatan' => $request->jabatan,
+                    'satuan_kerja' => $request->satuan_kerja,
+                    'unit_kerja' => $request->unit_kerja,
+                    'no_hp' => $request->no_hp,
+                ]);
+            } elseif ($user->hasRole('atasan') && $user->atasan) {
+                $user->atasan->update([
+                    'jabatan' => $request->jabatan,
+                    'satuan_kerja' => $request->satuan_kerja,
+                    'unit_kerja' => $request->unit_kerja,
+                    'no_hp' => $request->no_hp,
+                ]);
+            } else {
+                return back()->with('error', 'Profile tidak ditemukan.');
+            }
+
+            return back()->with('success', 'Informasi user berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -245,7 +284,7 @@ class SurveyUserController extends Controller
                 }
             } catch (\Exception $e) {
                 // Log error but don't fail the survey submission
-                \Illuminate\Support\FacadesLog::error("Failed to send thank you email: " . $e->getMessage());
+                Log::error("Failed to send thank you email: " . $e->getMessage());
             }
 
             // Return JSON response for AJAX requests
@@ -259,7 +298,7 @@ class SurveyUserController extends Controller
 
             return redirect()->route('user.profile.index')->with('success', 'Jawaban survey berhasil disimpan');
         } catch (\Exception $e) {
-            \Illuminate\Support\FacadesLog::error('Error saving survey: ' . $e->getMessage(), [
+            Log::error('Error saving survey: ' . $e->getMessage(), [
                 'survey_id' => $id,
                 'user_id' => Auth::id(),
                 'request_data' => $request->all()

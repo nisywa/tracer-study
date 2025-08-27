@@ -101,6 +101,7 @@ Route::middleware(['auth', 'role:admin|supervisor'])->prefix('admin')->name('adm
 // User route
 Route::middleware(['auth', 'role:alumni|atasan'])->prefix('user')->name('user.')->group(function () {
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('profile/update', [SurveyUserController::class, 'updateProfile'])->name('profile.update');
     Route::get('survey/{id}', [SurveyUserController::class, 'surveyUserPertanyaan'])->name('survey.survey');
     Route::post('survey/{id}', [SurveyUserController::class, 'saveSurvey'])->name('survey.save');
     Route::post('survey/{surveyId}/next-question/{questionId}', [SurveyUserController::class, 'getNextQuestion'])->name('survey.next_question');
