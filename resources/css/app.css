@@ -1,3 +1,87 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Preserve Argon Dashboard styles */
+@layer base {
+    /* Don't override existing base styles */
+}
+
+@layer components {
+    /* Custom component styles that work with Argon */
+    .dashboard-stats-card {
+        @apply relative flex flex-col min-w-0 break-words bg-white shadow-xl rounded-2xl bg-clip-border;
+    }
+}
+
+@layer utilities {
+    /* Custom utilities to complement existing styles */
+    .min-h-75 {
+        min-height: 75vh !important;
+    }
+    
+     .min-h-40 {
+        min-height: 40vh !important;
+    }
+    
+    .w-90 {
+        width: 22.5rem !important;
+    }
+    
+    .z-990 {
+        z-index: 990 !important;
+    }
+    
+    .rounded-circle {
+        border-radius: 50% !important;
+    }
+    
+    .xl\:ml-68 {
+        margin-left: 17rem !important;
+    }
+    
+    /* Preserve gradient utilities */
+    .bg-gradient-to-tl {
+        background-image: linear-gradient(to top left, var(--tw-gradient-stops)) !important;
+    }
+    
+    .from-blue-500 {
+        --tw-gradient-from: #3b82f6 !important;
+        --tw-gradient-to: rgb(59 130 246 / 0) !important;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+    }
+    
+    .to-violet-500 {
+        --tw-gradient-to: #8b5cf6 !important;
+    }
+    
+    .from-red-600 {
+        --tw-gradient-from: #dc2626 !important;
+        --tw-gradient-to: rgb(220 38 38 / 0) !important;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+    }
+    
+    .to-rose-400 {
+        --tw-gradient-to: #fb7185 !important;
+    }
+    
+    .from-green-600 {
+        --tw-gradient-from: #16a34a !important;
+        --tw-gradient-to: rgb(22 163 74 / 0) !important;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+    }
+    
+    .to-lime-400 {
+        --tw-gradient-to: #a3e635 !important;
+    }
+    
+    .from-purple-700 {
+        --tw-gradient-from: #7c3aed !important;
+        --tw-gradient-to: rgb(124 58 237 / 0) !important;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+    }
+    
+    .to-pink-500 {
+        --tw-gradient-to: #ec4899 !important;
+    }
+}

@@ -36,7 +36,7 @@
     <div class="container">
       <div class="relative flex items-center justify-between -mx-4">
         <div class="max-w-full px-4 w-60">
-          <a href="index.html" class="block w-full py-5 navbar-logo">
+          <a href="/" class="block w-full py-5 navbar-logo">
             <img src="{{asset('assets/images/logo/ts.svg')}}" alt="logo" class="w-full dark:hidden" />
             <img src="{{asset('assets/images/logo/ts_white.svg')}}" alt="logo" class="hidden w-full dark:block" />
           </a>
