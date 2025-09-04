@@ -19,7 +19,7 @@
                                 <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
                                     <div class="mb-4">
                                         <label for="nama"
-                                            class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama</label>
+                                            class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama <span class="text-red-500">*</span></label>
                                         <input type="text" name="nama" value="{{ $atasan->nama }}"
                                             class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                         @error('nama')
@@ -30,7 +30,7 @@
                                 <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
                                     <div class="mb-4">
                                         <label for="nip"
-                                            class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP</label>
+                                            class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP <span class="text-red-500">*</span></label>
                                         <input type="text" name="nip" value="{{ $atasan->nip }}"
                                             class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                         @error('nip')
@@ -42,7 +42,7 @@
                                 <div class="w-full max-w-full px-3 shrink-0 md:w-4/12 md:flex-0">
                                     <div class="mb-4">
                                         <label for="email"
-                                            class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email</label>
+                                            class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email <span class="text-red-500">*</span></label>
                                         <input type="email" name="email" value="{{ $atasan->email }}"
                                             class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                         @error('email')

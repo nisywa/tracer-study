@@ -72,9 +72,13 @@
                             <button type="button" class="preview-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200" data-type="survey_invitation">
                                 Preview
                             </button>
+                            <div>
+                            @if(!auth()->user()->hasRole('supervisor'))
                             <button type="submit" class="inline-block px-8 py-2 font-bold text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                                 Simpan
                             </button>
+                            @endif
+                            </div>
                         </div>
                     </form>
                 </div>

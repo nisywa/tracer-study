@@ -17,7 +17,7 @@
                         <p class="leading-normal uppercase dark:text-white dark:opacity-60 text-sm">Informasi User</p>
                         <div class="flex flex-wrap -mx-3">
                         <div class="w-full px-3 mb-4">
-                                <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama</label>
+                                <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama <span class="text-red-500">*</span></label>
                                 <input type="text" name="nama" value="{{ old('nama') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('nama')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -33,14 +33,14 @@
                             </div>
                           </div> -->
                           <div class="w-full px-3 mb-4">
-                                <label for="nip" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP</label>
+                                <label for="nip" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP <span class="text-red-500">*</span></label>
                                 <input type="text" name="nip" value="{{ old('nip') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('niP')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email</label>
+                                <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email <span class="text-red-500">*</span></label>
                                 <input type="email" name="email" value="{{ old('email') }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('email')
                                   <span class="text-red-500 text-xs">{{ $message }}</span>

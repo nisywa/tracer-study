@@ -22,8 +22,8 @@
                                 data-survey-id="{{ $survey->id }}"
                                 class="inline-block px-8 py-2 font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md cursor-pointer text-xs tracking-tight-rem hover:shadow-xs hover:-translate-y-px active:opacity-85">
                             <i class="fas fa-paper-plane mr-2"></i>
-                            <span class="hidden sm:inline">Kirim Email</span>
-                            <span class="sm:hidden">Email</span>
+                            <span class="hidden sm:inline">Kirim Undangan</span>
+                            <span class="sm:hidden">Undangan</span>
                         </button>
 
                         <button type="button"
@@ -192,13 +192,13 @@
                   <div class="flex items-center gap-4">
                   @if(!auth()->user()->hasRole('supervisor'))
                     <div class="relative w-64">
-                      <label for="graduationYearSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tambah Alumni by Tahun Lulus:</label>
+                      <label for="graduationYearSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tambah User by Tahun Lulus: <span class="text-red-500">[HANYA UNTUK SURVEI TIPE ALUMNI]</span></label>
                       <select id="graduationYearSelect" class="w-full form-select focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                         <option value="">Pilih Tahun Lulus...</option>
                       </select>
                     </div>
                     <div class="relative w-64">
-                      <label for="userSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tambah Alumni Individual:</label>
+                      <label for="userSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Tambah User Individual:</label>
                       <select id="userSelect" class="w-full form-select focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none">
                             <option></option>
                         </select>

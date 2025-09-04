@@ -197,6 +197,7 @@
                                     <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                         <div class="icon-container">
                                             <!-- edit -->
+                                             @if(!auth()->user()->hasRole('supervisor'))
                                             <a href="{{ route('admin.alumni.edit', $alumnus) }}" class="icon-link" data-tooltip="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -208,6 +209,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

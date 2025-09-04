@@ -18,21 +18,21 @@
                         <hr class="h-px mx-0 my-4 bg-transparent border-0 opacity-25 bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent " />
                         <div class="flex flex-wrap -mx-3">
                             <div class="w-full px-3 mb-4">
-                                <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama</label>
+                                <label for="nama" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Nama <span class="text-red-500">*</span></label>
                                 <input type="text" name="nama" value="{{ $alumnus->nama }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('nama')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="nip" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP</label>
+                                <label for="nip" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP <span class="text-red-500">*</span></label>
                                 <input type="text" name="nip" value="{{ $alumnus->nip }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('nip')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email</label>
+                                <label for="email" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Email <span class="text-red-500">*</span></label>
                                 <input type="email" name="email" value="{{ $alumnus->user->email }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('email')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -67,21 +67,21 @@
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="tanggal_lahir" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tanggal Lahir</label>
+                                <label for="tanggal_lahir" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tanggal Lahir <span class="text-red-500">*</span></label>
                                 <input type="text" name="tanggal_lahir" value="{{ $alumnus->tanggal_lahir }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('tanggal_lahir')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="tahun_lulus" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tahun Lulus</label>
+                                <label for="tahun_lulus" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tahun Lulus <span class="text-red-500">*</span></label>
                                 <input type="text" name="tahun_lulus" value="{{ $alumnus->tahun_lulus }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('tahun_lulus')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="w-full px-3 mb-4">
-                                <label for="nip_kepala_bps" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP Kepala BPS Tempat Bekerja</label>
+                                <label for="nip_kepala_bps" class="inline-block mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">NIP Kepala BPS Tempat Bekerja <span class="text-red-500">*</span></label>
                                 <input type="text" name="nip_kepala_bps" value="{{ $alumnus->nip_kepala_bps }}" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none" />
                                 @error('nip_kepala_bps')
                                     <span class="text-red-500 text-xs">{{ $message }}</span>
